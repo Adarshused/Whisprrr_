@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <svg  id="graph" width="800" height="800" viewBox="0 0 800 800">
+        <defs>
+            <linearGradient id="fade-purple" x1="0%" y1="0%" x2="0%" y2="100%">
+              <!-- solid purple at the top -->
+              <stop offset="0%" stop-color="#5235E8" stop-opacity="20%" />
+              <!-- same purple at the bottom but fully transparent -->
+              <stop offset="100%" stop-color="#5235E8" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+    <rect x="10" y="10" width="700" height="400" fill="none" stroke="purple"/>
+    <path d="M40 100 L40 100 100 200 180 200 220 100 280 100 360 300 400 250 490 280 550 130" stroke="#5235E8" fill="none"  stroke-width="4"/>
+    <path d="M12 400 L40 100 100 200 180 200 220 100 280 100 360 300 400 250 490 280 550 130 V 400"  stroke-width="4" fill="url(#fade-purple)"/>
+    <circle id="tracker" r="6" fill="red
+    " cx="0" cy="0" visibility="hidden"/>
+    </svg>
+</body>
+<script>
+    const svg = document.getElementById('graph');
+    const tracker = document.getElementById('tracker');
+  
+    // Same points used to draw the polyline
+    const points = [
+      { x: 40, y: 100 },
+      { x: 100, y: 200 },
+      { x: 180, y: 200 },
+      { x: 220, y: 100 },
+      { x: 280, y: 100 },
+      { x: 360, y: 300 },
+      { x: 400, y: 250 },
+      { x: 490, y: 280 },
+      { x: 550, y: 130 }
+    ];
+  
+    svg.addEventListener('mousemove', (e) => {
+      const pt = svg.createSVGPoint();
+      pt.x = e.clientX;
+      pt.y = e.clientY;
+  
+      const cursor = pt.matrixTransform(svg.getScreenCTM().inverse());
+      const x = cursor.x;
+  
+      // Find closest point by x
+      let closest = points[0];
+      for (let p of points) {
+        if (Math.abs(p.x - x) < Math.abs(closest.x - x)) {
+          closest = p;
+        }
+      }
+  
+      tracker.setAttribute('cx', closest.x);
+      tracker.setAttribute('cy', closest.y);
+      tracker.setAttribute('visibility', 'visible');
+    });
+  
+    svg.addEventListener('mouseleave', () => {
+      tracker.setAttribute('visibility', 'hidden');
+    });
+  </script>
+  
+</html>
