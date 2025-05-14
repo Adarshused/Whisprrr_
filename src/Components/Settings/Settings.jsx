@@ -17,7 +17,7 @@ function Settings(){
     <Settingleftpage/>
     <div className="fixed mt-18 ml-63.5">
     {curractive['SettingisActive'] === "Profile" && <Profile/>}
-    {curractive['SettingisActive'] === "Notification" &&<Notification/>}
+    {curractive['SettingisActive'] === "Notifications" &&<Notification/>}
     {curractive['SettingisActive'] === "Privacy" &&<Privacy/>}
     {curractive['SettingisActive'] === "Security" && <Security/>}
     {curractive['SettingisActive'] === "Perference" &&<Preference/>}

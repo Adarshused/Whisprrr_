@@ -25,7 +25,7 @@ function Settingleftpage(){
         setpassword(false);
         setsecurity(false);
       }
-      else if(currFeature === "Notification"){
+      else if(currFeature === "Notifications"){
         setprofile(false);
         setnotification(true);
         setprivacy(false);
@@ -88,7 +88,7 @@ function Settingleftpage(){
             </NavLink>
             <NavLink>
             <div className="flex cursor-pointer" onClick={()=>{
-              changeFeature("Notification");
+              changeFeature("Notifications");
             }
         }>
               <div className={`flex px-3 py-2 caret-purple-400   gap-x-2 w-50 rounded-lg ${notification ? "bg-[#F7F6FE] border border-purple-100" : ""}`}>
