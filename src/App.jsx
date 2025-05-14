@@ -10,7 +10,7 @@ import Settingsheader from './Components/Settings/Settingsheader.jsx';
  function App(props) {
   // const Dispatch=useDispatch();
   
-  const[islogin,setislogin]=useState(false); 
+  const[islogin,setislogin]=useState(true); 
 
   // console.log("Reached")
   
@@ -47,7 +47,7 @@ import Settingsheader from './Components/Settings/Settingsheader.jsx';
     //  })}
   return (
     <>
-    {islogin?(
+    {!islogin?(
     <>
     <Header/>
     <div className='pt-18'>
