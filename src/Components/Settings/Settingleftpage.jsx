@@ -14,6 +14,7 @@ function Settingleftpage(){
     const [security,setsecurity]=useState(false);
     const [preference,setpreference]=useState(false);
     const [password,setpassword]=useState(false);
+    const curractive= useSelector((state)=>state.CurrActive)
     
     const changeFeature=(currFeature)=>{
       Dispatch(ChangeSettingStatus(currFeature));
@@ -66,10 +67,20 @@ function Settingleftpage(){
         setsecurity(true);
       }
     }
+    const GoBack=()=>{
+      Dispatch(ChangeStatus("Dashboard"));
+    }
      return (
         <>
         <div className="fixed top-0 left-0 flex flex-col h-screen border-r border-gray-300 w-1/6 ">
-        <h1 className="mt-4 ml-10 font-extrabold text-2xl" style={{fontFamily:'Times New Roman,Serif'}}>Settings</h1>
+        <div className="flex mt-4 ">
+          <svg className="cursor-pointer" onClick={(e)=>GoBack()} width="50" height="50" viewBox="0 0 50 50">
+          <polyline points="35 12 30 16 35 20" stroke="gray" fill="none" strokeWidth="2"></polyline>
+
+          </svg>
+ <h1 className=" font-extrabold text-2xl" style={{fontFamily:'Times New Roman,Serif'}}>Settings</h1>
+        </div>
+       
         <div className="flex mt-8 ml-5 ">
 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
   <path stroke="gray" stroke-width="1" d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
