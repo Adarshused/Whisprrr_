@@ -95,7 +95,7 @@ function Dashboard_left(){
               </div>
             </div>
             </NavLink>
-            <NavLink>
+            <NavLink to="connectionspage">
             <div className="flex cursor-pointer" onClick={()=>{
               changeFeature("Connections");
                     

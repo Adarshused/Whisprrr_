@@ -2,7 +2,7 @@ import React from "react";
 import Dashboard_left from './Dashboard_left'
 import Dashboardpage from "./Dashboardpage";
 import { useSelector } from "react-redux";
-import Connectionspage from "./Connectionspage";
+import Connectionspage from "../Connections/Connectionspage.jsx";
 import Announcementspage from "./Announcementspage";
 import Portfoliopage from "./Portfoliopage";
 import Profile from "../Settings/Profile.jsx";

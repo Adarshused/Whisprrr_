@@ -15,6 +15,7 @@ import Dashboardpage from './Components/Dashboard/Dashboardpage.jsx'
 import Settings from './Components/Settings/Settings.jsx'
 import {store} from './app/store.js'
 import Profile from './Components/Settings/Profile.jsx'
+import Connection from './Components/Connections/Connectionspage.jsx'
 const router=createBrowserRouter([
   {
     path:'/',
@@ -56,6 +57,10 @@ const router=createBrowserRouter([
       {
         path:"profilepage",
         element:<Profile/>
+      },
+      {
+        path:"connectionspage",
+        element:<Connection/>
       }
       
     ]
