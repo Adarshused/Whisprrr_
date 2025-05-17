@@ -16,6 +16,7 @@ import Settings from './Components/Settings/Settings.jsx'
 import {store} from './app/store.js'
 import Profile from './Components/Settings/Profile.jsx'
 import Connection from './Components/Connections/Connectionspage.jsx'
+import ConnectionPortfolio from './Components/Connections/ConnectionPortfolio.jsx'
 const router=createBrowserRouter([
   {
     path:'/',
@@ -61,6 +62,10 @@ const router=createBrowserRouter([
       {
         path:"connectionspage",
         element:<Connection/>
+      },
+      {
+        path:"connectionportfolio",
+        element:<ConnectionPortfolio/>
       }
       
     ]
