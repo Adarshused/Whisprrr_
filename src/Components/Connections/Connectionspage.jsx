@@ -1,6 +1,118 @@
-import React from "react";
-
+import React, { useSyncExternalStore } from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 function Connectionspage(){
+  const [userDetail,setuserDetail]=useState([]);
+   const [curr_leaderboard_page,setcurr_leaderboard_page]=useState(0);
+    const [end_leaderboard_page,setend_leaderboard_page]=useState(10);
+    const [ConectionDetail,setConnectionDetail]=useState([]);
+    const [cordinate,setcordinate]=useState("");
+    const [change,setchange] = useState(null);
+  let cordinates="50 55 52 55 54 55 56 55 58 55 60 55 62 55 64 55 66 55 68 55 70 55 72 55 74 55 76 55 78 55 80 55 82 55 84 55 86 55 88 55 90 55 92 55 94 55 96 55";
+  let changed_coordinate=""
+  function asign_coordinates(point){
+     let cordinateArr=cordinates.split(" ").map(Number);
+    const points=point.split(",");
+    for(let i=1;i<points.length;i++){
+    let ans=Math.floor(((points[i]-points[i-1])/points[i-1])*100);
+    cordinateArr[i*2-1]+=ans;
+    cordinateArr[i*2-1]=Math.min(cordinateArr[i*2-1],80);
+    cordinateArr[i*2-1]=Math.max(cordinateArr[i*2-1],30);
+    }
+    changed_coordinate=cordinateArr.join(" ");
+    // console.log(changed_coordinate)
+    return true
+  }
+   let changePerc=null;
+     const Calculate_change=(currUp,prevUp)=>{
+       changePerc = prevUp
+        ? ((currUp- prevUp) / Math.abs(prevUp)) * 100
+        : 0;
+        console.log(changePerc)
+     }
+     useEffect(()=>{setchange(changePerc);},[changePerc])
+  useEffect(()=>{
+    setcordinate(changed_coordinate);
+    console.log(changed_coordinate)
+  },[changed_coordinate])
+  const values=[
+      {
+        'name':'Monika',
+        'Title':'Dean',
+        'img':"/assests/Monika.jpg",
+        'upvote':'20000',
+        'status':'following',
+        'watchlist':true,
+        'twentyFour_hour':'20000,20100,20150,20140,20200,20200,2050,20230,20230,20231,20232,20232,20310,20311,20290,20283,20312,20400,20450,21000,21010,21100,21150,20800',
+        'prevD_up':'800',
+        'prevPD_up':'2100',
+      },
+      {
+        'name':'komal',
+        'Title':'Prof',
+        'img':"/assests/komal.jpg",
+        'upvote':'11000',
+        'status':'notfollowing',
+        'watchlist':true,
+        'twentyFour_hour':'11000,11010,11010,11010,11200,12000,12300,12450,12345,12343,12342,12450,12360,12390,12400,12460,12467,12468,12500,12520,12554,12560,12567,12568',
+        'prevD_up':'1568',
+        'prevPD_up':'540',
+      },
+      {
+        'name':'Hithesh',
+        'Title':'Dean',
+        'img':"/assests/hithesh.jpg",
+        'upvote':'4900',
+         'status':'notfollowing',
+         'watchlist':false,
+       'twentyFour_hour':'4900,4810,4805,4958,5010,5012,5013,5020,5024,5098,5100,5234,4980,4789,4679,3000,4670,5500,5500,5500,5510,5512,5514,5516',
+        'prevD_up':'616',
+        'prevPD_up':'740',
+      },
+      {
+        'name':'Kunal',
+        'Title':'Prof',
+        'img':"/assests/kunal.jpg",
+        'upvote':'4600',
+        'status':'notfollowing',
+        'watchlist':false,
+        'twentyFour_hour':'4600,4410,4505,4558,4510,4512,4513,4520,4524,4598,4500,4534,4580,4589,4579,4500,4570,4500,4500,4500,4510,4512,4514,4516',
+        'prevD_up':'-84',
+        'prevPD_up':'720',
+      },
+      {
+        'name':'Naina',
+        'Title':'Ms',
+        'img':'/assests/naina.jpg',
+        'upvote':'2500',
+        'status':'following',
+        'watchlist':true,
+        'twentyFour_hour':'2500,2810,2805,2958,2010,2012,2013,2120,2054,2058,2100,2234,2980,2789,2679,3000,3670,3500,3500,3500,3510,3512,3514,3516',
+        'prevD_up':'1216',
+        'prevPD_up':'50',
+      },
+      {
+        'name':'Ishita',
+        'Title':'Ms',
+        'img':'/assests/Ishita.jpg',
+        'upvote':'1589',
+        'status':'notfollowing',
+        'watchlist':false,
+        'twentyFour_hour':'1589,1560,1505,1958,1910,1912,2013,2020,2024,2098,2100,2234,2980,2789,2679,2000,2670,2200,2500,2500,2510,2512,2514,2516',
+        'prevD_up':'1016',
+        'prevPD_up':'2010',
+      }
+    ]
+    const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
+     useEffect(()=>{setuserDetail(sorted_values)},[])
+       
+       const increment=()=>{
+        setcurr_leaderboard_page(prev=>Math.min(prev+1,end_leaderboard_page));
+       }
+    
+       const decrement=()=>{
+        setcurr_leaderboard_page(prev=>Math.max(prev-1,0));
+       }
     return(
         <>
         <div className="flex flex-col mt-10 ml-10 w-300 gap-y-5">
@@ -65,14 +177,195 @@ function Connectionspage(){
               <div className="flex w-full h-10 rounded-lg  bg-[#F9F9FA] font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>
                 <div className="flex w-full h-full mt-2 ml-3 text-gray-400 gap-x-40">
                      <h1>Name</h1>
-                     <h1 className="ml-35">Upvote</h1>
+                     <h1 className="ml-35">Upvotes</h1>
                      <h1>Status</h1>
                      <h1>Change %</h1>
                      <h1>Last(24H)</h1>
                 </div>
-              
-              </div>
+            </div>
+              <div className="flex flex-col w-full h-full ">
+           <div className="flex flex-col  ">{
+           userDetail.slice(curr_leaderboard_page*4,curr_leaderboard_page*4+4)
+           .map((values,idx)=>(
+            <div className="w-screen ">
+          <div className="flex w-350 h-20    ">
+           <div className="flex gap-x-2 w-40 mt-7">
+           <img className="rounded-[50%] h-12 w-12" src={values.img} alt="" />
+           <div className=" flex font-extrabold mt-3 text-md gap-x-2" style={{fontFamily:'Times New Roman,Serif'}}>
+            <div className="flex ">
+            <h1 className="">{values.Title[0]}</h1>
+            <h1 className={`flex ${values.upvote>=5000?'text-[#FB3766]':values.upvote>=2000 && values.upvote<5000?'text-[#5235E8]':values.upvote>=500 && values.upvote<2000?'text-[#DAF727]':'text-black'}`}>{values.Title.slice(1)}</h1>
+            </div>
+           <h1>{values.name}</h1>
+           </div>
+           </div>
+          
+           <div className="flex w-20  ml-47   text-sm mt-9">
+            <h1 className="flex ml-2 text-[#42424D] ">{values.upvote}</h1>
+           </div>
+           <div className="w-25 ml-35 mt-6 ">
+             {values.status === 'notfollowing' && (
+             <div className=" flex mt-2 cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " style={{fontFamily:'Times New Roman,Serif'}}>
+              <h3 className="font-extrabold flex  text-white">Follow</h3>  
+             </div>
+          )}
+           {values.status === 'following' && (
+            <div className="ml-2 mt-2">
 
+              <h1 className="font-extrabold text-[#5235E8]" style={{fontFamily:'Times New Roman,Serif'}}>Following</h1>
+            </div>
+           )}
+           </div>
+           <div className="mt-8 w-30 ml-27">
+            {(()=>{
+              const ans=((values.prevD_up - values.prevPD_up)/values.prevPD_up)*100;
+       if(ans >0 ) return( 
+       <div className="flex gap-x-2">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <g transform="translate(10, 20)">
+            <polygon points="-5,0 3,-10 10,0" fill="#11CF8B" strokeLinejoin="round"/>
+          </g>
+        </svg> 
+        <div className="w-5">
+     <h1 className="font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{Number((((values.prevD_up-values.prevPD_up)/Math.abs(values.prevPD_up))).toFixed(1))}%</h1>
+        </div>
+       
+        </div>
+              
+           )
+           else if(ans<0) return (
+           <div className="flex gap-x-2">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+          <g transform="translate(10, 20)">
+            <polygon points="-5,-10 3,0 10,-10" fill="#FB3766" stroke="#FB3766" strokeWidth="0" strokeLinejoin="round" />
+          </g>
+        </svg>
+         <div className="w-1/7">
+        <h1 className="font-extrabold" style={{fontFamily:'Times New Roman , Serif'}}>{Number((((values.prevD_up-values.prevPD_up)/Math.abs(values.prevPD_up))).toFixed(1))}%</h1>
+        </div>
+        </div>)
+            })
+            ()}
+           </div>
+         
+           <div className="w-30 ml-15">
+              {(()=>{
+                 asign_coordinates(values.twentyFour_hour);
+                 const ans=((values.prevD_up - values.prevPD_up)/values.prevPD_up)*100;
+                 if(ans > 0) return (
+                   <div className="">
+                   <svg width="220" height="220" viewBox="0 0 200 200"  >
+         <defs>
+            <linearGradient id="fade-purple" x1="0%" y1="0%" x2="0%" y2="100%"> 
+             
+              <stop offset="6%" stop-color="#BCFBFF" stop-opacity="40%" />
+            
+                <stop offset="100%" stop-color="#BCFBFF" stop-opacity="0" />        
+                  </linearGradient>
+          </defs>
+       <polyline points={changed_coordinate} stroke="#11CF8B" fill="none" stroke-width="1"/>
+      <polyline points={changed_coordinate}  fill="url(#fade-purple)"  />
+
+  
+       </svg>
+                </div>
+                 )
+                else return (
+                  <div className="">
+                   <svg width="220" height="220" viewBox="0 0 200 200"  >
+         <defs>
+            <linearGradient id="fade-purple" x1="0%" y1="0%" x2="0%" y2="100%"> 
+             
+              <stop offset="50%" stop-color="#FED7E0" stop-opacity="40%" />
+            
+                <stop offset="100%" stop-color="#FCE2ED" stop-opacity="0" />        
+                  </linearGradient>
+          </defs>
+       <polyline points={changed_coordinate} stroke="#FB3766" fill="none" stroke-width="1"/>
+      <polyline points={changed_coordinate}  fill="url(#fade-purple)"  />
+
+  
+       </svg>
+                </div>
+                )
+              })()}
+           </div>
+           <div className="w-1/7 ml-15 mt-8">
+            {values.watchlist === true && (
+                <div className="flex cursor-pointer" >
+                  <svg className="mt-1  w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+     <path stroke="none" fill="#5235E8" stroke-width="1" d="M11.083 5.104c.35-.8 1.485-.8 1.834 0l1.752 4.022a1 1 0 0 0 .84.597l4.463.342c.9.069 1.255 1.2.556 1.771l-3.33 2.723a1 1 0 0 0-.337 1.016l1.03 4.119c.214.858-.71 1.552-1.474 1.106l-3.913-2.281a1 1 0 0 0-1.008 0L7.583 20.8c-.764.446-1.688-.248-1.474-1.106l1.03-4.119A1 1 0 0 0 6.8 14.56l-3.33-2.723c-.698-.571-.342-1.702.557-1.771l4.462-.342a1 1 0 0 0 .84-.597l1.753-4.022Z"/>
+       </svg>
+       </div>
+            )}
+            {values.watchlist === false && (
+              <div className="flex cursor-pointer" >
+                  <svg className="mt-1  w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+     <path stroke="#5235E8" fill="none" stroke-width="1" d="M11.083 5.104c.35-.8 1.485-.8 1.834 0l1.752 4.022a1 1 0 0 0 .84.597l4.463.342c.9.069 1.255 1.2.556 1.771l-3.33 2.723a1 1 0 0 0-.337 1.016l1.03 4.119c.214.858-.71 1.552-1.474 1.106l-3.913-2.281a1 1 0 0 0-1.008 0L7.583 20.8c-.764.446-1.688-.248-1.474-1.106l1.03-4.119A1 1 0 0 0 6.8 14.56l-3.33-2.723c-.698-.571-.342-1.702.557-1.771l4.462-.342a1 1 0 0 0 .84-.597l1.753-4.022Z"/>
+       </svg>
+       </div>
+            )}
+           </div>
+          </div>
+          </div>
+        ))
+        }
+           </div>
+        <div className="flex mt-3 justify-center">
+          <div className="cursor-pointer w-8 h-7 rounded-lg border border-gray-300" onClick={decrement}>
+            <svg
+                         xmlns="http://www.w3.org/2000/svg"
+                         width="24" height="24"
+                         viewBox="-10 0 24 24"
+                        fill="none"
+                         stroke="black"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                          stroke-linejoin="round"
+>
+  <g transform="translate(-10, 0)">
+    <polyline points="18 8 10 14 18 20"/>
+  </g>
+</svg>
+          </div>
+          {Math.abs(curr_leaderboard_page-end_leaderboard_page)>2 && (
+            <div className="flex gap-x-5">
+              <div className="cursor-pointer ml-5  pointer w-8 h-7 bg-black text-white rounded-lg ">
+                <h1 className="px-3" onClick={(e)=>setcurr_leaderboard_page()}>{curr_leaderboard_page+1}</h1></div>
+                <h1 className="cursor-pointer text-gray-400" onClick={(e)=>setcurr_leaderboard_page(prev=>prev+1)}>{curr_leaderboard_page+2}</h1>
+                <h1 className=" text-gray-400">...</h1>
+                <h1 className="cursor-pointer text-gray-400">{end_leaderboard_page+1}</h1>
+            </div>
+          )}
+          {Math.abs(curr_leaderboard_page-end_leaderboard_page)<=2 && (
+             <div className="flex gap-x-5 ">
+              <h1 className="ml-5 text-gray-400">...</h1>
+             <div className="cursor-pointer pointer w-8 h-7 bg-black text-white rounded-lg ">
+               <h1 className="px-3" onClick={(e)=>setcurr_leaderboard_page()}>{end_leaderboard_page-2}</h1></div>
+               <h1 className="cursor-pointer text-gray-400" onClick={(e)=>setcurr_leaderboard_page(prev=>prev+1)}>{curr_leaderboard_page+2}</h1>
+               
+               <h1 className="cursor-pointer text-gray-400">{end_leaderboard_page+1}</h1>
+           </div>
+          )}
+          <div className="cursor-pointer w-8 h-7 ml-5 rounded-lg border border-gray-300" onClick={increment}>
+            <svg
+                         xmlns="http://www.w3.org/2000/svg"
+                         width="24" height="24"
+                         viewBox="-10 0 24 24"
+                        fill="none"
+                         stroke="black"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                          stroke-linejoin="round"
+>
+  <g transform="translate(-10, 0)">
+    <polyline points="10 8 18 14 10 20"/>
+  </g>
+</svg>
+          </div>
+        </div>
+      </div>
+             
             </div>
         </div>
         </>

@@ -21,7 +21,7 @@
     <circle id="tracker" r="6" fill="red
     " cx="0" cy="0" visibility="hidden"/>
     </svg> -->
-    <!-- 1568 1598 1670 1616 1702 1780 1780 1780 1810 1810 1900 1610 1580 1560 1500 1490 1512 1534 1620 1623 1623 1624 1624 1622-->
+    <!-- -->
     <svg width="200" height="200" viewBox="0 0 200 200"  >
        <defs>
             <linearGradient id="fade-purple" x1="0%" y1="0%" x2="0%" y2="100%"> 
@@ -31,7 +31,7 @@
                 <stop offset="100%" stop-color="#BCFBFF" stop-opacity="0" />        
                   </linearGradient>
           </defs>
-    <polyline points="50 55 52 53 54 49 56 52 58 48 60 44 62 44 64 43 66 43 68 38 70 57 72 57 74 55 76 54 78 50 80 49 82 51 84 53 86 58 88 59 90 59 92 60 94 60 96 58" stroke="#11CF8B" fill="none" stroke-width="1"/>
+    <polyline points="50 55 52 20 54 49 56 52 58 48 60 44 62 44 64 43 66 43 68 38 70 57 72 57 74 55 76 54 78 50 80 49 82 51 84 53 86 58 88 59 90 59 92 60 94 60 96 58" stroke="#11CF8B" fill="none" stroke-width="1"/>
       <polyline points="50 55 52 53 54 49 56 52 58 48 60 44 62 44 64 43 66 43 68 38 70 57 72 57 74 55 76 54 78 50 80 49 82 51 84 53 86 58 88 59 90 59 92 60 94 60 96 58"  fill="url(#fade-purple)"  />
 
   
@@ -42,6 +42,16 @@
     const tracker = document.getElementById('tracker');
   
     // Same points used to draw the polyline
+    const point=[1568,1598,1670,1616,1702,1780,1780,1780,1810,1810,1900,1610,1580,1560,1500,1490,1512,1534,1620,1623,1623,1624,1624,1622]
+    let cordinates="50 55 52 55 54 55 56 55 58 55 60 55 62 55 64 55 66 55 68 55 70 55 72 55 74 55 76 55 78 55 80 55 82 55 82 55 84 55 86 55 88 55 90 55 92 55 94 55 ";
+    let cordinateArr=cordinates.split(" ").map(Number);
+   
+    for(let i=1;i<point.length;i++){
+    const ans= Math.floor(((point[i]-point[i-1])/point[i-1])*100);
+    cordinateArr[i*2-1]+=ans;
+    }
+    cordinates=cordinateArr.join(" ");
+     console.log(cordinates);
     const points = [
       { x: 40, y: 100 },
       { x: 100, y: 200 },
