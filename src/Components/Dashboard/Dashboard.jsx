@@ -3,6 +3,7 @@ import Dashboard_left from './Dashboard_left'
 import Dashboardpage from "./Dashboardpage";
 import { useSelector } from "react-redux";
 import Connectionspage from "../Connections/Connectionspage.jsx";
+import ConnectionPortfolio from "../Connections/ConnectionPortfolio.jsx";
 import Announcementspage from "./Announcementspage";
 import Portfoliopage from "./Portfoliopage";
 import Profile from "../Settings/Profile.jsx";
@@ -23,7 +24,7 @@ function Dashboard(){
     {curractive['isActive'] === "Chat" &&<Chatpage/>}
     {curractive['isActive'] === "Profile" && <Profile/>}
     {curractive['isActive'] === "Setting" &&<Settings/>}
-
+    {curractive['isActive'] === "ConnectionPortfolio" && <ConnectionPortfolio/>}
     </div>
     
     </div>

@@ -1,7 +1,12 @@
 import React, { useSyncExternalStore } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import ConnectionPortfolio from "./ConnectionPortfolio";
+import { ChangeStatus, ChangeTitle ,ChangeName} from "../../Features/DashboardSlice";
 function Connectionspage(){
+  const Dispatch=useDispatch();
   const [userDetail,setuserDetail]=useState([]);
    const [curr_leaderboard_page,setcurr_leaderboard_page]=useState(0);
     const [end_leaderboard_page,setend_leaderboard_page]=useState(10);
@@ -113,6 +118,13 @@ function Connectionspage(){
        const decrement=()=>{
         setcurr_leaderboard_page(prev=>Math.max(prev-1,0));
        }
+       const changeFeature=()=>{
+           Dispatch(ChangeStatus("ConnectionPortfolio"))
+       }
+       const changeName=(User)=>{
+         Dispatch(ChangeName(User.name))
+         Dispatch(ChangeTitle(User.Title));
+       }
     return(
         <>
         <div className="flex flex-col mt-10 ml-10 w-300 gap-y-5">
@@ -189,9 +201,13 @@ function Connectionspage(){
            .map((values,idx)=>(
             <div className="w-screen ">
           <div className="flex w-350 h-20    ">
-           <div className="flex gap-x-2 w-40 mt-7">
+            <NavLink to="/connectionportfolio">
+            <div className="flex gap-x-2 w-40 mt-7">
            <img className="rounded-[50%] h-12 w-12" src={values.img} alt="" />
-           <div className=" flex font-extrabold mt-3 text-md gap-x-2" style={{fontFamily:'Times New Roman,Serif'}}>
+           <div className="  flex font-extrabold cursor-pointer mt-3 text-md gap-x-2 " onClick={()=>{
+            changeFeature();
+            changeName(values);
+           }} style={{fontFamily:'Times New Roman,Serif'}}>
             <div className="flex ">
             <h1 className="">{values.Title[0]}</h1>
             <h1 className={`flex ${values.upvote>=5000?'text-[#FB3766]':values.upvote>=2000 && values.upvote<5000?'text-[#5235E8]':values.upvote>=500 && values.upvote<2000?'text-[#DAF727]':'text-black'}`}>{values.Title.slice(1)}</h1>
@@ -199,6 +215,8 @@ function Connectionspage(){
            <h1>{values.name}</h1>
            </div>
            </div>
+            </NavLink>
+
           
            <div className="flex w-20  ml-47   text-sm mt-9">
             <h1 className="flex ml-2 text-[#42424D] ">{values.upvote}</h1>

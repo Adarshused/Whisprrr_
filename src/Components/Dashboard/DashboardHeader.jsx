@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import Profile from "../Settings/Profile.jsx";
 import Settings from "../Settings/Settings.jsx";
 import { ChangeStatus } from "../../Features/DashboardSlice";
@@ -20,11 +21,38 @@ function DashboardHeader(props){
 const changeFeature=(currFeature)=>{
 Dispatch(ChangeStatus(currFeature));
 }
+  const name=useSelector((state)=>state.CurrActive)
   return (
     <>
     <div className="fixed top-0 left-0 w-310 ml-67 flex py-4 border-b border-gray-300 gap-x-8"style={{fontFamily:'Times New Roman, Serif'}}>
       <div className="w-50">
-      <h1 className="font-extrabold text-2xl px-12 " >{heading}</h1>
+        
+          { heading === "ConnectionPortfolio" && (
+              <div className="flex ml-5 mt-2 ">
+                <div className="flex gap-x-2 ">
+                  <div className="flex gap-x-2">
+ <svg class="w-6 h-6 text-gray-800 cursor-pointer dark:text-white" onClick={()=>{
+  changeFeature("Connections");
+ }} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <path stroke="#9C9CAB" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/>
+               </svg>
+               <h1 className="text-[#9C9CAB] h-full">|</h1>
+                  </div>
+              <div className="flex">             
+                 <h1 className="font-extrabold text-lg   text-gray-400">Connections</h1>
+               <div className="  flex font-extrabold  text-lg gap-x-2 " style={{fontFamily:'Times New Roman,Serif'}}>
+            <div className="flex ">
+            <h1 className="">/{name.Title}</h1>
+            </div>
+           <h1>{name.Name}</h1>
+           </div>
+            </div>
+                </div>
+              </div>
+              
+            )}
+          
+   {heading !== "ConnectionPortfolio" && (<h1 className="font-extrabold text-2xl px-12 " >{heading}</h1>)}   
       </div>
     
      <div className="flex ml-160 gap-x-5">
