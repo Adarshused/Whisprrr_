@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import ConnectionPortfolio from "./ConnectionPortfolio";
-import { ChangeStatus, ChangeTitle ,ChangeName} from "../../Features/DashboardSlice";
+import { ChangeStatus, ChangeTitle ,ChangeName,ChangeVal} from "../../Features/DashboardSlice";
 function Connectionspage(){
   const Dispatch=useDispatch();
   const [userDetail,setuserDetail]=useState([]);
@@ -51,6 +51,12 @@ function Connectionspage(){
         'twentyFour_hour':'20000,20100,20150,20140,20200,20200,2050,20230,20230,20231,20232,20232,20310,20311,20290,20283,20312,20400,20450,21000,21010,21100,21150,20800',
         'prevD_up':'800',
         'prevPD_up':'2100',
+        'max_title':'Grand Master',
+        'max upvote':'20800',
+        'about':"I’m Dr. Monika Sharma, Dean of acadmics  at xyz University, and I’m honored to serve this vibrant community of scholars and innovators. My journey in higher education began with a Ph.D. in Molecular Biology from Evergreen Institute, where I discovered my passion for both groundbreaking research and nurturing young talent.Here, I strive to foster an environment where curiosity thrives.As Dean, I remain deeply committed to your success—celebrating your milestones, supporting you through challenges, and continuously enhancing our programs so that Zenith graduates leave fully prepared to make a difference in our ever-evolving world. I look forward to partnering with you on this exciting journey of discovery, growth, and impact.",
+        'address':'Chennai,Tamil Nadu',
+        'experience':'15 years',
+        'upv_twlmonths':[[50,  300,  800, 1200],[1500, 2000, 1800, 2500],[3000, 2700, 3200, 3500],[3800, 4200, 4000, 4500],[5000, 4800, 5300, 5500],[6000, 6200, 5800, 6500],[7000, 6800, 7200, 7500],[8200, 8400, 8000, 8800],[9000, 9200, 9600, 9800],[10500, 11000, 10800, 11500],[13000, 12500, 13500, 14000],[15000, 17000, 19000, 20000],]
       },
       {
         'name':'komal',
@@ -62,6 +68,12 @@ function Connectionspage(){
         'twentyFour_hour':'11000,11010,11010,11010,11200,12000,12300,12450,12345,12343,12342,12450,12360,12390,12400,12460,12467,12468,12500,12520,12554,12560,12567,12568',
         'prevD_up':'1568',
         'prevPD_up':'540',
+        'max_title':'Grand Master',
+        'max upvote':'12568',
+        'about':"I’m Dr. Komal Verma, Associate Professor of Computer Science at Zenith University, and I’m thrilled to guide the next generation of innovators. After earning my Ph.D. in Artificial Intelligence from Horizon Tech Institute, I joined Zenith’s faculty with a dual passion for cutting-edge research and hands-on mentorship. Over the past 12 years, I’ve led projects in machine learning, published in top conferences such as NeurIPS and ICML, and secured grants from both governmental and industry partners.In my classroom and lab, I emphasize experiential learning: whether developing real-world AI applications in our robotics lab or dissecting complex algorithms in interactive workshops, my goal is to make theory come alive. I maintain an open-door policy—encouraging students to drop by with questions, propose independent study projects, or simply brainstorm career paths. Outside teaching, I serve on the university’s Curriculum Committee, where I’ve helped integrate data ethics and interdisciplinary capstones into our core program.My research group welcomes curious minds at all levels: undergraduates eager to learn Python and TensorFlow, master’s students tackling novel NLP challenges, or Ph.D. candidates pushing the boundaries of explainable AI. Together, we strive not only to publish but to deploy solutions that address real societal needs—whether in healthcare diagnostics, sustainable agriculture, or accessibility technologies.I’m deeply committed to your growth—celebrating every coding breakthrough, guiding you through research milestones, and preparing you to thrive in industry or academia. Let’s explore, experiment, and excel together!",
+        'address':'Chennai,Tamil Nadu',
+        'experience':'12 years',
+        'upv_twlmonths':[[10,   200,   400,   600],[800,  1000,  1200,  1400],[1600, 1800,  2000,  2200],[2400, 2600,  2800,  3000],[3200, 3400,  3600,  3800],[4000, 4200,  4400,  4600],[4800, 5000,  5200,  5400],[5600, 5800,  6000,  6200],[6400, 6600,  6800,  7000],[7200, 7600,  8000,  8400],[8800, 9000,  9200,  9600],[9800, 10200, 10600, 11000],]
       },
       {
         'name':'Hithesh',
@@ -73,6 +85,12 @@ function Connectionspage(){
        'twentyFour_hour':'4900,4810,4805,4958,5010,5012,5013,5020,5024,5098,5100,5234,4980,4789,4679,3000,4670,5500,5500,5500,5510,5512,5514,5516',
         'prevD_up':'616',
         'prevPD_up':'740',
+        'max_title':'Master',
+        'max upvote':'5516',
+        'about':"I’m Dr. Hithesh Kumar, Dean of Student Welfare at Zenith University, and it is my privilege to champion your well-being, growth, and campus experience. After earning my M.Ed. in Student Development from Horizon University and completing my doctoral research on holistic student support, I joined Zenith’s team with a passion for creating a vibrant, inclusive community where every individual can thrive.In my role, I oversee programs that foster mental health, peer mentoring, and leadership development. I’ve launched our Wellness Wednesdays series—bringing in counselors, mindfulness practitioners, and stress-management workshops—and expanded the peer-advisory network so every student has a trained colleague to turn to. Working closely with the Office of Accessibility, I helped implement flexible learning accommodations and created the first “Quiet Zones” study lounges on campus.Beyond support services, I collaborate with student organizations to amplify your voice in university governance. Whether convening our quarterly Student Welfare Council meetings, coordinating service-learning projects in the local community, or organizing social-justice speaker panels, my mission is to ensure that your ideas shape our policies and your successes define our progress.As Dean, I remain committed to listening, advocating, and innovating—celebrating your achievements, addressing your challenges, and continually enhancing our resources so that every Zenith student feels supported, inspired, and empowered. I look forward to working together to build a campus culture where well-being and opportunity go hand in hand.",
+        'address':'Delhi,New Delhi',
+        'experience':'14 years',
+        'upv_twlmonths':[[0,   50,   100,  200],[300, 400,  500,  600],[700, 800,  900,  1000],[1100, 1200, 1300, 1400],[1500, 1600, 1700, 1800],[1900, 2000, 2100, 2200],[2300, 2400, 2500, 2600],[2700, 2800, 2900, 3000],[3100, 3200, 3300, 3400],[3500, 3600, 3700, 3800],[3900, 4000, 4100, 4200],[4300, 4500, 4700, 4900]]
       },
       {
         'name':'Kunal',
@@ -84,6 +102,12 @@ function Connectionspage(){
         'twentyFour_hour':'4600,4410,4505,4558,4510,4512,4513,4520,4524,4598,4500,4534,4580,4589,4579,4500,4570,4500,4500,4500,4510,4512,4514,4516',
         'prevD_up':'-84',
         'prevPD_up':'720',
+         'max_title':'Master',
+        'max upvote':'4516',
+        'about':"I’m Dr. Rohan Kapoor, Assistant Professor of Computer Science at Zenith University, and I’m passionate about turning complex theory into hands-on innovation. After completing my Ph.D. in Distributed Systems at Nova Tech University, I joined Zenith to bridge the gap between cutting-edge research and real-world applications. Over the past eight years, I’ve published extensively on scalable microservices architectures and fault-tolerant cloud platforms, and I’ve collaborated with industry leaders to deploy high-availability solutions in production environments.In the classroom and lab, I emphasize project-based learning: students build their own containerized applications, simulate failure scenarios, and implement recovery protocols on a mini-cloud I maintain in our data center. My open-door policy encourages undergraduates to co-author papers, master’s candidates to lead code sprints, and Ph.D. scholars to explore novel consensus algorithms. Outside of research, I serve on the ACM SIGOPS education board, where I help shape best practices for teaching operating-systems concepts worldwide.My goal is to equip you not just with knowledge, but with the confidence to architect resilient systems—whether you’re building the next global video-streaming service or designing mission-critical infrastructure. Let’s collaborate, experiment, and push the boundaries of what’s possible in distributed computing together.",
+        'address':'Jalandhar,Punjab',
+        'experience':'8 years',
+        'upv_twlmonths':[[0,    150,   50,   400],[800,  300,   1200, 600],[700,  1600,  900,  1400],[1100, 500,   1800, 1300],[1700, 200,   1500, 1900],[900,  2100,  1600, 2300],[2400, 1800,  2600, 1000],[2800, 3200,  2400, 3400],[3000, 3600,  3100, 3800],[3500, 3300,  4000, 3600],[4200, 3900,  4400, 4100],[3800, 4300,  3500, 4600],]
       },
       {
         'name':'Naina',
@@ -95,6 +119,13 @@ function Connectionspage(){
         'twentyFour_hour':'2500,2810,2805,2958,2010,2012,2013,2120,2054,2058,2100,2234,2980,2789,2679,3000,3670,3500,3500,3500,3510,3512,3514,3516',
         'prevD_up':'1216',
         'prevPD_up':'50',
+        'max_title':'Master',
+        'max upvote':'3516',
+        'about':"I’m Ms. Naina, Lecturer in Computer Science at Zenith University, and I’m delighted to join you on your journey into computing. I earned my M.Tech in Software Engineering from Horizon Institute of Technology, where I discovered my passion for teaching complex concepts in a clear, hands-on way. Over the past five years, I’ve designed and delivered courses in Data Structures, Algorithms, and Object-Oriented Design—always aiming to bridge theory with real-world projects.In my classroom, you’ll find a blend of interactive lectures, collaborative coding labs, and peer-reviewed assignments. I believe students learn best by doing, so I integrate mini–hackathons and live debugging sessions into every module. My open-door policy means you’re always welcome to stop by my office for extra guidance on a tricky algorithm, feedback on your code, or career advice about internships in software development and QA engineering.Beyond teaching, I’m active in our department’s curriculum committee, where I’ve helped introduce a new module on DevOps practices and cloud deployment. I also advise our student coding club, coordinating workshops on version control, test-driven development, and accessibility testing. My goal is to equip you not only with technical skills but with the confidence to tackle any challenge—whether you’re writing your first linked-list implementation or architecting a full-scale web application. Let’s learn, build, and innovate together!",
+        'address':'Jodhpur,Rajesthan',
+        'experience':'3 years',
+        'upv_twlmonths':[[0,   150,   50,   300],[600, 400,   800,  500],[700, 1000,  900,  1200],[1100, 600,  1400, 1000],[1300, 800,  1600, 1500],[1700, 900,  1800, 1400],[2000, 1200, 2100, 1600],[1900, 2300, 1700, 2500],[2200, 1300, 2400, 2000],[1800, 2100, 1900, 2300],[2000, 1500, 2500, 1700],[2300, 1900, 2400, 2100]]
+     
       },
       {
         'name':'Ishita',
@@ -106,6 +137,13 @@ function Connectionspage(){
         'twentyFour_hour':'1589,1560,1505,1958,1910,1912,2013,2020,2024,2098,2100,2234,2980,2789,2679,2000,2670,2200,2500,2500,2510,2512,2514,2516',
         'prevD_up':'1016',
         'prevPD_up':'2010',
+        'max_title':'Senior Faculty',
+        'max upvote':'2516',
+        'about':"I’m Ms. Ishita Rao, Assistant Professor of Mechanical Engineering at Zenith University, and I’m thrilled to guide you through the principles and practice of modern mechanics. I earned my M.Tech in Thermal Sciences from Meridian Institute of Technology, where I developed a passion for energy systems and sustainable design. Prior to joining Zenith, I spent three years at the National Energy Lab, collaborating on heat‐exchanger innovations and publishing in journals such as the International Journal of Heat and Mass Transfer.In my courses—from Thermodynamics and Fluid Mechanics to Heat Transfer and CAD Modeling—I emphasize hands‐on learning. You’ll collaborate on lab experiments building working turbines, run CFD simulations in our high-performance cluster, and prototype components on our 3D printers. My goal is to make complex concepts tangible: we’ll measure real temperature gradients, visualize flow patterns, and iterate designs until they meet efficiency targets.I maintain an open-door policy—whether you need help debugging your SolidWorks assembly, feedback on a research proposal, or career advice for internships in automotive or aerospace industries, my office is always open. Beyond teaching, I serve on the department’s Green Energy Committee, where I’ve helped launch our Solar Car Club and coordinate student projects in renewable energy.I’m committed to your growth as an engineer and a critical thinker—celebrating your problem-solving breakthroughs, guiding you through capstone projects, and preparing you to innovate in industry or research. Let’s explore, design, and engineer sustainable solutions together!",
+        'address':'Thane,Mumbai',
+        'experience':'3 years',
+        'upv_twlmonths':[  [0,    100,   20,   250],[400,  50,    350,  150],[300,  450,   200,  500],[600,  250,   700,  350],[500,  800,   450,  900],[1000, 600,   1100, 550],[650,  1200,  700,  1300],[1300, 900,   1400, 850],[750,  1500,  800,  1580],[900,  100,   1150, 1250],[1350, 750,   1450, 950],[1589, 300,   1200, 1400]]
+
       }
     ]
     const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
@@ -124,6 +162,7 @@ function Connectionspage(){
        const changeName=(User)=>{
          Dispatch(ChangeName(User.name))
          Dispatch(ChangeTitle(User.Title));
+         Dispatch(ChangeVal(User));
        }
     return(
         <>
@@ -291,8 +330,8 @@ function Connectionspage(){
                 else return (
                   <div className="">
                    <svg width="220" height="220" viewBox="0 0 200 200"  >
-         <defs>
-            <linearGradient id="fade-purple" x1="0%" y1="0%" x2="0%" y2="100%"> 
+            <defs>
+            <linearGradient id="fade-purple-1" x1="0%" y1="0%" x2="0%" y2="100%"> 
              
               <stop offset="50%" stop-color="#FED7E0" stop-opacity="40%" />
             
@@ -300,7 +339,7 @@ function Connectionspage(){
                   </linearGradient>
           </defs>
        <polyline points={changed_coordinate} stroke="#FB3766" fill="none" stroke-width="1"/>
-      <polyline points={changed_coordinate}  fill="url(#fade-purple)"  />
+      <polyline points={changed_coordinate}  fill="url(#fade-purple-1)"  />
 
   
        </svg>

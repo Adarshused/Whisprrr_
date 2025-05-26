@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState={
-    CurrActive:{"isActive":"Dashboard","SettingisActive":"Profile","Name":"none","Title":"none"}
+    CurrActive:{"isActive":"Dashboard","SettingisActive":"Profile","Name":"none","Title":"none","value":{}}
 }
 
 export const DashboardSlice=createSlice({
@@ -20,11 +20,14 @@ export const DashboardSlice=createSlice({
         },
         ChangeTitle:(state,action)=>{
             state.CurrActive['Title']=action.payload;
+        },
+        ChangeVal:(state,action)=>{
+            state.CurrActive['value']=action.payload;
         }
     
     }
 })
 
-export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle}=DashboardSlice.actions
+export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle,ChangeVal}=DashboardSlice.actions
 
 export default DashboardSlice.reducer
