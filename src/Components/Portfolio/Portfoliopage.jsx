@@ -1,0 +1,339 @@
+import React from "react";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useMemo } from "react";
+import { useRef } from "react";
+function Portfoliopage(){
+        const y_cordinate=[],x_cordinate=[];
+        
+        let data=""
+        const [percInc,setpercInc]=useState("0");
+        const Value=useSelector((state)=>state.CurrActive);
+         useEffect(()=>{
+              setpercInc(Number((((Value['USerValue'].prevD_up-Value['USerValue'].prevPD_up)/Math.abs(Value['USerValue'].prevPD_up))).toFixed(1)))
+             },[])
+             const y_cor=new Array(230,200,150,100,50);
+                   const cordinate=Value['USerValue'].upv_twlmonths;
+                   const len=cordinate.length;
+                   let val=0;
+                    for(let i=0;i<len;i++){
+                     let x=[]
+                     for(let j=0;j<6;j++){
+                          x_cordinate.push(val+(j+1)*16.66);
+                          if(cordinate[i][j]<100){
+                              let base=0,ceil=100;
+                              let delta=cordinate[i][j]-base;
+                              let range=ceil-base;
+                              let per=delta/range;
+                              let inter=250-y_cor[0];
+                              let y=250-(inter*per);
+                              y_cordinate.push(y);
+                          }
+                          else if(cordinate[i][j]>=100 && cordinate[i][j]<500){
+                              let base=100,ceil=500;
+                              let delta=cordinate[i][j]-base;
+                              let range=ceil-base;
+                              let per=delta/range;
+                              let inter=y_cor[0]-y_cor[1];
+                              let y=y_cor[0]-(inter*per);
+                              y_cordinate.push(y);
+                          }
+                          else if(cordinate[i][j]>=500 && cordinate[i][j]<2500){
+                           let base=500,ceil=2500;
+                              let delta=cordinate[i][j]-base;
+                              let range=ceil-base;
+                              let per=delta/range;
+                              let inter=y_cor[1]-y_cor[2];
+                              let y=y_cor[1]-(inter*per);
+                              y_cordinate.push(y);
+                          }
+                          else if(cordinate[i][j]>=2500 && cordinate[i][j]<5000){
+                           let base=2500,ceil=5000;
+                              let delta=cordinate[i][j]-base;
+                              let range=ceil-base;
+                              let per=delta/range;
+                              let inter=y_cor[2]-y_cor[3];
+                              let y=y_cor[2]-(inter*per);
+                              y_cordinate.push(y);
+                          }
+                          else if(cordinate[i][j]>=5000 && cordinate[i][j]<10000){
+                           let base=5000,ceil=10000;
+                              let delta=cordinate[i][j]-base;
+                              let range=ceil-base;
+                              let per=delta/range;
+                              let inter=y_cor[3]-y_cor[4];
+                              let y=y_cor[3]-(inter*per);
+                              y_cordinate.push(y);
+                          }
+                          else if(cordinate[i][j]>=10000 && cordinate[i][j]<=20000){
+                             let base=10000,ceil=20000;
+                              let delta=cordinate[i][j]-base;
+                              let range=ceil-base;
+                              let per=delta/range;
+                              let inter=y_cor[4]-0;
+                              let y=y_cor[4]-(inter*per);
+                              y_cordinate.push(y);
+                          }
+                     }
+                     val+=100;
+                    }
+                    let pts="";
+                   //Value['value'].upv_twlmonths= [[50,  300,  800, 1200],[1500, 2000, 1800, 2500],[3000, 2700, 3200, 3500],[3800, 4200, 4000, 4500],[5000, 4800, 5300, 5500],[6000, 6200, 5800, 6500],[7000, 6800, 7200, 7500],[8200, 8400, 8000, 8800],[9000, 9200, 9600, 9800],[10500, 11000, 10800, 11500],[13000, 12500, 13500, 14000],[15000, 17000, 19000, 20000]]
+                    for (let i = 0; i < x_cordinate.length; i++) {
+                     pts += `${x_cordinate[i]},${y_cordinate[i]} `;
+                   }
+                   data=pts.trim();
+                   console.log(x_cordinate)
+                   console.log(y_cordinate)
+               const last12Months = useMemo(() => {
+                 const result = [];
+                 const today  = new Date();
+             
+                 for (let i = 0; i < 12; i++) {
+                   const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+                   result.push(d.toLocaleString("default", { month: "short" }));
+                 }
+             
+                 return result.reverse();
+             
+               }, []);
+              
+               // handling the mouseeven for the point
+              const svgRef = useRef(null);
+               const trackerRef = useRef(null);
+             
+               // Convert flat values to coordinate objects
+               const x_and_y =x_cordinate.map((x, i) => ({ x, y: y_cordinate[i] }));
+               let text=0
+               useEffect(() => {
+                 const svg = svgRef.current;
+                 const tracker = trackerRef.current;
+                 if (!svg || !tracker) return;
+                
+                 const handleMouseMove = (e) => {
+                   const pt = svg.createSVGPoint();
+                   pt.x = e.clientX;
+                   pt.y = e.clientY;
+             
+                   const cursor = pt.matrixTransform(svg.getScreenCTM().inverse());
+                   const x = cursor.x;
+             
+                   let closest = x_and_y[0];
+                   for (let p of x_and_y) {
+                     if (Math.abs(p.x - x) < Math.abs(closest.x - x)) {
+                       closest = p;
+                       text=Value['USerValue'].upv_twlmonths[p];
+                      
+                     }
+                   }
+             
+                   trackerRef.current.setAttribute("transform", `translate(${closest.x}, ${closest.y})`);
+                   trackerRef.current.setAttribute("visibility", "visible");
+             
+                 };
+             
+                 const handleMouseLeave = () => {
+                   trackerRef.current.setAttribute("visibility", "hidden");
+                 };
+             
+                 svg.addEventListener('mousemove', handleMouseMove);
+                 svg.addEventListener('mouseleave', handleMouseLeave);
+             
+                 return () => {
+                   svg.removeEventListener('mousemove', handleMouseMove);
+                   svg.removeEventListener('mouseleave', handleMouseLeave);
+                 };
+               }, [x_and_y]);
+    return (
+        <>
+        <div className="flex flex-col mt-6 ml-9">
+            <div className="flex flex-col">
+          <div className="flex">
+            <div className="flex flex-col" style={{fontFamily:'Times New Roman,Serif'}}>
+        <div className="flex gap-x-2">
+             <svg width="20" height="20" viewBox="0 0 20 20">
+           
+           <rect x="3" y="11" width="3" height="9" ry="2" fill="#5235E8"/>
+           <rect x="8" y="8" width="3" height="12" ry="2" fill="#DAF727"/>
+           <rect x="13" y="3" width="3" height="17" ry="2" fill="#D6D1FA"/>
+        </svg>
+         <h1 className="font-extrabold text-gray-400" >PORTFOLIO VALUE</h1>
+        </div>
+         <div className="flex">
+            <div className="w-17">
+<h1 className="font-extrabold text-3xl">{Value['USerValue'].upvote}</h1>
+
+            </div>
+  <div className="mt-2">
+{percInc>0 && (<svg className="ml-3 "width="70" height="20" viewBox="0 0 70 30"
+                  xmlns="http://www.w3.org/2000/svg">
+                     <rect
+                 x="0" y="0"
+                width="70" height="30"
+                rx="15"
+                fill="#ECFDF7"
+                stroke="#DAFBEF"
+                />
+                 
+                <text style={{fontFamily:'Times New Roman,Serif'}}
+                x="43"               
+                y="15"               
+                fill="#11CF8B"      
+                font-size="14"
+                font-family="sans-serif"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                >
+            {percInc}%
+              </text>
+                <g transform="translate(13, 20)">
+               <polygon
+               points="-5,0 3,-10 10,0"
+               fill="#11CF8B"       
+               />
+              </g>
+             </svg>)}
+              {percInc<0 && (
+                <svg className="ml-3 "width="70" height="30" viewBox="0 0 70 30"
+                  xmlns="http://www.w3.org/2000/svg">
+                <rect
+                 x="0" y="0"
+                width="70" height="30"
+                rx="15"
+                fill="#FFEBF0"
+                stroke="#FED7E0"
+                />
+                <text style={{fontFamily:'Times New Roman,Serif'}}
+                x="43"               
+                y="15"               
+                fill="#FB3766"      
+                font-size="14"
+                font-family="sans-serif"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                >
+            {percInc}%
+              </text>
+                <g transform="translate(13, 10)">
+               <polygon
+               points="-5,0 3,10 10,0"
+               fill="#FB3766"       
+               />
+              </g>
+             </svg>
+              )}
+                  </div>
+         </div>
+        
+            </div>
+           
+          </div>
+           <div className="flex">
+            <div className="ml-7 text-gray-500">
+                <h1 className="mt-1">20k</h1>
+                <h1 className="mt-3">10k</h1>
+                <h1 className="mt-6">5k</h1>
+                <h1 className="mt-6">2.5k</h1>
+                <h1 className="mt-7">500</h1>
+                <h1 className="mt-1">100</h1>
+              </div>
+              <svg ref={svgRef} width="1100" height="250" viewBox="0 0 1100 250" style={{ pointerEvents: 'all' }}>
+               <defs>
+    <linearGradient
+      id="fade-purple"
+      gradientUnits="userSpaceOnUse"
+      x1="0" y1="0"
+      x2="0" y2="250"
+    >
+      <stop offset="0%"   stopColor="#5235E8" stopOpacity="0.5" />
+      <stop offset="100%" stopColor="#5235E8" stopOpacity="0"   />
+    </linearGradient>
+  </defs>
+                 {/* <line x1="100" y1="0" x2="100" y2="250" stroke="#E3E3E8"></line>
+                <line x1="200" y1="0" x2="200" y2="250" stroke="#E3E3E8"></line>
+                <line x1="300" y1="0" x2="300" y2="250" stroke="#E3E3E8"></line>
+                <line x1="400" y1="0" x2="400" y2="250" stroke="#E3E3E8"></line>
+                <line x1="500" y1="0" x2="500" y2="250" stroke="#E3E3E8"></line>
+                <line x1="600" y1="0" x2="600" y2="250" stroke="#E3E3E8"></line>
+                <line x1="700" y1="0" x2="700" y2="250" stroke="#E3E3E8"></line>
+                <line x1="800" y1="0" x2="800" y2="250" stroke="#E3E3E8"></line>
+                <line x1="900" y1="0" x2="900" y2="250" stroke="#E3E3E8"></line>
+                <line x1="1000" y1="0" x2="1000" y2="250" stroke="#E3E3E8"></line>
+                <line x1="1100" y1="0" x2="1100" y2="250" stroke="#E3E3E8"></line>
+                <line x1="1200" y1="0" x2="1200" y2="250" stroke="#E3E3E8"></line>
+                y axis label */}
+                {/* <line x1="0" y1="230" x2="1200" y2="230" stroke="#E3E3E8"></line>
+                <line x1="0" y1="200" x2="1200" y2="200" stroke="#E3E3E8"></line>
+                <line x1="0" y1="150" x2="1200" y2="150" stroke="#E3E3E8"></line>
+                <line x1="0" y1="100" x2="1200" y2="100" stroke="#E3E3E8"></line>
+                 <line x1="0" y1="50" x2="1200" y2="50" stroke="#E3E3E8"></line>  */}
+
+                 {/* data points */}
+                 
+                 <polyline points={data}
+                  fill="none"
+                  stroke="#5235E8"
+                  strokeWidth="2"
+                  ></polyline>
+                 <path
+    d={`
+      M ${x_cordinate[0]},${y_cordinate[0]}
+      ${x_cordinate.slice(1).map((x,i) => `L ${x},${y_cordinate[i+1]}`).join(" ")}
+      L ${x_cordinate[x_cordinate.length-1]},250   
+      L ${x_cordinate[0]},250
+      Z
+    `}
+    fill="url(#fade-purple)"
+  />
+  <defs>
+    <filter id="circleShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="gray" flood-opacity="0.5" />
+    </filter>
+  </defs>
+         <g width="1200" ref={trackerRef} visibility="hidden" filter="url(#circleShadow)">
+            <rect x="-50" y="-100" width="100" height="70" rx="4" ry="4" fill="black"/>
+         <text
+         x="0"
+         y="-80"
+         fill="gray"
+         font-family="Arial, sans-serif"
+         font-size="12"
+         text-anchor="middle"
+         alignment-baseline="middle"
+     >
+    Outer Rect
+  </text>
+         <rect x="-40" y="-65" width="80" height="25" rx="4" ry="4" fill="#2F2F37"/>
+
+            <text x="-35" y="-45" fill="#9C9CAB" >
+                Value {text}
+               </text>
+             <polygon
+               points="-5 -30, 0 -25, 5 -30"
+               fill="black"       
+               />
+              
+            <circle r="9" fill="white"  />
+            <circle r="3" fill="#5235E8" />
+</g>
+
+              </svg>
+              
+              
+             </div>
+             <div className="flex  ml-36 gap-x-16 text-gray-500">
+           {last12Months.map((value)=>(
+             <h1 className="">{value}</h1>
+           ))}
+          </div>
+          </div>
+          <div>
+
+          </div>
+        </div>
+        </>
+    )
+}
+
+export default Portfoliopage

@@ -39,7 +39,8 @@ function Connectionspage(){
   useEffect(()=>{
     setcordinate(changed_coordinate);
     console.log(changed_coordinate)
-  },[changed_coordinate])
+  },[changed_coordinate]);
+  
   const values=[
       {
         'name':'Monika',

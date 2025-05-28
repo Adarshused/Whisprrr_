@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Connectionspage from "../Connections/Connectionspage.jsx";
 import ConnectionPortfolio from "../Connections/ConnectionPortfolio.jsx";
 import Announcementspage from "./Announcementspage";
-import Portfoliopage from "./Portfoliopage";
+import Portfoliopage from "../Portfolio/Portfoliopage.jsx";
 import Profile from "../Settings/Profile.jsx";
 import Settings from "../Settings/Settings.jsx";
 import Chatpage from "./Chatpage";
