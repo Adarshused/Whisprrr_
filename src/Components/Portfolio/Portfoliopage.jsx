@@ -6,10 +6,26 @@ import { useMemo } from "react";
 import { useRef } from "react";
 function Portfoliopage(){
         const y_cordinate=[],x_cordinate=[];
-        
+        const [texti,settexti]=useState("");
+        const [mon_visibility,setmon_visibility]=useState(true);
+        const [tue_visibility,settue_visibility]=useState(true);
+        const [wed_visibility,setwed_visibility]=useState(true);
+        const [thu_visibility,setthu_visibility]=useState(true);
+        const [fri_visibility,setfri_visibility]=useState(true);
         let data=""
+        const [week_Days,setweek_Days]=useState({'mon_up':125,'tue_up':109,'wed_up':88,'thu_up':140,'fri_up':70});
+        const [week_Days_h,setweek_Days_h]=useState({'mon_h':195-week_Days['mon_up'],'tue_h':195-week_Days['tue_up'],'wed_h':195-week_Days['wed_up'],'thu_h':195-week_Days['thu_up'],'fri_h':195-week_Days['fri_up']});
+        const oneDir=[];
         const [percInc,setpercInc]=useState("0");
         const Value=useSelector((state)=>state.CurrActive);
+        useEffect(()=>{
+           for(let i=0;i<Value['USerValue'].upv_twlmonths.length;i++){
+          for(let j=0;j<Value['USerValue'].upv_twlmonths[i].length;j++){
+            oneDir.push(Value['USerValue'].upv_twlmonths[i][j]);
+          }
+         }
+        },[Value])
+        
          useEffect(()=>{
               setpercInc(Number((((Value['USerValue'].prevD_up-Value['USerValue'].prevPD_up)/Math.abs(Value['USerValue'].prevPD_up))).toFixed(1)))
              },[])
@@ -84,8 +100,8 @@ function Portfoliopage(){
                      pts += `${x_cordinate[i]},${y_cordinate[i]} `;
                    }
                    data=pts.trim();
-                   console.log(x_cordinate)
-                   console.log(y_cordinate)
+                  //  console.log(x_cordinate)
+                  //  console.log(y_cordinate)
                const last12Months = useMemo(() => {
                  const result = [];
                  const today  = new Date();
@@ -102,10 +118,9 @@ function Portfoliopage(){
                // handling the mouseeven for the point
               const svgRef = useRef(null);
                const trackerRef = useRef(null);
-             
+               
                // Convert flat values to coordinate objects
                const x_and_y =x_cordinate.map((x, i) => ({ x, y: y_cordinate[i] }));
-               let text=0
                useEffect(() => {
                  const svg = svgRef.current;
                  const tracker = trackerRef.current;
@@ -119,20 +134,29 @@ function Portfoliopage(){
                    const cursor = pt.matrixTransform(svg.getScreenCTM().inverse());
                    const x = cursor.x;
              
-                   let closest = x_and_y[0];
-                   for (let p of x_and_y) {
-                     if (Math.abs(p.x - x) < Math.abs(closest.x - x)) {
-                       closest = p;
-                       text=Value['USerValue'].upv_twlmonths[p];
-                      
-                     }
-                   }
-             
+                  let bestIdx  = 0;
+                  let closest  = x_and_y[0];
+                  let minDist  = Math.abs(closest.x - x);
+
+              for (const [idx, p] of x_and_y.entries()) {
+                const dist = Math.abs(p.x - x);
+               if (dist < minDist) {
+                 minDist  = dist;
+                 closest  = p;
+                 bestIdx  = idx;
+                }
+                 }
+            // console.log(oneDir)
+            // console.log(bestIdx)
+             settexti(oneDir[bestIdx]);
+              
+              // console.log(text)
+            // console.log(text)
                    trackerRef.current.setAttribute("transform", `translate(${closest.x}, ${closest.y})`);
                    trackerRef.current.setAttribute("visibility", "visible");
              
                  };
-             
+                 
                  const handleMouseLeave = () => {
                    trackerRef.current.setAttribute("visibility", "hidden");
                  };
@@ -145,6 +169,8 @@ function Portfoliopage(){
                    svg.removeEventListener('mouseleave', handleMouseLeave);
                  };
                }, [x_and_y]);
+
+            
     return (
         <>
         <div className="flex flex-col mt-6 ml-9">
@@ -229,7 +255,8 @@ function Portfoliopage(){
             </div>
            
           </div>
-           <div className="flex">
+          <div className="flex flex-col shadow-[0px_0px_10px_2px_rgba(0,0,0,0.1)] w-295 h-72 rounded-xl">
+    <div className="flex ">
             <div className="ml-7 text-gray-500">
                 <h1 className="mt-1">20k</h1>
                 <h1 className="mt-3">10k</h1>
@@ -238,7 +265,7 @@ function Portfoliopage(){
                 <h1 className="mt-7">500</h1>
                 <h1 className="mt-1">100</h1>
               </div>
-              <svg ref={svgRef} width="1100" height="250" viewBox="0 0 1100 250" style={{ pointerEvents: 'all' }}>
+              <svg  ref={svgRef} width="1100" height="250" viewBox="0 0 1100 250" style={{ pointerEvents: 'all' }}>
                <defs>
     <linearGradient
       id="fade-purple"
@@ -307,14 +334,14 @@ function Portfoliopage(){
          <rect x="-40" y="-65" width="80" height="25" rx="4" ry="4" fill="#2F2F37"/>
 
             <text x="-35" y="-45" fill="#9C9CAB" >
-                Value {text}
+                Value {texti}
                </text>
              <polygon
                points="-5 -30, 0 -25, 5 -30"
                fill="black"       
                />
-              
-            <circle r="9" fill="white"  />
+             
+            <circle  r="9" fill="white"  />
             <circle r="3" fill="#5235E8" />
 </g>
 
@@ -322,14 +349,100 @@ function Portfoliopage(){
               
               
              </div>
-             <div className="flex  ml-36 gap-x-16 text-gray-500">
+              <div className="flex  ml-36 gap-x-16 text-gray-500">
            {last12Months.map((value)=>(
              <h1 className="">{value}</h1>
            ))}
           </div>
           </div>
-          <div>
+           
+            
+          </div>
+          <div className="flex w-full h-65 mt-4 gap-x-4 ">
+                <div className=" flex flex-col w-1/2  rounded-xl shadow-[0px_0px_10px_2px_rgba(0,0,0,0.1)]">
+                  <div className="flex ml-5 gap-x-5">
+                    <div className="flex flex-col text-gray-500 gap-y-5 mt-5 ">
+                       <h1 className="ml-1">10k</h1>
+                       <h1 className="ml-1">5k</h1>
+                       <h1 className="ml-1">1k</h1>
+                       <h1 className="">100</h1>
+                       <h1 className="ml-2">0</h1>
+                       
+                    </div>
+                    <div className="mt-6">
+                      <svg className="cursor-pointer" width="500" height="200" viewBox="0 0 500 200 ">
+                          {/* <rect x="0" y="0" width="500" height={200} fill="none" stroke="black"></rect> */}
+                          <g >
+                             <rect x="5" y="5" width={70} height={190} rx="20" ry="20" fill="#F8F8FF" ></rect>
+                            <rect x="5" y={week_Days['mon_up']} width={70} height={week_Days_h['mon_h']} rx="20" ry="20" fill="#5235E8" ></rect>
+                            <rect x="0" y={week_Days['mon_up']} width={80} height={17} rx="5" fill="#5235E8"></rect>
+                            <g  visibility={mon_visibility?'visible':'hidden'}  onClick={() => setmon_visibility(v => !v)}>
+                              <line x1="40" y1="5" x2="40" y2="195" stroke="#93AAFD"  strokeDasharray="5,5"></line> 
+                              <circle cx="40" cy={week_Days['mon_up']} r="9" fill="white"  />
+                             <circle  cx="40" cy={week_Days['mon_up']} r="3" fill="#5235E8" />
 
+                            </g>
+                             
+                          </g>
+                          <g>
+                           <rect x="105" y="5" width={70} height={190} rx="20" ry="20" fill="#F8F8FF" ></rect>
+                           <rect x="105" y={week_Days['tue_up']} width={70} height={week_Days_h['tue_h']} rx="20" ry="20" fill="#5235E8" ></rect>
+                            <rect x="100" y={week_Days['tue_up']} width={80} height={17} rx="5" fill="#5235E8"></rect>
+                            <g  visibility={tue_visibility?'visible':'hidden'}  onClick={() => settue_visibility(v => !v)}>
+                              <line x1="140" y1="5" x2="140" y2="195" stroke="#93AAFD"  strokeDasharray="5,5"></line> 
+                              <circle cx="140" cy={week_Days['tue_up']} r="9" fill="white"  />
+                             <circle  cx="140" cy={week_Days['tue_up']} r="3" fill="#5235E8" />
+
+                            </g>
+                          </g>
+                         <g>
+                          <rect x="205" y="5" width={70} height={190} rx="20" ry="20" fill="#F8F8FF" ></rect>
+                          <rect x="205" y={week_Days['wed_up']} width={70} height={week_Days_h['wed_h']} rx="20" ry="20" fill="#5235E8" ></rect>
+                            <rect x="200" y={week_Days['wed_up']} width={80} height={17} rx="5" fill="#5235E8"></rect>
+                            <g  visibility={wed_visibility?'visible':'hidden'}  onClick={() => setwed_visibility(v => !v)}>
+                              <line x1="240" y1="5" x2="240" y2="195" stroke="#93AAFD"  strokeDasharray="5,5"></line> 
+                              <circle cx="240" cy={week_Days['wed_up']} r="9" fill="white"  />
+                             <circle  cx="240" cy={week_Days['wed_up']} r="3" fill="#5235E8" />
+
+                            </g>
+                         </g>
+                          <g>
+                            <rect x="305" y="5" width={70} height={190} rx="20" ry="20" fill="#F8F8FF" ></rect>
+                            <rect x="305" y={week_Days['thu_up']} width={70} height={week_Days_h['thu_h']} rx="20" ry="20" fill="#5235E8" ></rect>
+                            <rect x="300" y={week_Days['thu_up']} width={80} height={17} rx="5" fill="#5235E8"></rect>
+                            <g  visibility={thu_visibility?'visible':'hidden'}  onClick={() => setthu_visibility(v => !v)}>
+                              <line x1="340" y1="5" x2="340" y2="195" stroke="#93AAFD"  strokeDasharray="5,5"></line> 
+                              <circle cx="340" cy={week_Days['thu_up']} r="9" fill="white"  />
+                             <circle  cx="340" cy={week_Days['thu_up']} r="3" fill="#5235E8" />
+
+                            </g>
+                          </g>
+                          <g>
+                            <rect x="405" y="5" width={70} height={190} rx="20" ry="20" fill="#F8F8FF"></rect>
+                            <rect x="405" y={week_Days['fri_up']} width={70} height={week_Days_h['fri_h']} rx="20" ry="20" fill="#5235E8" ></rect>
+                            <rect x="400" y={week_Days['fri_up']} width={80} height={17} rx="5" fill="#5235E8"></rect>
+                            <g  visibility={fri_visibility?'visible':'hidden'}  onClick={() => setfri_visibility(v => !v)}>
+                              <line x1="440" y1="5" x2="440" y2="195" stroke="#93AAFD"  strokeDasharray="5,5"></line> 
+                              <circle cx="440" cy={week_Days['fri_up']} r="9" fill="white"  />
+                             <circle  cx="440" cy={week_Days['fri_up']} r="3" fill="#5235E8" />
+
+                            </g>
+                          </g>
+                          
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="ml-22 flex gap-x-18 text-gray-500">
+                       <h1>Mon</h1>
+                       <h1>Tue</h1>
+                       <h1>Wed</h1>
+                       <h1>Thu</h1>
+                       <h1>Fri</h1>
+                  </div>
+                </div>
+                <div className="w-1/2 shadow-[0px_0px_10px_2px_rgba(0,0,0,0.1)] rounded-xl">
+
+                </div>
           </div>
         </div>
         </>
