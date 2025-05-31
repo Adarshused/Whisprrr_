@@ -5,9 +5,18 @@ import { useEffect } from "react";
 import { useMemo } from "react";
 import { useRef } from "react";
 function Portfoliopage(){
+        const [is_btech,setis_btech]=useState(true);
+        const [btech_course,setbetch_course] = useState('cse');
+        const [batch,setbatch] = useState("Btech CSE")
+        const [line_chart,setline_chart] = useState([])
+        const [line_chartper,setline_chartper] = useState([])
         const y_cordinate=[],x_cordinate=[];
         const [texti,settexti]=useState("");
         const [mon_visibility,setmon_visibility]=useState(true);
+        const [first_yr,setfirst_yr]=useState(false);
+        const [second_yr,setsecond_yr]=useState(false);
+        const [third_yr,setthird_yr]=useState(false);
+        const [fourth_yr,setfourth_yr]=useState(true);
         const [tue_visibility,settue_visibility]=useState(true);
         const [wed_visibility,setwed_visibility]=useState(true);
         const [thu_visibility,setthu_visibility]=useState(true);
@@ -29,6 +38,23 @@ function Portfoliopage(){
          useEffect(()=>{
               setpercInc(Number((((Value['USerValue'].prevD_up-Value['USerValue'].prevPD_up)/Math.abs(Value['USerValue'].prevPD_up))).toFixed(1)))
              },[])
+          useEffect(()=>{
+            const x=[]
+            const y=[]
+            if(is_btech && btech_course === 'cse'){
+              const upvts=Value['USerValue'].btech_cse;
+              const total_upv=Value['USerValue'].btech_cse_totalupv;
+              for(let i=0;i<upvts.length;i++){
+                const per_=upvts[i]/total_upv;
+                y.push(100*per_);
+                const per=510*per_;
+                // console.log(per)
+                 x.push(per);
+              }
+            }
+            setline_chart(x);
+            setline_chartper(y)
+          },[Value])
              const y_cor=new Array(230,200,150,100,50);
                    const cordinate=Value['USerValue'].upv_twlmonths;
                    const len=cordinate.length;
@@ -440,8 +466,118 @@ function Portfoliopage(){
                        <h1>Fri</h1>
                   </div>
                 </div>
-                <div className="w-1/2 shadow-[0px_0px_10px_2px_rgba(0,0,0,0.1)] rounded-xl">
+                <div className="flex flex-col w-1/2 shadow-[0px_0px_10px_2px_rgba(0,0,0,0.1)] rounded-xl gap-y-2">
+                  
+                     <div className="ml-110 mt-4 border border-[#C893FD] relative flex w-30 h-8 bg-white rounded-lg">
+                          <input className="ml-3 w-full font-extrabold outline-none" type="text" readOnly='true' value={batch} style={{fontFamily:'Times New Roman, serif'}} />
+                          <select  className=" font-extrabold mr-8 outline-none absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={(e)=>{
+                            setbatch(e.target.value)
+                            if(e.target.value[1]!='t') setis_btech(false);
+                            else setis_btech(true);
+                            }} style={{fontFamily:'Times New Roman, serif'}} name="" id="">
+                            <option  value=""disabled selected hidden></option>
+                            <option  value="Btech CSE" >Btech CSE</option>
+                            <option value="Btech ECE">Btech ECE</option>
+                            <option  value="Btech ME" >Btech ME</option>
+                            <option value="Btech CE">Btech CE</option>
+                            <option  value="Btech AI/ML" >Btech AI/ML</option>
+                            <option value="BCA">BCA</option>
+                            <option  value="BSC" >BSC</option>
+                            
+                          </select>
+                        </div>
+                     {is_btech && (
+                      <>
+                       <div className="flex flex-col ml-7 gap-y-1" style={{fontFamily:'Times New Roman Serif'}}>
+                        <div className="cursor-pointer">
+                        <div className="flex gap-x-108">
+                        <h1 className="text-sm text-[#615E83]" >4th Year</h1>
+                        <h1 className="text-[#6D3AFF]">{line_chartper[0].toFixed(0)}%</h1>
+                          </div>
+                       <svg onClick={()=>{
+                        setfirst_yr(false);
+                        setsecond_yr(false);
+                        setthird_yr(false);
+                        setfourth_yr(true);
+                       }} width={510} height={20} viewBox="0 0 510 20">
+                        <defs>
+                        <linearGradient
+                      id="fade-purple_"
+                      gradientUnits="objectBoundingBox"
+                        x1="0" y1="0"
+                        x2="1" y2="0"
+                       >
+                       <stop offset="0%"   stopColor="#4A3AFF" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#6D3AFF" stopOpacity="1"   />
+                     </linearGradient>
+                           </defs>
+                          <rect x="" y="" width={510} height={20} rx="7" ry="7" fill="#F8F8FF" ></rect>
+                          <rect x="" y="" width={line_chart[0]} height={20} rx="7" ry="7" fill={fourth_yr?"url(#fade-purple_)":'#9291A5'} ></rect>
+                       </svg>
+                        </div>
+                       <div className="cursor-pointer">
+                        <div className="flex gap-x-108">
+                        <h1 className="text-sm text-[#615E83]" >3rd Year</h1>
+                        <h1 className="text-[#6D3AFF]">{line_chartper[1].toFixed(0)}%</h1>
+                          </div>
+                       <svg onClick={()=>{
+                        setfirst_yr(false);
+                        setsecond_yr(false);
+                        setthird_yr(true);
+                        setfourth_yr(false);
+                       }} width={510} height={20} viewBox="0 0 510 20">
+                        
+                          <rect x="" y="" width={510} height={20} rx="7" ry="7" fill="#F8F8FF" ></rect>
+                          <rect x="" y="" width={line_chart[1]} height={20} rx="7" ry="7" fill={third_yr?"url(#fade-purple_)":'#9291A5'} ></rect>
 
+                       </svg>
+                        </div>
+                        <div className="cursor-pointer">
+                          <div className="flex gap-x-108">
+                        <h1 className="text-sm text-[#615E83]" >2nd Year</h1>
+                        <h1 className="text-[#6D3AFF]">{line_chartper[2].toFixed(0)}%</h1>
+                          </div>
+                        
+                       <svg onClick={()=>{
+                        setfirst_yr(false);
+                        setsecond_yr(true);
+                        setthird_yr(false);
+                        setfourth_yr(false);
+                       }} width={510} height={20} viewBox="0 0 510 20">
+                        <defs>
+                        <linearGradient
+                      id="fade-purple_1"
+                      gradientUnits="objectBoundingBox"
+                        x1="0" y1="0"
+                        x2="1" y2="0"
+                       >
+                       <stop offset="0%"   stopColor="#4A3AFF" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#6D3AFF" stopOpacity="1"   />
+                     </linearGradient>
+                           </defs>
+                          <rect x="" y="" width={510} height={20} rx="7" ry="7" fill="#F8F8FF" ></rect>
+                          <rect x="" y="" width={line_chart[2]} height={20} rx="7" ry="7" fill={second_yr?"url(#fade-purple_1)":'#9291A5'} ></rect>
+
+                       </svg>
+                        </div>
+                        <div className="cursor-pointer">
+                        <div className="flex gap-x-108">
+                        <h1 className="text-sm text-[#615E83]" >1st Year</h1>
+                        <h1 className="text-[#6D3AFF]">{line_chartper[3].toFixed(0)}%</h1>
+                          </div>
+                       <svg onClick={()=>{
+                        setfirst_yr(true);
+                        setsecond_yr(false);
+                        setthird_yr(false);
+                        setfourth_yr(false);
+                       }} width={510} height={20} viewBox="0 0 510 20">
+                          <rect x="" y="" width={510} height={20} rx="7" ry="7" fill="#F8F8FF" ></rect>
+                           <rect x="" y="" width={line_chart[3]} height={20} rx="7" ry="7" fill={first_yr?"url(#fade-purple_1)":'#9291A5'} ></rect>
+                       </svg>
+                        </div>
+                       </div>
+                      </>
+                     )}
                 </div>
           </div>
         </div>
