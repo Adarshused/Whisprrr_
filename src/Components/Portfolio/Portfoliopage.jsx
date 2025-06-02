@@ -492,7 +492,7 @@ function Portfoliopage(){
                         <div className="cursor-pointer">
                         <div className="flex gap-x-108">
                         <h1 className="text-sm text-[#615E83]" >4th Year</h1>
-                        <h1 className="text-[#6D3AFF]">{line_chartper[0].toFixed(0)}%</h1>
+                        <h1 className="text-[#6D3AFF]">{line_chartper[0]?.toFixed(0)}%</h1>
                           </div>
                        <svg onClick={()=>{
                         setfirst_yr(false);
@@ -518,7 +518,7 @@ function Portfoliopage(){
                        <div className="cursor-pointer">
                         <div className="flex gap-x-108">
                         <h1 className="text-sm text-[#615E83]" >3rd Year</h1>
-                        <h1 className="text-[#6D3AFF]">{line_chartper[1].toFixed(0)}%</h1>
+                        <h1 className="text-[#6D3AFF]">{line_chartper[1]?.toFixed(0)}%</h1>
                           </div>
                        <svg onClick={()=>{
                         setfirst_yr(false);
@@ -535,7 +535,7 @@ function Portfoliopage(){
                         <div className="cursor-pointer">
                           <div className="flex gap-x-108">
                         <h1 className="text-sm text-[#615E83]" >2nd Year</h1>
-                        <h1 className="text-[#6D3AFF]">{line_chartper[2].toFixed(0)}%</h1>
+                        <h1 className="text-[#6D3AFF]">{line_chartper[2]?.toFixed(0)}%</h1>
                           </div>
                         
                        <svg onClick={()=>{
@@ -563,7 +563,7 @@ function Portfoliopage(){
                         <div className="cursor-pointer">
                         <div className="flex gap-x-108">
                         <h1 className="text-sm text-[#615E83]" >1st Year</h1>
-                        <h1 className="text-[#6D3AFF]">{line_chartper[3].toFixed(0)}%</h1>
+                        <h1 className="text-[#6D3AFF]">{line_chartper[3]?.toFixed(0)}%</h1>
                           </div>
                        <svg onClick={()=>{
                         setfirst_yr(true);
