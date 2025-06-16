@@ -1,15 +1,67 @@
-import React from "react";
+import React, { use } from "react";
 import { useState } from "react";
 import { Eye, EyeOff } from 'lucide-react';
 import { NavLink } from "react-router-dom";
+import { ChangeLogIn } from "../../Features/DashboardSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+
+
 function UserSignIn(){
     const [show,setshow]=useState(false);
     const [role,setrole]=useState("HOD")
+    const [formData,setformData] = useState({
+      email: "",
+      organizationID: "",
+      password : "",
+    })
+    const [islogin,setislogin] = useState(false);
+    // console.log(islogin)
+    const Disptach = useDispatch();
+    useEffect(()=>{
+      Disptach(ChangeLogIn(islogin));
+      console.log(islogin)
+    },[islogin])
+    const handleSubmit = async (e) => {
+      
+      try{
+      const res = await fetch("http://localhost:8000/api/v1/users/login",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+       })
+       if(res.ok) {
+        setislogin(true);
+        setformData({
+          email: "",
+          organizationID: "",
+          password: ""
+        })
+       }
+       else {
+        const err= await res.json();
+         throw new Error(err.message || "Login failed");
+       }
+      }
+      catch (err) {
+            setError(err.message);
+      }
+
+    }
+    const handleEvent = (e) => {
+       setformData({
+        ...formData,
+        [e.target.name] : e.target.value
+       })
+    }
     return(
         <>
          <div className="flex h-screen w-screen">
   {/* left half */}
   <div className="relative w-2/5 h-full overflow-hidden">
+    <form action={handleSubmit}>
     <svg
       className="absolute inset-0 w-full h-full block"
       viewBox="0 0 80 148"
@@ -38,7 +90,7 @@ function UserSignIn(){
         <div className="flex flex-col">
             <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Email</label>
             <div className="caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="bg-white-500 outline-none w-full p-2 absolute" type="text"  />
+                <input className="bg-white-500 outline-none w-full p-2 absolute" onChange={handleEvent} name="email" type="text" value={formData.email} />
             </div>
         </div>
      </div>
@@ -62,7 +114,7 @@ function UserSignIn(){
         <div className="flex flex-col">
             <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Organization ID</label>
             <div className="caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="bg-white-500 outline-none w-full p-2 absolute" type="text"  />
+                <input className="bg-white-500 outline-none w-full p-2 absolute" onChange={handleEvent} type="text" name="organizationID" value={formData.organizationID} />
             </div>
         </div>
      </div>
@@ -70,7 +122,7 @@ function UserSignIn(){
         <div className="flex flex-col">
             <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Password</label>
             <div className="flex caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="bg-white-500 outline-none w-full p-2 absolute" type={show?'text':'password'}  />
+                <input className="bg-white-500 outline-none w-full p-2 absolute" onChange={handleEvent} name="password" type={show?'text':'password'} value={formData.password} />
                 <button className=" absolute inset-y-0 right-0 flex items-center px-3 text-gray-400"
         tabIndex={-1} onClick={()=>setshow(!show)}>{show ? <EyeOff size={20} /> : <Eye size={20} />}</button>
             </div>
@@ -81,11 +133,9 @@ function UserSignIn(){
       </NavLink>
      
      <div className="flex flex-col gap-y-3 ml-5 mt-7">
-        <div className="flex cursor-pointer">
-            <div className="flex py-2 relative px-2 justify-center w-80  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] ">
-              <h3 className=" flex  text-white">Sign in</h3>  
-            </div>
-        </div>
+        <button className="flex text-lg py-1 relative px-2 justify-center cursor-pointer w-80 h-10 text-white rounded-md bg-[#5235E8] hover:bg-[#7C64ED]" type="submit" style={{fontFamily:'Times New Roman Serif'}}>
+          Sign In
+       </button>
         <div className="flex cursor-pointer">
             <div className="flex py-2 relative px-2 justify-center w-80  h-10 rounded-md bg-white  ">
             <div className="mr-2">
@@ -127,6 +177,7 @@ function UserSignIn(){
        <h3 className=" relative cursor-pointer font-extrabold text-[#5235E8] hover:text-[#7C64ED]" style={{fontFamily:'Times New Roman, serif'}}>Sign up now</h3>
      </div>
     </div>
+    </form>
   </div>
 
   {/* right half */}

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Profile from "../Settings/Profile.jsx";
-import Settings from "../Settings/Settings.jsx";
-import { ChangeStatus } from "../../Features/DashboardSlice";
+import Profile from "./Profile.jsx";
+import Settings from "./Settings.jsx";
+import { ChangeStatus } from "../../Features/DashboardSlice.js";
 
 function Settingsheader(props){
   // console.log(props.title)

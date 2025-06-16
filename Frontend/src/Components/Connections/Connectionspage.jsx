@@ -124,7 +124,7 @@ function Connectionspage(){
         'max_title':'Master',
         'max upvote':'3516',
         'about':"As Lecturer in Computer Science at IKG PTU, I leverage five years of software-engineering expertise to deliver interactive, project-driven courses that empower students to translate data structures, algorithms, and DevOps theory into real-world solutions.",
-        'address':'Jodhpur,Rajesthan',
+        'addreqss':'Jodhpur,Rajesthan',
         'experience':'3 years',
         'upv_twlmonths':[[0,   150,   50,   300],[600, 400,   800,  500],[700, 1000,  900,  1200],[1100, 600,  1400, 1000],[1300, 800,  1600, 1500],[1700, 900,  1800, 1400],[2000, 1200, 2100, 1600],[1900, 2300, 1700, 2500],[2200, 1300, 2400, 2000],[1800, 2100, 1900, 2300],[2000, 1500, 2500, 1700],[2300, 1900, 2400, 2100]]
      

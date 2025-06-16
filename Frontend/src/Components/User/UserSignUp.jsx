@@ -1,8 +1,53 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from 'lucide-react';
 import { FaGoogle, FaFacebookF } from 'react-icons/fa';
+import { NavLink } from "react-router-dom";
 function UserSignUp(){
+    const [formData, setformData] = useState({
+      name : "",
+      email : "",
+      password : "",
+      organizationID : ""
+    })
+    const [isRegistered, setisRegistered] =  useState(false)
     const[show,setshow]=useState(false)
+    const handleChange = (e) => {
+     setformData({
+      ...formData,
+      [e.target.name] : e.target.value
+     })
+    }
+    const register= async (e)=>{
+      e.preventDefault()
+       try{
+        // console.log(body)
+       const res = await fetch("http://localhost:8000/api/v1/users/register",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+       });
+       if(res.ok) {
+       const data = await res.json();
+          setformData({
+            name: "",
+            email : "",
+            password : "",
+            organizationID: ""
+          });
+        setisRegistered(true)
+       }
+       else if(!res.ok) {
+          const err= await res.json();
+         throw new Error(err.message || "Registration failed");
+       }
+       
+       }
+       catch (err){
+         setError(err.message);
+       }
+    }
     return(
         <>
      <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -11,11 +56,66 @@ function UserSignUp(){
 <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
   <path stroke="currentColor" strokeLinejoin="round" strokeWidth="2" d="M4 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5Zm16 14a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2ZM4 13a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6Zm16-2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6Z"/>
 </svg>
-
-
-        <div className="flex h-screen w-screen">
+{isRegistered && (
+        <div className="fixed top-60 left-1/2 transform -translate-x-1/2 bg-white rounded-lg  bg-opacity-50 flex flex-col items-center justify-center z-50 w-120 h-90 border border-gray-300 shadow-[0_0_8px_rgba(82,53,232,0.5)]">
+          <svg
+            className="w-30 h-30 mb-4"
+            viewBox="0 0 60 60"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="fade-purple"
+                gradientUnits="userSpaceOnUse"
+                x1="0" y1="0"
+                x2="0" y2="250"
+              >
+                <stop offset="0%" stopColor="#11CF8B" stopOpacity="1" />
+                <stop offset="100%" stopColor="#30EEA9" stopOpacity="1" />
+              </linearGradient>
+              <linearGradient
+                id="fade-stroke"
+                gradientUnits="userSpaceOnUse"
+                x1="0" y1="0"
+                x2="0" y2="250"
+              >
+                <stop offset="0%" stopColor="#7BF4C8" stopOpacity="1" />
+                <stop offset="100%" stopColor="#56F1B9" stopOpacity="1" />
+              </linearGradient>
+            </defs>
+            
+            <circle
+              cx={32}
+              cy={30}
+              r={24}
+              fill="url(#fade-purple)"
+              stroke="url(#fade-stroke)"
+              strokeWidth="1.5"
+            />
+            <g transform="scale(1) translate(20,18)">
+              <path
+                stroke="white"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 11.917 9.724 16.5 19 7.5"
+              />
+            </g>
+          </svg>
+          <h1 className="text-lg font-bold " style={{fontFamily:'Times New Roman Serif'}}>Your Registration Successful</h1>
+           <NavLink to="/signin">
+           <button className="flex mt-5 text-lg py-1 relative px-2 justify-center cursor-pointer w-30 h-10 text-white rounded-md bg-[#5235E8] hover:bg-[#7C64ED]" type="submit" style={{fontFamily:'Times New Roman Serif'}}>
+               Sign In
+            </button>
+            </NavLink>
+        </div>
+      )}
+        <div className="fixed top-18 left-0 flex h-screen w-screen">
   {/* left half */}
+  
   <div className="relative w-2/5 h-full overflow-hidden">
+  <form onSubmit={register}>
     <svg
       className="absolute inset-0 w-full h-full block"
       viewBox="0 0 80 148"
@@ -44,7 +144,7 @@ function UserSignUp(){
         <div className="flex flex-col">
             <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Name</label>
             <div className="caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="bg-white-500 outline-none w-full p-2 absolute" type="text"  />
+                <input className="bg-white-500 outline-none w-full p-2 absolute" type="text" name="name" onChange={handleChange} value={formData.name} />
             </div>
         </div>
      </div>
@@ -52,7 +152,7 @@ function UserSignUp(){
         <div className="flex flex-col">
             <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Email</label>
             <div className="caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="bg-white-500 outline-none w-full p-2 absolute" type="text"  />
+                <input className="bg-white-500 outline-none w-full p-2 absolute" type="text" name="email" onChange={handleChange} value={formData.email} />
             </div>
         </div>
      </div>
@@ -60,7 +160,7 @@ function UserSignUp(){
         <div className="flex flex-col">
             <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Organization ID</label>
             <div className="caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="bg-white-500 outline-none w-full p-2 absolute" type="text"  />
+                <input className="bg-white-500 outline-none w-full p-2 absolute" type="text" name="organizationID" onChange={handleChange} value={formData.organizationID}/>
             </div>
         </div>
      </div>
@@ -68,18 +168,16 @@ function UserSignUp(){
         <div className="flex flex-col">
             <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Password</label>
             <div className="flex caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="bg-white-500 outline-none w-full p-2 absolute" type={show?'text':'password'}  />
+                <input className="bg-white-500 outline-none w-full p-2 absolute" type={show?'text':'password'} name="password" onChange={handleChange} value={formData.password}/>
                 <button className=" absolute inset-y-0 right-0 flex items-center px-3 text-gray-400"
         tabIndex={-1} onClick={()=>setshow(!show)}>{show ? <EyeOff size={20} /> : <Eye size={20} />}</button>
             </div>
         </div>
      </div>
      <div className="flex flex-col gap-y-3 ml-5 mt-7">
-        <div className="flex cursor-pointer">
-            <div className="flex py-2 relative px-2 justify-center w-80  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] ">
-              <h3 className=" flex  text-white">Create account</h3>  
-            </div>
-        </div>
+       <button className="flex text-lg py-1 relative px-2 justify-center cursor-pointer w-80 h-10 text-white rounded-md bg-[#5235E8] hover:bg-[#7C64ED]" type="submit" style={{fontFamily:'Times New Roman Serif'}}>
+          create account
+       </button>
         <div className="flex cursor-pointer">
             <div className="flex py-2 relative px-2 justify-center w-80  h-10 rounded-md bg-white  ">
             <div className="mr-2">
@@ -119,6 +217,7 @@ function UserSignUp(){
        <h3 className=" relative cursor-pointer font-extrabold text-[#5235E8] hover:text-[#7C64ED]" style={{fontFamily:'Times New Roman, serif'}}>Sign in</h3>
      </div>
     </div>
+    </form>
   </div>
 
   {/* right half */}

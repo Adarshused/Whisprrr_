@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Profile from "../Settings/Profile.jsx";
 import Settings from "../Settings/Settings.jsx";
-import { ChangeStatus } from "../../Features/DashboardSlice";
+import { ChangeStatus } from "../../Features/DashboardSlice.js";
 
 function DashboardHeader(props){
   // console.log(props.title)

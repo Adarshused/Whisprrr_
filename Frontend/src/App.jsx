@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from './Components/Header/Header';
-import Footer from './Components/Footer/Footer';
-import Dashboard from './Components/Dashboard/Dashboard';
-import DashboardHeader from './Components/Dashboard/DashboardHeader';
+import Header from './Components/Header/Header.jsx';
+import Footer from './Components/Footer/Footer.jsx';
+import Dashboard from './Components/Dashboard/Dashboard.jsx';
+import DashboardHeader from './Components/Dashboard/DashboardHeader.jsx';
 import {useDispatch,useSelector} from 'react-redux';
 import Settings from './Components/Settings/Settings.jsx'
 import Settingsheader from './Components/Settings/Settingsheader.jsx';
@@ -12,7 +12,7 @@ import { Update_user } from './Features/DashboardSlice.js';
  function App(props) {
   // const Dispatch=useDispatch();
   
-  const[islogin,setislogin]=useState(true); 
+  
 
   // console.log("Reached")
   
@@ -25,7 +25,8 @@ import { Update_user } from './Features/DashboardSlice.js';
    const [heading,setheading]=useState("Dashboard");
    const [Sheading,setSheading] = useState("Profile")
    const curractive= useSelector((state)=>state.CurrActive)
-      
+   let islogin = false;
+   if(curractive['isLoggedIn']) islogin=true
       const uservalue={
         
         'name':'Adarsh Mishra',

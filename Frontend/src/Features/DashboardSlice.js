@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState={
-    CurrActive:{"isActive":"Dashboard","SettingisActive":"Profile","Name":"none","Title":"none","value":{},"USerValue":{}}
+    CurrActive:{"isActive":"Dashboard","SettingisActive":"Profile","Name":"none","Title":"none","value":{},"USerValue":{},"isLoggedIn":false}
 }
 
 export const DashboardSlice=createSlice({
@@ -26,11 +26,14 @@ export const DashboardSlice=createSlice({
         },
         Update_user:(state,action)=>{
             state.CurrActive['USerValue']=action.payload;
+        },
+        ChangeLogIn: (state, action)=>{
+            state.CurrActive['isLoggedIn']=action.payload
         }
     
     }
 })
 
-export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle,ChangeVal,Update_user}=DashboardSlice.actions
+export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle,ChangeVal,Update_user,ChangeLogIn}=DashboardSlice.actions
 
 export default DashboardSlice.reducer
