@@ -1,9 +1,36 @@
 import React, { useState } from "react";
-
+import Avatar from "../../utils/avatar.jsx";
 function Profile(){
-  const [profilelogo,setprofilelogo]=useState("AM");
+  const [profilelogo,setprofilelogo]=useState("");
   const [name,setname]=useState("Adarsh Mishra");
   const [email,setemail]=useState("adarshmishr6@gmail.com")
+  const handleFileChange = async (event) => {
+    const allCookies = document.cookie;
+    console.log(allCookies);
+    const file = event.target.files[0];
+    console.log(file)
+    const formData = new FormData();
+    formData.append("avatar", file)
+       try {
+        const res = await fetch("http://localhost:8000/api/v1/users/avatar",{
+        method: "POST",
+        body: formData,
+        credentials: "include", 
+       });
+       if(res.ok) {
+        const body = await res.json();
+        const newAvatarUrl = body.data.user
+        setprofilelogo(newAvatarUrl)
+       }
+       else {
+        const err = await res.json()
+        throw new Error(err.message)
+       }
+       }
+       catch (err){
+         setError(err.message);
+       }
+  }
     return (
         <>
       <div className="flex flex-col w-screen h-screen">
@@ -16,15 +43,23 @@ function Profile(){
           <div className=" border-b border-gray-300 h-1/2">
              <div className="flex mt-7 ml-6  gap-x-25">
               <div className="flex  gap-x-5">
-                  <button className="cursor-pointer shadow-md text-3xl rounded-full  w-20 h-20 font-extrabold text-white bg-[#DEDAFB]" style={{fontFamily:'Times New Roman, Serif',textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'}} >{profilelogo}</button>
+                  <Avatar firstName="Adarsh" lastName="mishra" avatarUrl={profilelogo} size={56} className="" />
+                  {/* <button className="cursor-pointer shadow-md text-3xl rounded-full  w-20 h-20 font-extrabold text-white bg-[#DEDAFB]" style={{fontFamily:'Times New Roman, Serif',textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'}} >{profilelogo}</button> */}
                   <div className="flex flex-col">
                   <h1 className=" mt-5 text-xl font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{name}</h1>
                    <h5 className="text-gray-400">{email}</h5>
                   </div>
               </div>
-               <div className="w-38 h-12 mt-7 cursor-pointer font-extrabold rounded-lg border  border-[#9785F1] text-[#5235E8] px-6 py-3 hover:text-[#5235E8]" style={{fontFamily:'Times New Roman, Serif'}}>
-                      Upload photo
-               </div>
+                <label className="w-38 h-12 mt-7 cursor-pointer font-extrabold rounded-lg border border-[#9785F1] text-[#5235E8] px-6 py-3 hover:text-[#5235E8] flex items-center justify-center"
+                style={{ fontFamily: 'Times New Roman, Serif' }}
+                 >
+                Upload Photo
+              <input
+             type="file"
+             onChange={handleFileChange}
+            className="hidden"
+            />
+           </label>
              </div>
              </div>
              <div className="h-1/2 flex w-screen">

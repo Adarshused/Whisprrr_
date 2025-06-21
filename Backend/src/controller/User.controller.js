@@ -57,7 +57,7 @@ const RegisterFaculty = AsyncHandler(async (req, res)=>{
 const LoginFaculty = AsyncHandler(async (req,res)=>{
    const {email,organizationID, password} = req.body
 
-   if([email,organizationID,password].some((field)=>field?.trim === ""))
+   if([email,organizationID,password].some((field)=>field?.trim() === ""))
     throw new ApiError(400, "all fields are required")
 
    const user = await Faculty.findOne({
@@ -78,7 +78,9 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
    )
    const option = {
         httpOnly : true,
-        secure : true
+        secure : true,
+        sameSite: "none",
+        maxAge: 1000 * 60 * 60 * 24 * 7, 
     }
     return res
     .status(200)
@@ -90,12 +92,14 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
 
 const AvatarUser = AsyncHandler(async (req, res)=>{
      const user_Id = req.user._id
+    //   console.log(req)
+
      const AvatarLocalPath = req.files?.avatar[0]?.path;
      if(!AvatarLocalPath) 
         throw new ApiError(400, "Avatar file is empty")
 
      const avatar = await uploadOnCloudinary(AvatarLocalPath)
-
+     
      await Faculty.findByIdAndUpdate(
         user_Id,
         {
@@ -114,7 +118,7 @@ const AvatarUser = AsyncHandler(async (req, res)=>{
 
      return res
      .status(200)
-     .json(new ApiResponse(200, "file uploaded successfully"))
+     .json(new ApiResponse(200,{user: avatar.url}, "file uploaded successfully"))
 })
 
 export {AvatarUser, RegisterFaculty, LoginFaculty}

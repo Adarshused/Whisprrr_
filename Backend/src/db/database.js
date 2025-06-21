@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 import { DB_NAME } from '../constant.js'
+import { Faculty } from '../models/faculty.model.js';
+import { ApiError } from '../utils/ApiError.js';
 
 const connectDB = async () => {
     
@@ -14,5 +16,48 @@ const connectDB = async () => {
 
    } 
 }
+const fetchAllUsersFromDB = async () => {
+  try{
+    const faculties = await Faculty.aggregate([
+      // take all faculties
+      {$match: {}},
+      // locate upvotes from the upvote schema
+      {
+         $lookup: {
+            from: "Upvotes",
+            localField: "_id",
+            foreignField: "faculty",
+            as: "upvoteDocs"
+         }
+      },
+      // sum up the values
+      {
+         $addFields: {
+            totalUpvote: { $sum: "$upvoteDocs.value"}
+         }
+      },
+      {
+          $project: {
+          displayname:         1,
+          email:               1,
+          firstname:           1,
+          avatar:              1,
+          dob:                 1,
+          country_residence:   1,
+          title:               1,
+          about:               1,
+          address:             1,
+          experience:          1,
+          totalUpvotes:        1
+        }
+      }
+    ]);
+    return faculties
+  }
+  catch (err){
+    console.error("ERROR occurred while loading data from db")
+    throw err
+  }
+}
 
-export {connectDB}
+export {connectDB, fetchAllUsersFromDB}

@@ -6,6 +6,7 @@ const router = Router()
 
 router.route("/avatar").post(
     verifyJWT,
+    
     upload.fields([
         {
             name:"avatar",

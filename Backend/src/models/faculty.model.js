@@ -1,8 +1,7 @@
 import mongoose, {Schema} from "mongoose"
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-
-
+// import { Upvotes } from './upvotes.model.js'
 
 const facultySchema = new Schema(
     {

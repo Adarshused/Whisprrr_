@@ -31,9 +31,12 @@ function UserSignIn(){
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        credentials: "include"
        })
        if(res.ok) {
         setislogin(true);
+        const body = await res.cookie();
+        console.log(body)
         setformData({
           email: "",
           organizationID: "",
@@ -46,7 +49,7 @@ function UserSignIn(){
        }
       }
       catch (err) {
-            setError(err.message);
+           console.log(err.message)
       }
 
     }

@@ -4,8 +4,10 @@ import { ApiError } from '../utils/ApiError.js'
 import { Faculty } from '../models/faculty.model.js'
 
 
-export const verifyJWT = AsyncHandler(async (req,res,next)=>{
+export const verifyJWT = AsyncHandler(async (req,_,next)=>{
     try{
+        
+        
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer","")
     // console.log(token)
     if(!token)
