@@ -24,16 +24,16 @@ const fetchAllUsersFromDB = async () => {
       // locate upvotes from the upvote schema
       {
          $lookup: {
-            from: "Upvotes",
+            from: "upvotes", // remember to write schema in smaller case
             localField: "_id",
             foreignField: "faculty",
             as: "upvoteDocs"
          }
       },
       // sum up the values
-      {
-         $addFields: {
-            totalUpvote: { $sum: "$upvoteDocs.value"}
+      { 
+         $set: {
+            totalUpvote: { $size: "$upvoteDocs"}
          }
       },
       {
@@ -48,10 +48,12 @@ const fetchAllUsersFromDB = async () => {
           about:               1,
           address:             1,
           experience:          1,
-          totalUpvotes:        1
+          totalUpvote:         1,
+          upvote:              1,
         }
       }
-    ]);
+    ])
+    
     return faculties
   }
   catch (err){

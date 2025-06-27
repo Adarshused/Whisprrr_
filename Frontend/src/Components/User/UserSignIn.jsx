@@ -35,7 +35,7 @@ function UserSignIn(){
        })
        if(res.ok) {
         setislogin(true);
-        const body = await res.cookie();
+        const body = await res.json();
         console.log(body)
         setformData({
           email: "",

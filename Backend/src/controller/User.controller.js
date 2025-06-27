@@ -3,6 +3,9 @@ import {ApiError} from '../utils/ApiError.js'
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import { Faculty } from '../models/faculty.model.js';
 import {ApiResponse} from '../utils/ApiResponse.js'
+import { redis } from '../utils/redis.js';
+import mongoose from 'mongoose';
+import { access } from 'fs';
 
 const generateAccessTokenAndRefreshToken = async(userID) => {
 try{
@@ -56,7 +59,7 @@ const RegisterFaculty = AsyncHandler(async (req, res)=>{
 
 const LoginFaculty = AsyncHandler(async (req,res)=>{
    const {email,organizationID, password} = req.body
-
+//    console.log(req)
    if([email,organizationID,password].some((field)=>field?.trim() === ""))
     throw new ApiError(400, "all fields are required")
 
@@ -64,7 +67,7 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
     email,
     organizationID,
    })
-    
+   
    if(!user) 
     throw new ApiError(401, "User does not exits")
    
@@ -73,9 +76,17 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
     throw new ApiError(401, "Invalid User Credentials")
 
    const {accessToken, refreshToken} = await generateAccessTokenAndRefreshToken(user._id)
+//    console.log(accessToken, refreshToken)
    const LoggedInUser = await Faculty.findById(user._id).select(
     "-password -refreshToken"
    )
+   const userID = user._id
+   const rediskey = `user:${userID}`;
+
+   const Cached = await redis.set(rediskey, LoggedInUser)
+   if(!Cached) {
+    throw new ApiError(500,"Their was problem while Caching user")
+   }
    const option = {
         httpOnly : true,
         secure : true,
@@ -121,4 +132,104 @@ const AvatarUser = AsyncHandler(async (req, res)=>{
      .json(new ApiResponse(200,{user: avatar.url}, "file uploaded successfully"))
 })
 
-export {AvatarUser, RegisterFaculty, LoginFaculty}
+const Logout = AsyncHandler(async (req, res) => {
+    await Faculty.findByIdAndUpdate(
+        req.user._id,
+        {
+            $unset: {
+                refreshToken : 1
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+    return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200,"User Logged out"))
+})
+
+const UserData = AsyncHandler(async (req, res) => {
+    const userID = req.user._id
+    let User;
+    const topN = 10
+    const redisKey = `user:${userID}`;
+    const Cached = await redis.get(redisKey)
+    // console.log(Cached)
+    
+    if(Cached) {
+        try{
+            // console.log(typeof Cached)
+          User = JSON.parse(Cached)
+          console.log("✅ Parsed object:", User)
+        }
+        catch(err) {
+           console.error("❌ JSON.parse failed on:", Cached)
+            throw err
+        }
+       
+    }
+    else {
+       User =  await Faculty.aggregate([
+          {$match : 
+            { _id: req.user._id}
+        },
+            {
+                $lookup:{
+                    from: "upvotes",
+                    localField: "_id",
+                    foreignField: "faculty",
+                    as: "upvoteDocs"
+                }
+            },
+            {
+            $set: {
+            totalUpvote: { $size: "$upvoteDocs"}
+           }
+           },
+           {
+              $project: {
+              displayname:         1,
+              email:               1,
+              firstname:           1,
+              avatar:              1,
+              dob:                 1,
+              country_residence:   1,
+              title:               1,
+              about:               1,
+              address:             1,
+              experience:          1,
+              totalUpvote:         1,
+              upvote:              1,
+        }
+      }
+        ]);
+        User._id = String(User._id)
+        await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
+    }
+    
+    const raw = await redis.zrevrange('users:byUpvotes', 0, topN - 1, 'WITHSCORES');
+    const leaderBoard = []
+    for(let i = 0; i < raw.length; i += 2) {
+        const faculty = await Faculty.findById(raw[i])
+        leaderBoard.push({
+            id: raw[i],
+            score: Number(raw[i + 1]),
+            username: faculty.displayname,
+            Title: faculty.title,
+            Avatar: faculty.avatar,
+        })
+    }
+   return res
+   .status(200)
+   .json(new ApiResponse(200, {user: User,leaderboard: leaderBoard},"Fetched user data"))
+})
+
+export {AvatarUser, RegisterFaculty, LoginFaculty, UserData,Logout}

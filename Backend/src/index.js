@@ -1,38 +1,43 @@
 import dotenv from 'dotenv'
 import { connectDB } from './db/database.js'
-import Redis from 'ioredis'
+import { redis } from './utils/redis.js'
 import {fetchAllUsersFromDB} from './db/database.js'
 import {app} from './app.js'
 dotenv.config({
     path:'./env'
 })
-const redis = new Redis({
-    host: process.env.REDIS_HOST,
-    username: process.env.REDIS_USERNAME,
-    port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD,
-});
+
 
 redis.on('error',err => {
     console.error('⚠️ Redis error:', err)
 })
 connectDB()
 async function preloadCache() {
+    
  const users = await  fetchAllUsersFromDB();
+ const rawUsers = users.map(u => u.toObject ? u.toObject() : u);
+//  console.log(typeof users)
  const pipeline = redis.pipeline();
- for(const user of users) {
-    pipeline.set(`user:${user.id}`,JSON.stringify(user));
+ for(const user of rawUsers) {
+    let userObj = {...user}
+    userObj._id = String(userObj._id)
+    userObj = JSON.stringify(userObj)
+    // userObj.totalUpvote = String(userObj.totalUpvote)
+    // console.log(userObj)
+    pipeline.set(`user:${userObj.id}`,userObj);
     // add the user upvotes in sorted set
+   
     pipeline.zadd(
         'users:byUpvotes',
-        user.totalUpvotes,
-        user._id.toString()
+        userObj.totalUpvote,
+        userObj._id
     );
  }
- await pipeline.exec();
-console.log(`🌡️    Preloaded ${users.length} users into Redis`)
+  const result = await pipeline.exec();
+ const user = await redis.zrevrange('users:byUpvotes',0,1);
+console.log(`🌡️   Preloaded ${users.length} users into Redis`)
 }
-
+await redis.flushdb();
 preloadCache()
 .then(()=>{
     app.listen(process.env.PORT || 8000, ()=>{

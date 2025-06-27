@@ -14,7 +14,7 @@ export const verifyJWT = AsyncHandler(async (req,_,next)=>{
         throw new ApiError(401, "Unauthorized request")
     
     const decodedToken = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET)
-
+    
     const user = await Faculty.findById(decodedToken._id).select("-password -refreshToken")
 
     req.user = user
@@ -23,4 +23,4 @@ export const verifyJWT = AsyncHandler(async (req,_,next)=>{
     throw new ApiError(401,err?.message || "Invalid access Token")
 }
 
-})
+})   

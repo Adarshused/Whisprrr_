@@ -51,6 +51,9 @@ const facultySchema = new Schema(
         type: Schema.Types.ObjectId,
         ref:"Connections"
       },
+      totalUpvote: {
+        type: Number,
+      },
       experience: {
         type: String,
       },
