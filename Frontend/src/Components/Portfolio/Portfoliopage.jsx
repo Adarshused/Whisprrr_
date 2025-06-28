@@ -28,22 +28,23 @@ function Portfoliopage(){
         const [percInc,setpercInc]=useState("0");
         const Value=useSelector((state)=>state.CurrActive);
         useEffect(()=>{
-           for(let i=0;i<Value['USerValue'].upv_twlmonths.length;i++){
-          for(let j=0;j<Value['USerValue'].upv_twlmonths[i].length;j++){
-            oneDir.push(Value['USerValue'].upv_twlmonths[i][j]);
+           const leng = Value['USerValue']?.upv_twlmonths?.length ??[]
+           for(let i=0;i<leng;i++){
+          for(let j=0;j<leng;j++){
+            oneDir.push(Value['USerValue']?.upv_twlmonths[i][j]);
           }
          }
         },[Value])
         
          useEffect(()=>{
-              setpercInc(Number((((Value['USerValue'].prevD_up-Value['USerValue'].prevPD_up)/Math.abs(Value['USerValue'].prevPD_up))).toFixed(1)))
+              setpercInc(Number((((Value['USerValue']?.prevD_up-Value['USerValue']?.prevPD_up)/Math.abs(Value['USerValue']?.prevPD_up))).toFixed(1)))
              },[])
           useEffect(()=>{
             const x=[]
             const y=[]
             if(is_btech && btech_course === 'cse'){
-              const upvts=Value['USerValue'].btech_cse;
-              const total_upv=Value['USerValue'].btech_cse_totalupv;
+              const upvts=Value['USerValue']?.btech_cse??[];
+              const total_upv=Value['USerValue']?.btech_cse_totalupv??[];
               for(let i=0;i<upvts.length;i++){
                 const per_=upvts[i]/total_upv;
                 y.push(100*per_);
@@ -56,8 +57,8 @@ function Portfoliopage(){
             setline_chartper(y)
           },[Value])
              const y_cor=new Array(230,200,150,100,50);
-                   const cordinate=Value['USerValue'].upv_twlmonths;
-                   const len=cordinate.length;
+                   const cordinate=Value['USerValue']?.upv_twlmonths ?? [];
+                   const len=cordinate.length
                    let val=0;
                     for(let i=0;i<len;i++){
                      let x=[]

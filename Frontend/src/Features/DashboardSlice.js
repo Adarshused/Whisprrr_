@@ -1,7 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState={
-    CurrActive:{"isActive":"Dashboard","SettingisActive":"Profile","Name":"none","Title":"none","value":{},"USerValue":{},"isLoggedIn":false}
+    CurrActive:{"isActive":"Dashboard","SettingisActive":"Profile","Name":"none","Title":"none","value":{},"USerValue":{},"isLoggedIn":false,'userData':{
+        'name':'',
+        'email':'',
+        'Title':'',
+        'img':"",
+        'upvote':'',
+        'twentyFour_hour':'',
+         'prevD_up':'',
+        'prevPD_up':'',
+        'max_title':'',
+        'max upvote':'',
+        'about':"",
+        'address':'',
+        'experience':'',
+        'upv_twlmonths':[[]],
+        'weekly_upvot':[],
+        'btech_cse':[],
+        'btech_cse_totalupv':'',
+         
+    }}
 }
 
 export const DashboardSlice=createSlice({
@@ -29,11 +48,14 @@ export const DashboardSlice=createSlice({
         },
         ChangeLogIn: (state, action)=>{
             state.CurrActive['isLoggedIn']=action.payload
+        },
+        ChangeUserData: (state, action)=>{
+            state.CurrActive['userData']=action.payload
         }
     
     }
 })
 
-export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle,ChangeVal,Update_user,ChangeLogIn}=DashboardSlice.actions
+export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle,ChangeVal,Update_user,ChangeLogIn,ChangeUserData}=DashboardSlice.actions
 
 export default DashboardSlice.reducer

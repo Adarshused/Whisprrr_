@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import Avatar from "../../utils/avatar.jsx";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+
 function Profile(){
   const [profilelogo,setprofilelogo]=useState("");
   const [name,setname]=useState("Adarsh Mishra");
-  const [email,setemail]=useState("adarshmishr6@gmail.com")
+  const [email,setemail]=useState("adarshmishr6@gmail.com");
+  
+  const Dispatch = useDispatch()
+  const curractive= useSelector((state)=>state.CurrActive)
   const handleFileChange = async (event) => {
     const allCookies = document.cookie;
     console.log(allCookies);
@@ -20,7 +27,7 @@ function Profile(){
        if(res.ok) {
         const body = await res.json();
         const newAvatarUrl = body.data.user
-        setprofilelogo(newAvatarUrl)
+        // Dispatch(ChangeAvatar(newAvatarUrl))
        }
        else {
         const err = await res.json()
@@ -30,7 +37,18 @@ function Profile(){
        catch (err){
          setError(err.message);
        }
+
   }
+   useEffect(()=>{
+    const user = curractive['userData']
+    if(user){
+      console.log(user)
+      setemail(user.email)
+      setname(user.name)
+      setprofilelogo(user.img)
+    }
+    else console.log("ERROOOOOOOOOOOOORRRRRRr")
+   },[])
     return (
         <>
       <div className="flex flex-col w-screen h-screen">

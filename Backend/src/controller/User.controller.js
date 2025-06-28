@@ -165,7 +165,12 @@ const UserData = AsyncHandler(async (req, res) => {
     // console.log(Cached)
     
     if(Cached) {
-        try{
+        if (typeof Cached !== "string") {
+    console.warn("Unexpected non-string from Redis:", Cached);
+    await redis.del(redisKey);
+     }
+      else{
+          try{
             // console.log(typeof Cached)
           User = JSON.parse(Cached)
           console.log("✅ Parsed object:", User)
@@ -174,7 +179,7 @@ const UserData = AsyncHandler(async (req, res) => {
            console.error("❌ JSON.parse failed on:", Cached)
             throw err
         }
-       
+    }
     }
     else {
        User =  await Faculty.aggregate([

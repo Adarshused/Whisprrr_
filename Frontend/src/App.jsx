@@ -7,12 +7,12 @@ import DashboardHeader from './Components/Dashboard/DashboardHeader.jsx';
 import {useDispatch,useSelector} from 'react-redux';
 import Settings from './Components/Settings/Settings.jsx'
 import Settingsheader from './Components/Settings/Settingsheader.jsx';
-import { ChangeLogIn, Update_user } from './Features/DashboardSlice.js';
+import { ChangeLogIn, ChangeUserData, Update_user } from './Features/DashboardSlice.js';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import { useCurrentUser } from './utils/useCurrentUser.js';
 import { HashLoader} from 'react-spinners'
 import { fetchCurrentUser } from './utils/Getme.js';
- 
+
 const queryClient  = new QueryClient()
 
 function App(props) {
@@ -69,8 +69,13 @@ function App(props) {
        const  userData = user?.data?.user
        console.log(userData)
        if(userData){
-        setuservalue({
+        // console.log(userData)
+
+         /* Here setuservalue or useState is an asynchronous call and im dispatching the value to the store since the setuservalue is not been updated its dispatching the old values itself 
+         so i instead of storing the value in setuservalue now i directly store it in payload const */
+        const payload ={
           name:userData[0]?.displayname?userData[0].displayname:"",
+          email:userData[0]?.email?userData[0].email:"",
           Title: userData[0]?.title?userData[0].title:"",
           img: userData[0]?.avatar?userData[0].avatar:"",
           upvote: userData[0]?.upvote?userData[0].upvote:"",
@@ -81,17 +86,22 @@ function App(props) {
           max_upvote: userData[0]?.max_upvote?userData[0].max_upvote:"",
           address: userData[0]?.address?userData[0].address:"",
           experience: userData[0]?.experience?userData[0].experience:"",
-          upv_twlmonths: userData[0]?.upv_twlmonths?userData[0].upv_twlmonths:"",
-          weekly_upvot: userData[0]?.weekly_upvot?userData[0].weekly_upvot:"",
-          btech_cse: userData[0]?.btech_cse?userData[0].btech_cse:"",
+          upv_twlmonths: userData[0]?.upv_twlmonths?userData[0].upv_twlmonths:[[]],
+          weekly_upvot: userData[0]?.weekly_upvot?userData[0].weekly_upvot:[],
+          btech_cse: userData[0]?.btech_cse?userData[0].btech_cse:[],
          btech_cse_totalupv: userData[0]?.btech_cse_totalupv?userData[0].btech_cse_totalupv:"",
-        })
+        }
+        Dispatch(ChangeUserData(payload))
+        // console.log(curractive['userData'].img)
+        console.log(curractive[ 'userData'])
       }
+      // console.log(userData[0]?.email)
    },[user, isLoading, isError, isFetching])
     
    useEffect(()=>{
    
  if(curractive['isLoggedIn']) {
+  console.log(curractive['isLoggedIn'])
     setislogin(true)
  }
  else setislogin(false)
