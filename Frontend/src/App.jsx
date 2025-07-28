@@ -52,10 +52,11 @@ function App(props) {
   //  console.log(user)
    const Dispatch=useDispatch();
    useEffect(()=>{
-         
+
           if(isError) {
          console.log("ERROR while getting user")
          Dispatch(ChangeLogIn(false));
+         setislogin(false)
         }
        if(isLoading) {
         <HashLoader color={"#5235E8"} loading={true} size={150}
@@ -64,36 +65,37 @@ function App(props) {
        }
       //  queryClient.removeQueries(['currentUser']);
        Dispatch(ChangeLogIn(true))
-      //  console.log(user)
+       console.log(user)
          
        const  userData = user?.data?.user
-       console.log(userData)
+      //  console.log(userData)
        if(userData){
-        // console.log(userData)
+        console.log(userData)
 
          /* Here setuservalue or useState is an asynchronous call and im dispatching the value to the store since the setuservalue is not been updated its dispatching the old values itself 
          so i instead of storing the value in setuservalue now i directly store it in payload const */
         const payload ={
-          name:userData[0]?.displayname?userData[0].displayname:"",
-          email:userData[0]?.email?userData[0].email:"",
-          Title: userData[0]?.title?userData[0].title:"",
-          img: userData[0]?.avatar?userData[0].avatar:"",
-          upvote: userData[0]?.upvote?userData[0].upvote:"",
-          about: userData[0]?.about?userData[0].about:"",
-          twentyFour_hour: userData[0]?.twentyFour_hour?userData[0].twentyFour_hour:"",
-          prevD_up: userData[0]?.prevD_up?userData[0].prevD_up:"",
-          max_title: userData[0]?.max_title?userData[0].max_title:"",
-          max_upvote: userData[0]?.max_upvote?userData[0].max_upvote:"",
-          address: userData[0]?.address?userData[0].address:"",
-          experience: userData[0]?.experience?userData[0].experience:"",
-          upv_twlmonths: userData[0]?.upv_twlmonths?userData[0].upv_twlmonths:[[]],
-          weekly_upvot: userData[0]?.weekly_upvot?userData[0].weekly_upvot:[],
-          btech_cse: userData[0]?.btech_cse?userData[0].btech_cse:[],
-         btech_cse_totalupv: userData[0]?.btech_cse_totalupv?userData[0].btech_cse_totalupv:"",
+          name:userData.displayname?userData.displayname:"",
+          email:userData.email?userData.email:"",
+          Title: userData.title?userData.title:"",
+          img: userData.avatar?userData.avatar:"",
+          upvote: userData.upvote?userData.upvote:"",
+          about: userData.about?userData.about:"",
+          twentyFour_hour: userData.twentyFour_hour?userData.twentyFour_hour:"",
+          prevD_up: userData.prevD_up?userData.prevD_up:"",
+          max_title: userData.max_title?userData.max_title:"",
+          max_upvote: userData.max_upvote?userData.max_upvote:"",
+          address: userData.address?userData.address:"",
+          experience: userData.experience?userData.experience:"",
+          upv_twlmonths: userData.upv_twlmonths?userData.upv_twlmonths:[[]],
+          weekly_upvot: userData.weekly_upvot?userData.weekly_upvot:[],
+          btech_cse: userData.btech_cse?userData.btech_cse:[],
+         btech_cse_totalupv: userData.btech_cse_totalupv?userData.btech_cse_totalupv:"",
         }
+        // console.log()
         Dispatch(ChangeUserData(payload))
         // console.log(curractive['userData'].img)
-        console.log(curractive[ 'userData'])
+        // console.log(curractive[ 'userData'])
       }
       // console.log(userData[0]?.email)
    },[user, isLoading, isError, isFetching])
@@ -150,7 +152,7 @@ function App(props) {
     //   else set(false);
     //  })}
   return (
-    <>
+    <div className="overflow-x-hidden min-h-screen">
     {!islogin?(
     <>
     <Header/>
@@ -169,7 +171,7 @@ function App(props) {
     <DashboardHeader title={heading}/>
     </>
   ))}
- </>
+ </div>
  )
 }
 

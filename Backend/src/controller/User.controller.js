@@ -165,6 +165,7 @@ const UserData = AsyncHandler(async (req, res) => {
     // console.log(Cached)
     
     if(Cached) {
+        // console.log("Chace HIT||")
         if (typeof Cached !== "string") {
     console.warn("Unexpected non-string from Redis:", Cached);
     await redis.del(redisKey);

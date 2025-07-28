@@ -18,21 +18,29 @@ async function preloadCache() {
  const rawUsers = users.map(u => u.toObject ? u.toObject() : u);
 //  console.log(typeof users)
  const pipeline = redis.pipeline();
- for(const user of rawUsers) {
-    let userObj = {...user}
-    userObj._id = String(userObj._id)
-    userObj = JSON.stringify(userObj)
-    // userObj.totalUpvote = String(userObj.totalUpvote)
-    // console.log(userObj)
-    pipeline.set(`user:${userObj.id}`,userObj);
-    // add the user upvotes in sorted set
+ for(const u of rawUsers) {
+    u._id = String(u._id)
+    const key = `user:${u._id}`;
+    const score = u.totalUpvote;
+    const val = JSON.stringify(u);
+    pipeline.set(key, val);
+    pipeline.zadd("users:byupvotes", score, u._id )
+    // MISTAKE -> here after converting the userObj into string im still trying to access it like document file
+    // let userObj = {...user}
+    // userObj._id = String(userObj._id)
+    // userObj = JSON.stringify(userObj)
+    // // userObj.totalUpvote = String(userObj.totalUpvote)
+    // // console.log(userObj)
+    // pipeline.set(`user:${userObj.id}`,userObj);
+    // // add the user upvotes in sorted set
    
-    pipeline.zadd(
-        'users:byUpvotes',
-        userObj.totalUpvote,
-        userObj._id
-    );
+    // pipeline.zadd(
+    //     'users:byUpvotes',
+    //     userObj.totalUpvote,
+    //     userObj._id
+    // );
  }
+
   const result = await pipeline.exec();
  const user = await redis.zrevrange('users:byUpvotes',0,1);
 console.log(`🌡️   Preloaded ${users.length} users into Redis`)
