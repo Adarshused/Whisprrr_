@@ -238,4 +238,34 @@ const UserData = AsyncHandler(async (req, res) => {
    .json(new ApiResponse(200, {user: User,leaderboard: leaderBoard},"Fetched user data"))
 })
 
-export {AvatarUser, RegisterFaculty, LoginFaculty, UserData,Logout}
+const UserInfo = AsyncHandler(async (req, res) => {
+   let userID = req.user._id;
+   console.log(req.body)
+   const displayname = String(req.body.displayname)
+   const email = String(req.body.email)
+  await Faculty.findByIdAndUpdate(
+     userID,
+    { $set:{
+        displayname : displayname,
+        email : email
+    }   
+    },
+    {
+        new : true,
+    },
+   )
+   const User = await Faculty.findById(userID).select(
+     "-password -refreshToken"
+   )
+   userID = String(userID);
+   const redisKey = `user:${userID}`;
+  await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
+  
+   return res.
+   status(200)
+   .json(new ApiResponse(200, "information updated successfully"))
+})
+const UserContact = AsyncHandler(async (req, res) => {
+
+})
+export {AvatarUser, RegisterFaculty, LoginFaculty, UserData,Logout,UserInfo}

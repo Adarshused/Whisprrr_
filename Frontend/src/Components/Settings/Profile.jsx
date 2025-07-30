@@ -8,8 +8,9 @@ function Profile(){
   const [profilelogo,setprofilelogo]=useState("");
   const [name,setname]=useState("Adarsh Mishra");
   const [email,setemail]=useState("adarshmishr6@gmail.com");
-  const [isEditContact, setisEditContact] = useState(false);
-  const [isEditInfo, setisEditInfo] = useState(false);
+  const [isEditContact, setisEditContact] = useState(true);
+  const [isEditInfo, setisEditInfo] = useState(true);
+  const [infoData,setinfoData] = useState({})
   const Dispatch = useDispatch()
   const curractive= useSelector((state)=>state.CurrActive)
   const handleFileChange = async (event) => {
@@ -41,10 +42,38 @@ function Profile(){
        }
 
   }
-  const HandleSubmitInfo = (e) => {
-     if(e.target) {
-       
+  const HandleSubmitContact = async (e) => {
+      e.preventDefault();     
+     const displayname = e.target.DisplayName?.value;
+     const email  = e.target.email?.value;
+    //  console.log(displayname, email)
+     try {
+     const res = await fetch("http://localhost:8000/api/v1/users/UserInfo",{
+      method : "POST",
+      headers: { "Content-Type": "application/json" },
+      body : JSON.stringify({displayname, email}),
+      credentials: "include",
+     });
+     if(res.ok) {
+      console.log("UserContact updated")
      }
+     else {
+      const err = await res.json()
+      throw new Error(err.message)
+     }
+     }
+     catch (err) {
+       setError(err.message)
+     }
+  }
+  const HandleSubmitInfo = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    // console.log(e.target.firstname?.value,e.target.lastname?.value,e.target.dob?.value)
+    formData.append(e.target.firstname?.value);
+    formData.append(e.target.lastname?.value);
+    formData.append(e.target.dob?.value);
+    formData.append(e.target.cor?.value)
   }
    useEffect(()=>{
     const user = curractive['userData']
@@ -60,9 +89,9 @@ function Profile(){
         <>
       <div className="flex flex-col w-screen h-screen">
         <div className="flex w-full h-4/10">
-         <div className="flex flex-col mt-9 ml-7">
+         <div className="flex flex-col mt-9 ml-7 w-40">
    <h1 className="font-extrabold text-xl" style={{fontFamily:'Times New Roman,Serif'}}> Contact info</h1>
-     <h5 className="text-gray-400">Manage your Contact     .</h5>
+     <h5 className="text-gray-400">Manage your Contact</h5>
          </div>
          <div className="flex flex-col w-230 rounded-lg ml-35 h-60 shadow-sm border border-gray-300 ">
           <div className=" border-b border-gray-300 h-1/2">
@@ -87,28 +116,31 @@ function Profile(){
            </label>
              </div>
              </div>
-             <form action={HandleSubmitInfo}>
+             <form  onSubmit={HandleSubmitContact}>
              <div className="h-1/2 flex w-screen">
-                <div className="flex flex-col ml-6 mt-7  ">
-                   <h5 className="font-extrabold "  style={{fontFamily:'Times New Roman,Serif'}} name="DisplayName">Display name</h5>
+                <div className="flex flex-col ml-6 mt-7 h-19 ">
+                   <h5 className="font-extrabold  "  style={{fontFamily:'Times New Roman,Serif'}} >Display name</h5>
                    <div className=" mt-2 w-103 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" readOnly={isEditContact} />
+                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="DisplayName" readOnly={isEditContact} />
                    </div>
                 </div>
                    <div>
                 <div className="flex flex-col ml-2  ">
                   <div className="flex mt-2 ml-4">
-                   <h5 className="font-extrabold mt-5 ml-4 " style={{fontFamily:'Times New Roman,Serif'}}  name="email">Email</h5>
-                    <label className="px-2 ml-69 w-20 h-6  cursor-pointer font-extrabold text-[#5235E8] px-6 py-3 hover:text-[#9785F1] flex items-center justify-center"
+                   <h5 className="font-extrabold mt-5 ml-4 " style={{fontFamily:'Times New Roman,Serif'}}  >Email</h5>
+                      <button className="h-6 " type={!isEditContact ? "button" : "submit"}>
+               <label className="px-2 ml-69 w-20 h-6  cursor-pointer font-extrabold text-[#5235E8] px-6 py-3 hover:text-[#9785F1] flex items-center justify-center"
                 style={{ fontFamily: 'Times New Roman, Serif' }} onClick={()=>{
                   setisEditContact(prev => !prev)
-                }} type="submit"
+                }} 
                  >{isEditContact? 'EDIT' : 'SAVE'}
                  </label>
+                      </button>
+                   
                   </div>
                    
                    <div className=" mt-2 w-103 ml-5 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" readOnly={isEditContact} />
+                   <input  className="ml-5 w-105 h-full  outline-none"  name="email" type="text" readOnly={isEditContact} />
                    </div>
                 </div>
                    </div>
@@ -123,43 +155,48 @@ function Profile(){
    <h1 className="font-extrabold text-xl" style={{fontFamily:'Times New Roman,Serif'}}> Personal info</h1>
      <h5 className="text-gray-400">Manage your information</h5>
          </div>
+         <form onSubmit={HandleSubmitInfo}>
          <div className="flex flex-col w-230 rounded-lg ml-30 h-60 shadow-sm border border-gray-300 ">
           <div className="flex ">
             <div className="flex flex-col ml-6 mt-4  ">
                    <h5 className="font-extrabold text-sm" style={{fontFamily:'Times New Roman,Serif'}}>First name</h5>
                    <div className="mt-1  w-103 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text"  readOnly={isEditInfo}/>
+                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="firstname" readOnly={isEditInfo}/>
                    </div>
                 </div>
                    <div className="flex flex-col ml-2  ">
                   <div className="flex mt-2 ml-2">
                    <h5 className="font-extrabold mt-2 ml-4 " style={{fontFamily:'Times New Roman,Serif'}}>Last Name</h5>
-                    <label className="px-2 ml-63 w-20 h-6  cursor-pointer font-extrabold  text-[#5235E8] px-6 py-3 hover:text-[#9785F1] hover: flex items-center justify-center"
+                   <button className="h-6" type={!isEditInfo?"button":"submit"}>
+                <label className="px-2 ml-63 w-20 h-6  cursor-pointer font-extrabold  text-[#5235E8] px-6 py-3 hover:text-[#9785F1] hover: flex items-center justify-center"
                 style={{ fontFamily: 'Times New Roman, Serif' }} onClick={()=>{
                   setisEditInfo(prev => !prev)
                 }}
                  >{isEditInfo? 'EDIT' : 'SAVE'}
                  </label>
+                   </button>
+                    
                   </div>
                    
                    <div className="  w-103 ml-3 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" readOnly={isEditInfo} />
+                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="lastname" readOnly={isEditInfo} />
                    </div>
                 </div>
           </div>
              <div className="flex flex-col ml-6   ">
                    <h5 className="font-extrabold text-sm " style={{fontFamily:'Times New Roman,Serif'}}>Date of birth</h5>
                    <div className="mt-1  w-212 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" readOnly={isEditInfo} />
+                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="dob" readOnly={isEditInfo} />
                    </div>
                 </div>
             <div className="flex flex-col ml-6   ">
                    <h5 className="font-extrabold text-sm " style={{fontFamily:'Times New Roman,Serif'}}>Country of residence</h5>
                    <div className=" mt-1 w-212 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" readOnly={isEditInfo} />
+                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="cor" readOnly={isEditInfo} />
                    </div>
                 </div>
         </div>
+        </form>
       </div>
        <div className="flex w-full h-3/10">
          <div className="flex flex-col mt-9 ml-7">

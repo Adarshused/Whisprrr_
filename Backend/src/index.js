@@ -13,16 +13,17 @@ redis.on('error',err => {
 })
 connectDB()
 async function preloadCache() {
-    
+
  const users = await  fetchAllUsersFromDB();
  const rawUsers = users.map(u => u.toObject ? u.toObject() : u);
-//  console.log(typeof users)
+//  console.log(rawUsers)
  const pipeline = redis.pipeline();
  for(const u of rawUsers) {
     u._id = String(u._id)
     const key = `user:${u._id}`;
     const score = u.totalUpvote;
     const val = JSON.stringify(u);
+    
     pipeline.set(key, val);
     pipeline.zadd("users:byupvotes", score, u._id )
     // MISTAKE -> here after converting the userObj into string im still trying to access it like document file
@@ -40,13 +41,12 @@ async function preloadCache() {
     //     userObj._id
     // );
  }
-
-  const result = await pipeline.exec();
+ const result = await pipeline.exec();
  const user = await redis.zrevrange('users:byUpvotes',0,1);
 console.log(`🌡️   Preloaded ${users.length} users into Redis`)
 }
 await redis.flushdb();
-preloadCache()
+await preloadCache()
 .then(()=>{
     app.listen(process.env.PORT || 8000, ()=>{
          console.log(`⚙️   Server is running on ${process.env.PORT}`)

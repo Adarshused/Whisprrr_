@@ -38,7 +38,7 @@ export default function Dropdown({ options, value, onChange, placeholder = 'Sele
         <span>{selectedLabel()}</span>
        
       </button> */}
-        <div className="flex gap-x-2 px-5  text-sm font-medium">
+        <div className="flex hidden  md:flex gap-x-2 px-5  text-sm font-medium">
       <div className="flex ">
                 <label htmlFor="" className="gap-x-2 ">Developer</label>
                 <svg
@@ -91,6 +91,59 @@ export default function Dropdown({ options, value, onChange, placeholder = 'Sele
            </svg>
                 </div> 
      
+        </div>
+        <div className=' flex flex-col   md:hidden gap-y-2'>
+           <div className="flex ">
+                <label htmlFor="" className="gap-x-2 ml-11">Developer</label>
+                <svg
+          className="cursor-pointer w-5 h-5 mt-1 ml-1 text-extrabold text-black-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 35  35"
+          stroke="currentColor"
+          onClick={()=>{setDeveloperOpen(prev=>!prev)
+            if(Featureopen) setFeatureOpen(false)
+            if(Contactopne) setContactOpen(false)
+          }}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+           </svg>
+                </div>
+    <div className="flex ml-4 ">
+                <label htmlFor="" className="ml-9">Features</label>
+                <svg
+          className="cursor-pointer w-5 h-5 mt-1 ml-1 text-extrabold text-black-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 35  35"
+          stroke="currentColor"
+          onClick={()=>{
+         setFeatureOpen(prev=>!prev) 
+         if(Developeropen) setDeveloperOpen(false);
+         if(Contactopne) setContactOpen(false);
+        }
+           
+         }
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+           </svg>
+                </div>
+                <div className="flex ml-4">
+                <label htmlFor="" className="cursor-pointer ml-5">Contact us</label>
+                <svg
+          className=" cursor-pointer w-5 h-5 mt-1 ml-1 text-extrabold text-black-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 35  35"
+          stroke="currentColor"
+          onClick={()=>{setContactOpen(prev=>!prev)
+            if(Featureopen) setFeatureOpen(false)
+            if(Developeropen) setDeveloperOpen(false)
+          }}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+           </svg>
+                </div> 
         </div>
       {/* Dropdown List */}
       {Developeropen && (

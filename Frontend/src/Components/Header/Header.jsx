@@ -1,14 +1,23 @@
 import React from "react";
-import { useState } from "react";
+import { useState , useEffect,useRef} from "react";
 import { NavLink } from "react-router-dom";
 import Dropdown from "../Dropdown/Dropdown";
 function Header(){
     const optionArr=[{label:"Features",value:["FAQ","Features"]}];
     const [open, setOpen] = useState(false);
-
+     const containerRef = useRef(null);
+    useEffect(() => {
+        function handleClickOutside(event) {
+          if (containerRef.current && !containerRef.current.contains(event.target)) {
+            setOpen(false)
+          }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+      }, []);
     return(
         <>
-        <div className=" relative flex gap-x-20 bg-white/30 backdrop-blur-md  fixed top-0 left-0  z-50 shadow-sm w-screen h-14 ">
+        <div ref={containerRef} className="flex gap-x-20 bg-white/30 backdrop-blur-md fixed  top-0 left-0  z-50 shadow-sm w-screen h-14 ">
              <div className="hidden md:block flex gap-x-2 px-5 py-6 md:ml-160 text-sm font-medium">
                 {/* <div className="flex ">
                 <label htmlFor="" className="gap-x-2 ">Features</l abel>
@@ -26,7 +35,7 @@ function Header(){
                 <Dropdown options={optionArr}/>
               
              </div>
-            <div className="md:hidden px-4 py-4">
+            <div className="relative md:hidden px-4 py-4">
       <button
         onClick={() => setOpen(o => !o)}
         className="w-6 h-6 flex flex-col justify-center items-center focus:outline-none"
@@ -69,9 +78,9 @@ function Header(){
       </button>
     </div>
         {open && (
-          <div className="absolute w-1/2 h-full bg-white/30 backdrop-blur-md  fixed top-0 left-0  z-50 shadow-sm">
-
-         h
+          <div className=" w-1/2 h-120  fixed top-10 left-4  z-50 shadow-[0_4px_6px_rgba(82,53,232,0.5)] rounded-lg overflow-hidden" >
+           <Dropdown options={optionArr}></Dropdown>
+              
           </div>
         )}
              <div className="flex gap-x-4 px-2 py-2   font-serif">

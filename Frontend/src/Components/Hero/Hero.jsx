@@ -86,15 +86,15 @@ function Hero(){
        </div>
       </div>
                    {/* Second page */}
-          <div className="flex flex-col ">
-          <div className="flex flex-col h-screen w-screen " style={{'position':'relative'}}>
+          <div className="relative h-screen w-screen flex flex-col ">
+          <div className="  flex flex-col  ">
 
          <svg
       viewBox="0 0 80 132"
       xmlns="http://www.w3.org/2000/svg"
       fill="currentColor"   
-      style={{'position':'absolute'}}
-      className=" h-700  md:w-auto md:h-auto"
+      
+      className="absolute h-430  md:w-auto md:h-auto"
     >
       <defs>
         <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
