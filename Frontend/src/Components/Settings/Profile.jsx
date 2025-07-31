@@ -6,13 +6,18 @@ import { useEffect } from "react";
 
 function Profile(){
   const [profilelogo,setprofilelogo]=useState("");
-  const [name,setname]=useState("Adarsh Mishra");
-  const [email,setemail]=useState("adarshmishr6@gmail.com");
+  const [name,setname]=useState("");
+  const [email,setemail]=useState("");
+  const [Firstname, setFirstname] = useState("")
+  const [Lastname, setLastname] = useState("")
+  const [DOB, setDOB] = useState("")
+  const [COR,setCOR] = useState("")
   const [isEditContact, setisEditContact] = useState(true);
   const [isEditInfo, setisEditInfo] = useState(true);
   const [infoData,setinfoData] = useState({})
   const Dispatch = useDispatch()
   const curractive= useSelector((state)=>state.CurrActive)
+  
   const handleFileChange = async (event) => {
     const allCookies = document.cookie;
     console.log(allCookies);
@@ -48,7 +53,7 @@ function Profile(){
      const email  = e.target.email?.value;
     //  console.log(displayname, email)
      try {
-     const res = await fetch("http://localhost:8000/api/v1/users/UserInfo",{
+     const res = await fetch("http://localhost:8000/api/v1/users/UserContact",{
       method : "POST",
       headers: { "Content-Type": "application/json" },
       body : JSON.stringify({displayname, email}),
@@ -66,14 +71,31 @@ function Profile(){
        setError(err.message)
      }
   }
-  const HandleSubmitInfo = (e) => {
+  const HandleSubmitInfo = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    // console.log(e.target.firstname?.value,e.target.lastname?.value,e.target.dob?.value)
-    formData.append(e.target.firstname?.value);
-    formData.append(e.target.lastname?.value);
-    formData.append(e.target.dob?.value);
-    formData.append(e.target.cor?.value)
+    const firstname = e.target.firstname?.value;
+    const lastname = e.target.lastname?.value;
+    const dob = e.target.dob?.value;
+    const cor = e.target.cor?.value;
+    try {
+      const res = await fetch("http://localhost:8000/api/v1/users/UserInfo", {
+        method : "POST",
+        headers : { "Content-Type" : "application/json"},
+        body : JSON.stringify({firstname, lastname, dob, cor}),
+        credentials : "include",
+      });
+
+      if (res.ok) {
+        console.log("Contact Info updated Successfully")
+      }
+      else { 
+        const err = await res.json();
+        throw new Error(err.message)
+      }
+    }
+    catch (err) {
+     setError(err.message)
+    }
   }
    useEffect(()=>{
     const user = curractive['userData']
@@ -82,6 +104,11 @@ function Profile(){
       setemail(user.email)
       setname(user.name)
       setprofilelogo(user.img)
+      setFirstname(user.firstname)
+      setLastname(user.lastname)
+      setDOB(user.dob)
+      setCOR(user.cor)
+
     }
     else console.log("ERROOOOOOOOOOOOORRRRRRr")
    },[])
@@ -97,7 +124,7 @@ function Profile(){
           <div className=" border-b border-gray-300 h-1/2">
              <div className="flex mt-7 ml-6  gap-x-25">
               <div className="flex  gap-x-5">
-                  <Avatar firstName="Adarsh" lastName="mishra" avatarUrl={profilelogo} size={56} className="" />
+                  <Avatar firstName={Firstname} lastName={Lastname} avatarUrl={profilelogo} size={56} className="" />
                   {/* <button className="cursor-pointer shadow-md text-3xl rounded-full  w-20 h-20 font-extrabold text-white bg-[#DEDAFB]" style={{fontFamily:'Times New Roman, Serif',textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'}} >{profilelogo}</button> */}
                   <div className="flex flex-col ">
                   <h1 className=" mt-5 text-xl font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{name}</h1>
@@ -121,7 +148,7 @@ function Profile(){
                 <div className="flex flex-col ml-6 mt-7 h-19 ">
                    <h5 className="font-extrabold  "  style={{fontFamily:'Times New Roman,Serif'}} >Display name</h5>
                    <div className=" mt-2 w-103 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="DisplayName" readOnly={isEditContact} />
+                   <input  className="ml-5 w-105 h-full text-gray-400 outline-none" type="text" name="DisplayName" defaultValue={name} readOnly={isEditContact} />
                    </div>
                 </div>
                    <div>
@@ -140,7 +167,7 @@ function Profile(){
                   </div>
                    
                    <div className=" mt-2 w-103 ml-5 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none"  name="email" type="text" readOnly={isEditContact} />
+                   <input  className="ml-5 w-105 h-full text-gray-400  outline-none" defaultValue={email}  name="email" type="text" readOnly={isEditContact} />
                    </div>
                 </div>
                    </div>
@@ -161,7 +188,7 @@ function Profile(){
             <div className="flex flex-col ml-6 mt-4  ">
                    <h5 className="font-extrabold text-sm" style={{fontFamily:'Times New Roman,Serif'}}>First name</h5>
                    <div className="mt-1  w-103 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="firstname" readOnly={isEditInfo}/>
+                   <input  className="ml-5 w-105 h-full text-gray-400 outline-none" type="text" defaultValue={Firstname} name="firstname" readOnly={isEditInfo}/>
                    </div>
                 </div>
                    <div className="flex flex-col ml-2  ">
@@ -179,20 +206,20 @@ function Profile(){
                   </div>
                    
                    <div className="  w-103 ml-3 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="lastname" readOnly={isEditInfo} />
+                   <input  className="ml-5 w-105 h-full text-gray-400 outline-none" type="text" defaultValue={Lastname} name="lastname" readOnly={isEditInfo} />
                    </div>
                 </div>
           </div>
              <div className="flex flex-col ml-6   ">
                    <h5 className="font-extrabold text-sm " style={{fontFamily:'Times New Roman,Serif'}}>Date of birth</h5>
                    <div className="mt-1  w-212 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="dob" readOnly={isEditInfo} />
+                   <input  className="ml-5 w-105 h-full text-gray-400 outline-none" type="text" defaultValue={DOB} name="dob" readOnly={isEditInfo} />
                    </div>
                 </div>
             <div className="flex flex-col ml-6   ">
                    <h5 className="font-extrabold text-sm " style={{fontFamily:'Times New Roman,Serif'}}>Country of residence</h5>
                    <div className=" mt-1 w-212 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full  outline-none" type="text" name="cor" readOnly={isEditInfo} />
+                   <input  className="ml-5 w-105 h-full text-gray-400 outline-none" type="text" defaultValue={COR} name="cor" readOnly={isEditInfo} />
                    </div>
                 </div>
         </div>

@@ -38,9 +38,10 @@ function UserSignUp(){
           });
         setisRegistered(true)
        }
-       else if(!res.ok) {
-          const err= await res.json();
-         throw new Error(err.message || "Registration failed");
+       else {
+          const playload= await res.json();
+          console.log(playload)
+         throw new Error(playload.error || "Registration failed");
        }
        
        }

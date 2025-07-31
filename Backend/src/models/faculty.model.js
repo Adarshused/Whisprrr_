@@ -13,7 +13,12 @@ const facultySchema = new Schema(
         unique: true,
         trim: true,
       },
+     
       firstname: {
+        type: String,
+        trim: true,
+      },
+      lastname: {
         type: String,
         trim: true,
       },

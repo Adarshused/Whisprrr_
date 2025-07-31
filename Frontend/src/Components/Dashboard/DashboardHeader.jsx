@@ -12,16 +12,22 @@ function DashboardHeader(props){
   const [heading,setheading]=useState('');
   const [notification,setnotification]=useState(true);
   const [clickednotification,setclickednotification]=useState(false);
-  const [profilelogo,setprofilelogo]=useState("AM");
-  
+  const [profilelogo,setprofilelogo]=useState("");
+  const name=useSelector((state)=>state.CurrActive)
   useEffect(()=>{
     setheading(props.title);
   },[props])
 
+  useEffect(()=> {
+   
+    // console.log(name.userData.img)
+    setprofilelogo(name.userData.img)
+  })
 const changeFeature=(currFeature)=>{
 Dispatch(ChangeStatus(currFeature));
 }
-  const name=useSelector((state)=>state.CurrActive)
+  
+
   return (
     <>
     <div className="fixed top-0 left-0 w-310 ml-67 flex py-4 border-b border-gray-300 gap-x-8"style={{fontFamily:'Times New Roman, Serif'}}>
@@ -104,8 +110,9 @@ Dispatch(ChangeStatus(currFeature));
   }
 </svg>
 <NavLink to="/settingpage">
-  <button className="cursor-pointer rounded-full w-10 h-10 font-extrabold text-white bg-[#DEDAFB]" onClick={(e)=>{changeFeature("Setting")}} >{profilelogo}</button>
-
+  <button  className="cursor-pointer rounded-full w-10 h-10 font-extrabold text-white bg-[#DEDAFB]" onClick={(e)=>{changeFeature("Setting")}} >
+   <img className="cursor-pointer rounded-full w-10 h-10 font-extrabold text-white bg-[#DEDAFB]" src={profilelogo} alt="" />
+  </button>
 </NavLink>
 
 

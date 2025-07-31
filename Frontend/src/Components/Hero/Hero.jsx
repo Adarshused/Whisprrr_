@@ -10,7 +10,7 @@ function Hero(){
    
     return(
         <>
-    <div className="flex flex-col gap-y-8 md:w-screen w-10">
+    <div className="flex flex-col  gap-y-8 md:w-screen w-10">
        
         {/* First page */}
         <div className="flex" style={{'position':'relative'}}>

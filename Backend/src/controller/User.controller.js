@@ -39,7 +39,7 @@ const RegisterFaculty = AsyncHandler(async (req, res)=>{
         ]
     })
     if(existedUser)
-        throw new ApiError(409, "User with email or username already exists")
+        throw new ApiError(409, "User with same email or organizationID already exists")
    
     const user = await Faculty.create({
         name,
@@ -102,9 +102,9 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
 
 
 const AvatarUser = AsyncHandler(async (req, res)=>{
-     const user_Id = req.user._id
+     const userID = req.user._id
     //   console.log(req)
-
+    
      const AvatarLocalPath = req.files?.avatar[0]?.path;
      if(!AvatarLocalPath) 
         throw new ApiError(400, "Avatar file is empty")
@@ -112,7 +112,7 @@ const AvatarUser = AsyncHandler(async (req, res)=>{
      const avatar = await uploadOnCloudinary(AvatarLocalPath)
      
      await Faculty.findByIdAndUpdate(
-        user_Id,
+        userID,
         {
             $set:{
                 avatar : avatar.url
@@ -122,6 +122,12 @@ const AvatarUser = AsyncHandler(async (req, res)=>{
             new:true
         }
      )
+      const User = await Faculty.findById(userID).select(
+        "-password -refreshToken"
+     )
+     userID = String(userID);
+     const redisKey = `user:${userID}`;
+    await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
      const option = {
         httpOnly : true,
         secure: true,
@@ -157,9 +163,10 @@ const Logout = AsyncHandler(async (req, res) => {
 })
 
 const UserData = AsyncHandler(async (req, res) => {
-    const userID = req.user._id
+    let userID = req.user._id
     let User;
     const topN = 10
+    userID = String(userID)
     const redisKey = `user:${userID}`;
     const Cached = await redis.get(redisKey)
     // console.log(Cached)
@@ -238,9 +245,9 @@ const UserData = AsyncHandler(async (req, res) => {
    .json(new ApiResponse(200, {user: User,leaderboard: leaderBoard},"Fetched user data"))
 })
 
-const UserInfo = AsyncHandler(async (req, res) => {
+const UserContact = AsyncHandler(async (req, res) => {
    let userID = req.user._id;
-   console.log(req.body)
+//    console.log(req.body)
    const displayname = String(req.body.displayname)
    const email = String(req.body.email)
   await Faculty.findByIdAndUpdate(
@@ -265,7 +272,34 @@ const UserInfo = AsyncHandler(async (req, res) => {
    status(200)
    .json(new ApiResponse(200, "information updated successfully"))
 })
-const UserContact = AsyncHandler(async (req, res) => {
+const UserInfo = AsyncHandler(async (req, res) => {
+    let userID = req.user._id;
+    const firstname = String(req.body.firstname);
+    const lastname = String(req.body.lastname);
+    const dob = String(req.body.dob);
+    const cor = String(req.body.cor);
 
+    await Faculty.findByIdAndUpdate(
+        userID,
+        { $set : {
+            firstname : firstname,
+            lastname : lastname,
+            dob : dob,
+            country_residence : cor,
+        }
+        },
+        {
+            new : true,
+        },
+    )
+     const User = await Faculty.findById(userID).select(
+        "-password -refreshToken"
+     )
+     userID = String(userID);
+     const redisKey = `user:${userID}`;
+    await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
+    return res.
+   status(200)
+   .json(new ApiResponse(200, "Contact updated successfully"))
 })
-export {AvatarUser, RegisterFaculty, LoginFaculty, UserData,Logout,UserInfo}
+export {AvatarUser, RegisterFaculty, LoginFaculty, UserData,Logout,UserContact,UserInfo}

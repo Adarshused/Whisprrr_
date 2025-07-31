@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 function Security(){
-    const [number,setnumber]=useState("(+91) 9768 543 3xxx");
-    const [email,setemail]=useState("adarshmishr6@gmail.com")
+    const [number,setnumber]=useState("");
+    const [email,setemail]=useState("")
     const toggle_message=(e)=>{
       const track=e.target;
       // console.log(track.getAttribute('data-on'))
@@ -60,7 +60,7 @@ function Security(){
                         <img className="w-6 h-6 "src="/assests/msg.svg" alt="" />
                     </div>
                    </div>
-                   <div className="flex flex-col ml-2">
+                   <div className="flex flex-col ml-2 w-140">
                <h1 className="font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>Text Message</h1>
                <div className="flex gap-x-1">
                <h5 className="text-xs text-gray-400">When you sign in, you will receive OTP code to approve your login to your number</h5>
@@ -84,7 +84,7 @@ function Security(){
                         <img className="w-6 h-6 "src="/assests/msg_1.svg" alt="" />
                     </div>
                    </div>
-                   <div className="flex flex-col ml-2">
+                   <div className="flex flex-col ml-2 w-151">
                <h1 className="font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>Email</h1>
                <div className="flex gap-x-1">
                <h5 className="text-xs  text-gray-400">When you sign in, you will receive notification to approve your login on your email</h5>

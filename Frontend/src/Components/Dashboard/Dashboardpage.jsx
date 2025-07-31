@@ -540,7 +540,7 @@ return(
      </div>
      
     </div>
-    <div className="flex flex-col w-4/9 ml-8  border border-b border-l border-gray-300">
+    <div className="flex flex-col mt-3 w-4/9 ml-8  border border-b border-l border-gray-300">
       <div className="flex flex-col w-5/9 ml-5 w-85 ">
            <div className="flex gap-x-20 mt-2">
               <h1 className="font-extrabold text-lg " style={{fontFamily:'Times New Roman,Serif'}}>University wide Ranking</h1>

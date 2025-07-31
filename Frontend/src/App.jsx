@@ -75,6 +75,10 @@ function App(props) {
          /* Here setuservalue or useState is an asynchronous call and im dispatching the value to the store since the setuservalue is not been updated its dispatching the old values itself 
          so i instead of storing the value in setuservalue now i directly store it in payload const */
         const payload ={
+          firstname:userData.firstname?userData.firstname:"",
+          lastname:userData.lastname?userData.lastname:"",
+          dob:userData.dob?userData.dob:"",
+          cor:userData.country_residence?userData.country_residence:"",
           name:userData.displayname?userData.displayname:"",
           email:userData.email?userData.email:"",
           Title: userData.title?userData.title:"",

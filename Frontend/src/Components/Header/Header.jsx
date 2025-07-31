@@ -5,6 +5,7 @@ import Dropdown from "../Dropdown/Dropdown";
 function Header(){
     const optionArr=[{label:"Features",value:["FAQ","Features"]}];
     const [open, setOpen] = useState(false);
+    const [GetStarted,setGetStarted] = useState(false);
      const containerRef = useRef(null);
     useEffect(() => {
         function handleClickOutside(event) {
@@ -83,14 +84,19 @@ function Header(){
               
           </div>
         )}
+        
              <div className="flex gap-x-4 px-2 py-2   font-serif">
                 <NavLink to="/signin">
                 <button className=" cursor-pointer border-1 h-10 font-medium rounded-md border-purple-300 px-3 py-1 hover:bg-[#5235E8] active:text-white active:bg-[#5235E8] hover:text-white">Sign In</button>
                 </NavLink>
                
-                <NavLink to="/signup" >
-                <button className=" cursor-pointer border-1 h-10 font-medium  rounded-md border-purple-300 text-[#5235E8] px-3 py-1 hover:bg-[#5235E8] active:bg-[#5235E8] active:text-white hover:text-white" >Get Started</button>
+                <NavLink to="/signup">
+                <button className=" cursor-pointer border-1 h-10 font-medium  rounded-md border-purple-300 text-[#5235E8] px-3 py-1 hover:bg-[#5235E8] active:bg-[#5235E8] active:text-white hover:text-white" onClick={()=>{
+                  setGetStarted(prev=>!prev)
+                }} >Get Started</button>
+
                 </NavLink>
+               
                 
              </div>
         </div>
