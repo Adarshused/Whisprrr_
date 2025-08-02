@@ -7,7 +7,7 @@ import DashboardHeader from './Components/Dashboard/DashboardHeader.jsx';
 import {useDispatch,useSelector} from 'react-redux';
 import Settings from './Components/Settings/Settings.jsx'
 import Settingsheader from './Components/Settings/Settingsheader.jsx';
-import { ChangeLogIn, ChangeUserData, Update_user } from './Features/DashboardSlice.js';
+import { ChangeLogIn, ChangeUserData, Update_Org, Update_user } from './Features/DashboardSlice.js';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import { useCurrentUser } from './utils/useCurrentUser.js';
 import { HashLoader} from 'react-spinners'
@@ -28,24 +28,25 @@ function App(props) {
   const [setting,setsetting]=useState(false);
    const [heading,setheading]=useState("Dashboard");
    const [Sheading,setSheading] = useState("Profile")
-   const [uservalue, setuservalue] = useState({
-        name: "",
-        Title: "",
-        img: "",
-        upvote: "",
-        about: "",
-        twentyFour_hour: "",
-        prevD_up: "",
-        prevPD_up: "",
-        max_title: "",
-        max_upvote: "",
-        address: "",
-        experience: "",
-        upv_twlmonths: "",
-        weekly_upvot: "",
-        btech_cse: "",
-        btech_cse_totalupv: ""
-   })
+  //  const [uservalue, setuservalue] = useState({
+  //       name: "",
+  //       Title: "",
+  //       img: "",
+  //       upvote: "",
+  //       about: "",
+  //       twentyFour_hour: "",
+  //       prevD_up: "",
+  //       prevPD_up: "",
+  //       max_title: "",
+  //       max_upvote: "",
+  //       address: "",
+  //       experience: "",
+  //       upv_twlmonths: "",
+  //       weekly_upvot: "",
+  //       btech_cse: "",
+  //       btech_cse_totalupv: ""
+  //  })
+   const [Organization, setOrganizations] = useState([]);
    const curractive= useSelector((state)=>state.CurrActive)
   
    const {data: user, isLoading, isFetching, isError} =  useCurrentUser();
@@ -68,10 +69,16 @@ function App(props) {
        console.log(user)
          
        const  userData = user?.data?.user
-      //  console.log(userData)
+       const orgData = user?.data?.organization
+       console.log(orgData)
+      if(orgData) {
+          Dispatch(Update_Org(orgData))
+      }
+       console.log(user)
        if(userData){
         console.log(userData)
 
+        
          /* Here setuservalue or useState is an asynchronous call and im dispatching the value to the store since the setuservalue is not been updated its dispatching the old values itself 
          so i instead of storing the value in setuservalue now i directly store it in payload const */
         const payload ={

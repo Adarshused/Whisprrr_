@@ -2,6 +2,7 @@ import {AsyncHandler} from '../utils/AsyncHandler.js'
 import {ApiError} from '../utils/ApiError.js'
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import { Faculty } from '../models/faculty.model.js';
+import { Organization } from '../models/organisation.model.js';
 import {ApiResponse} from '../utils/ApiResponse.js'
 import { redis } from '../utils/redis.js';
 import mongoose from 'mongoose';
@@ -26,25 +27,61 @@ catch (err) {
 
 const RegisterFaculty = AsyncHandler(async (req, res)=>{
 //    db.faculties.deleteMany({ displayname: null })
-    const {name, email, organizationID,password} = req.body
-    //    console.log(req.body)
+    const {name, email, organization,password} = req.body
+    //    console.log(organization)
     // Faculty.getIndexes()
-    if([name, email,organizationID, password].some((field)=>field?.trim === "")){
+    if([name, email,organization, password].some((field)=>field?.trim === "")){
         throw new ApiError(400,"all fields are required")
     }
-    const existedUser = await Faculty.findOne({
-        $or :[
-            {email},
-            {organizationID}
-        ]
-    })
-    if(existedUser)
-        throw new ApiError(409, "User with same email or organizationID already exists")
+    // const existedUser = await Faculty.findOne({
+    //     $or :[
+    //         {email},
+    //         {organization}
+    //     ]
+    // })
+    
+     /* 
+              IMPORTANT NOTE THE SCHEMA NAME IS SAVED BY DEFAULT WITH ALL LETTER SMALL AND PLURAL FORM
+              eg: Faculty --> faculties
+     */
+    const existedUser = await Organization.aggregate([
+        // find the org
+        {$match: {name: organization}},
+
+        // see for only faculties in the org
+        {$unwind: '$members'},
+        {$match: { 'members.kind': 'Faculty' }},
+
+        // JOIN on Faculty collection on members.item -> _id
+        {
+            $lookup: {
+                from: "faculties",
+                localField: 'members.item',
+                foreignField: '_id',
+                as: 'facultyDoc',
+            }
+        },
+        {$unwind: '$facultyDoc'},
+
+        // filter by email
+        {$match: {'facultyDoc.email': email}},
+
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                memberInfo: '$facultyDoc'
+            }
+        }
+    ])
+    console.log(existedUser)
+    if(existedUser.length > 0)
+        throw new ApiError(409, "User with same email already exists in your organization")
    
     const user = await Faculty.create({
         name,
         email,
-        organizationID,
+        organization,
         password
     })
     const created_user = await Faculty.findById(user._id).select(
@@ -52,20 +89,38 @@ const RegisterFaculty = AsyncHandler(async (req, res)=>{
     )
     if(!created_user)
         throw new ApiError(500, "Something went wrong while creating user")
+
+    // push the faculty in the respective org
+    const updateOrg = await Organization.findOneAndUpdate(
+        {name: organization},
+        {
+            $push: {
+                members: {
+                    kind: "Faculty",    
+                    item: user
+                }
+            }
+        },
+        {
+            new: true
+        }
+    )
+    if(!updateOrg)
+        throw new ApiError(404, "Organization not found")
     return res.status(201).json(
         new ApiResponse(200, "User Created Successfully")
     )
 })
 
 const LoginFaculty = AsyncHandler(async (req,res)=>{
-   const {email,organizationID, password} = req.body
+   const {email,organization, password} = req.body
 //    console.log(req)
-   if([email,organizationID,password].some((field)=>field?.trim() === ""))
+   if([email,organization,password].some((field)=>field?.trim() === ""))
     throw new ApiError(400, "all fields are required")
 
    const user = await Faculty.findOne({
     email,
-    organizationID,
+    organization,
    })
    
    if(!user) 
@@ -240,6 +295,7 @@ const UserData = AsyncHandler(async (req, res) => {
             Avatar: faculty.avatar,
         })
     }
+    
    return res
    .status(200)
    .json(new ApiResponse(200, {user: User,leaderboard: leaderBoard},"Fetched user data"))

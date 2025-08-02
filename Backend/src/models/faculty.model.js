@@ -26,7 +26,7 @@ const facultySchema = new Schema(
         type: String,
 
       },
-      organizationID: {
+      organization: {
         type: String,
         required: true
       },

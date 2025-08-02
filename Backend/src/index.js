@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { connectDB } from './db/database.js'
 import { redis } from './utils/redis.js'
-import {fetchAllUsersFromDB} from './db/database.js'
+import {fetchAllUsersFromDB, fetchOrgFromDB} from './db/database.js'
 import {app} from './app.js'
 dotenv.config({
     path:'./env'
@@ -15,9 +15,13 @@ connectDB()
 async function preloadCache() {
 
  const users = await  fetchAllUsersFromDB();
+ const org = await fetchOrgFromDB();
+ const orgListStr = JSON.stringify(org)
+
  const rawUsers = users.map(u => u.toObject ? u.toObject() : u);
 //  console.log(rawUsers)
  const pipeline = redis.pipeline();
+ pipeline.set(process.env.ORG_LIST_KEY, orgListStr)
  for(const u of rawUsers) {
     u._id = String(u._id)
     const key = `user:${u._id}`;

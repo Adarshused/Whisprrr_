@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import { DB_NAME } from '../constant.js'
 import { Faculty } from '../models/faculty.model.js';
 import { ApiError } from '../utils/ApiError.js';
+import { Organization } from '../models/organisation.model.js';
 
 const connectDB = async () => {
     
@@ -15,6 +16,17 @@ const connectDB = async () => {
     process.exit(1)
 
    } 
+}
+const fetchOrgFromDB = async () => {
+  try{
+    const org = await Organization.distinct('name')
+     return org
+  }
+  catch (err) {
+   console.error("ERROR occurred while loading Org data from db")
+   throw err
+  }
+ 
 }
 const fetchAllUsersFromDB = async () => {
   try{
@@ -62,4 +74,4 @@ const fetchAllUsersFromDB = async () => {
   }
 }
 
-export {connectDB, fetchAllUsersFromDB}
+export {connectDB, fetchAllUsersFromDB, fetchOrgFromDB}

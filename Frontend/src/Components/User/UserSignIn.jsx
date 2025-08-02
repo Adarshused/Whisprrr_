@@ -16,14 +16,19 @@ function UserSignIn(){
       password : "",
     })
     const [islogin,setislogin] = useState(false);
+    const [org, setorg] = useState([])
+    const [orgs, setorgs] = useState("Select Organization")
     // console.log(islogin)
+    const curractive= useSelector((state)=>state.CurrActive)
     const Disptach = useDispatch();
     useEffect(()=>{
       Disptach(ChangeLogIn(islogin));
       console.log(islogin)
     },[islogin])
+     useEffect(()=>{
+     setorg(curractive['org'])
+    },[])
     const handleSubmit = async (e) => {
-      
       try{
       const res = await fetch("http://localhost:8000/api/v1/users/login",{
         method: "POST",
@@ -115,9 +120,17 @@ function UserSignIn(){
      </div>
      <div className="flex flex-col gap-y-3 ml-5 mt-3">
         <div className="flex flex-col">
-            <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Organization ID</label>
+            <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Organization</label>
             <div className="caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="bg-white-500 outline-none w-full p-2 absolute" onChange={handleEvent} type="text" name="organizationID" value={formData.organizationID} />
+                <input className="ml-3 w-full py-2 text-sm font-extrabold outline-none" type="text" readOnly='true' value={orgs}  style={{fontFamily:'Times New Roman, serif'}} />
+                          <select  className=" font-extrabold mr-8 outline-none absolute inset-0 w-full h-full opacity-0 cursor-pointer"  style={{fontFamily:'Times New Roman, serif'}} name="" id="">
+                            <option  value=""disabled selected hidden></option>
+                            {org.map((name)=>(
+                              <option key={name} value={name}>
+                                {name}
+                              </option>
+                            ))}
+                          </select>
             </div>
         </div>
      </div>
