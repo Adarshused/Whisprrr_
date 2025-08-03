@@ -78,6 +78,7 @@ const RegisterFaculty = AsyncHandler(async (req, res)=>{
     if(existedUser.length > 0)
         throw new ApiError(409, "User with same email already exists in your organization")
    
+    
     const user = await Faculty.create({
         name,
         email,
