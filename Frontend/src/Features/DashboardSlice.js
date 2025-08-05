@@ -21,7 +21,7 @@ const initialState={
         'btech_cse_totalupv':'',
          
     },
-    "org":[]}
+    }
 }
 
 export const DashboardSlice=createSlice({
@@ -53,13 +53,10 @@ export const DashboardSlice=createSlice({
         ChangeUserData: (state, action)=>{
             state.CurrActive['userData']=action.payload
         },
-        Update_Org: (state, action) => {
-            state.CurrActive['org'] = action.payload
-        },
-    
+      
     }
 })
 
-export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle,ChangeVal,Update_user,ChangeLogIn,ChangeUserData,Update_Org}=DashboardSlice.actions
+export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle,ChangeVal,Update_user,ChangeLogIn,ChangeUserData}=DashboardSlice.actions
 
 export default DashboardSlice.reducer

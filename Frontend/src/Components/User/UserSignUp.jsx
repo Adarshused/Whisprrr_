@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { Eye, EyeOff } from 'lucide-react';
 import { FaGoogle, FaFacebookF } from 'react-icons/fa';
 import { NavLink } from "react-router-dom";
@@ -7,10 +7,12 @@ function UserSignUp(){
       name : "",
       email : "",
       password : "",
-      organizationID : ""
+      organization : ""
     })
     const [isRegistered, setisRegistered] =  useState(false)
     const[show,setshow]=useState(false)
+     const [orgList, setorgList] = useState([])
+
     const handleChange = (e) => {
      setformData({
       ...formData,
@@ -49,6 +51,34 @@ function UserSignUp(){
          setError(err.message);
        }
     }
+     /*          Fetch All Organization          */
+        useEffect( ()=> {
+          const fetchOrg = async() => {
+          try {
+           const res = await fetch("http://localhost:8000/api/v1/admin/AllOrganization", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include", 
+           })
+    
+           if(!res.ok) {
+            throw new Error("Something went Wrong")
+           }
+           else {
+            const data = await res.json();
+    
+            // console.log(typeof(data.data.org))
+            setorgList(data.data.org)
+           }
+          }
+          catch (err) {
+              throw new Error("Error while fetching Org detail")
+          }
+        }
+        fetchOrg();
+        }, [])
     return(
         <>
      <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -159,9 +189,25 @@ function UserSignUp(){
      </div>
      <div className="flex flex-col gap-y-3 ml-5 mt-3">
         <div className="flex flex-col">
-            <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Organization ID</label>
+            <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Organization</label>
             <div className="caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="bg-white-500 outline-none w-full p-2 absolute" type="text" name="organizationID" onChange={handleChange} value={formData.organizationID}/>
+                <input
+      className="ml-3 w-full py-2 text-sm font-extrabold outline-none"
+      type="text"
+      readOnly={true}
+      value={formData.organization}
+      style={{ fontFamily: "Times New Roman, serif" }}
+    />
+              <select name="organization" value={formData.organization} onChange={handleChange}  className="font-extrabold mr-8 outline-none absolute inset-0 w-full h-full opacity-0 cursor-pointer" style={{ fontFamily: "Times New Roman, serif" }}>
+      <option value="" disabled hidden>
+        Select an organization
+      </option>
+      {orgList.map((orgName, idx) => (
+        <option key={idx} value={orgName}>
+          {orgName}
+        </option>
+      ))}
+    </select>
             </div>
         </div>
      </div>

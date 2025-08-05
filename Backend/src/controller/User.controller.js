@@ -74,7 +74,7 @@ const RegisterFaculty = AsyncHandler(async (req, res)=>{
             }
         }
     ])
-    console.log(existedUser)
+    // console.log(existedUser)
     if(existedUser.length > 0)
         throw new ApiError(409, "User with same email already exists in your organization")
    
@@ -98,7 +98,8 @@ const RegisterFaculty = AsyncHandler(async (req, res)=>{
             $push: {
                 members: {
                     kind: "Faculty",    
-                    item: user
+                    item: user,
+                    email: email
                 }
             }
         },
@@ -119,14 +120,31 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
    if([email,organization,password].some((field)=>field?.trim() === ""))
     throw new ApiError(400, "all fields are required")
 
-   const user = await Faculty.findOne({
-    email,
-    organization,
-   })
+//    const user = await Faculty.findOne({
+//     email,
+//     organization,
+//    })
    
-   if(!user) 
-    throw new ApiError(401, "User does not exits")
-   
+    const org = await Organization.findOne({name: organization})
+               .populate({
+                path: "members.item",
+                match: {kind: 'Faculty', email},
+                model: "Faculty"
+               })     
+               .exec();
+     
+   if(!org) 
+    throw new ApiError(401, "Organization Not found")
+//    console.log(org)
+   const faculty = org.members.find(m => m.kind === 'Faculty' && m.email == email);
+
+   if(!faculty) 
+     throw new ApiError(401, "User Does not exits in the Organization")
+
+    const user = await Faculty.findOne({
+       email
+    })
+  
    const isPasswordValid = await user.isPasswordValid(password)
    if(!isPasswordValid)
     throw new ApiError(401, "Invalid User Credentials")
@@ -158,7 +176,7 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
 
 
 const AvatarUser = AsyncHandler(async (req, res)=>{
-     const userID = req.user._id
+    let userID = req.user._id
     //   console.log(req)
     
      const AvatarLocalPath = req.files?.avatar[0]?.path;
@@ -181,8 +199,8 @@ const AvatarUser = AsyncHandler(async (req, res)=>{
       const User = await Faculty.findById(userID).select(
         "-password -refreshToken"
      )
-     userID = String(userID);
-     const redisKey = `user:${userID}`;
+    //  userID = String(userID);
+     const redisKey = userID;
     await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
      const option = {
         httpOnly : true,
@@ -222,8 +240,8 @@ const UserData = AsyncHandler(async (req, res) => {
     let userID = req.user._id
     let User;
     const topN = 10
-    userID = String(userID)
-    const redisKey = `user:${userID}`;
+    // userID = String(userID)
+    const redisKey = userID;
     const Cached = await redis.get(redisKey)
     // console.log(Cached)
     
@@ -280,7 +298,7 @@ const UserData = AsyncHandler(async (req, res) => {
         }
       }
         ]);
-        User._id = String(User._id)
+        // User._id = String(User._id)
         await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
     }
     
@@ -321,8 +339,8 @@ const UserContact = AsyncHandler(async (req, res) => {
    const User = await Faculty.findById(userID).select(
      "-password -refreshToken"
    )
-   userID = String(userID);
-   const redisKey = `user:${userID}`;
+   
+   const redisKey =userID;
   await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
   
    return res.
@@ -352,8 +370,8 @@ const UserInfo = AsyncHandler(async (req, res) => {
      const User = await Faculty.findById(userID).select(
         "-password -refreshToken"
      )
-     userID = String(userID);
-     const redisKey = `user:${userID}`;
+     
+     const redisKey =userID;
     await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
     return res.
    status(200)

@@ -7,7 +7,7 @@ import DashboardHeader from './Components/Dashboard/DashboardHeader.jsx';
 import {useDispatch,useSelector} from 'react-redux';
 import Settings from './Components/Settings/Settings.jsx'
 import Settingsheader from './Components/Settings/Settingsheader.jsx';
-import { ChangeLogIn, ChangeUserData, Update_Org, Update_user } from './Features/DashboardSlice.js';
+import { ChangeLogIn, ChangeUserData, Update_user } from './Features/DashboardSlice.js';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import { useCurrentUser } from './utils/useCurrentUser.js';
 import { HashLoader} from 'react-spinners'
@@ -46,7 +46,7 @@ function App(props) {
   //       btech_cse: "",
   //       btech_cse_totalupv: ""
   //  })
-   const [Organization, setOrganizations] = useState([]);
+   
    const curractive= useSelector((state)=>state.CurrActive)
   
    const {data: user, isLoading, isFetching, isError} =  useCurrentUser();
@@ -69,12 +69,9 @@ function App(props) {
        console.log(user)
          
        const  userData = user?.data?.user
-       const orgData = user?.data?.organization
-       console.log(orgData)
-      if(orgData) {
-          Dispatch(Update_Org(orgData))
-      }
-       console.log(user)
+      
+    
+      //  console.log(user)
        if(userData){
         console.log(userData)
 

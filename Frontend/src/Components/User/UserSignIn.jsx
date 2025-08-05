@@ -12,23 +12,25 @@ function UserSignIn(){
     const [role,setrole]=useState("HOD")
     const [formData,setformData] = useState({
       email: "",
-      organizationID: "",
+      organization: "",
       password : "",
     })
     const [islogin,setislogin] = useState(false);
-    const [org, setorg] = useState([])
+    const [orgList, setorgList] = useState([])
+    const [org, setorg] = useState("Select Organization")
     const [orgs, setorgs] = useState("Select Organization")
     // console.log(islogin)
     const curractive= useSelector((state)=>state.CurrActive)
     const Disptach = useDispatch();
+
+
     useEffect(()=>{
       Disptach(ChangeLogIn(islogin));
       console.log(islogin)
     },[islogin])
-     useEffect(()=>{
-     setorg(curractive['org'])
-    },[])
+    
     const handleSubmit = async (e) => {
+      console.log(formData)
       try{
       const res = await fetch("http://localhost:8000/api/v1/users/login",{
         method: "POST",
@@ -58,11 +60,43 @@ function UserSignIn(){
       }
 
     }
+    /*          Fetch All Organization          */
+    useEffect( ()=> {
+      const fetchOrg = async() => {
+      try {
+       const res = await fetch("http://localhost:8000/api/v1/admin/AllOrganization", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", 
+       })
+
+       if(!res.ok) {
+        throw new Error("Something went Wrong")
+       }
+       else {
+        const data = await res.json();
+
+        // console.log(typeof(data.data.org))
+        setorgList(data.data.org)
+       }
+      }
+      catch (err) {
+          throw new Error("Error while fetching Org detail")
+      }
+    }
+    fetchOrg();
+    }, [])
+      
+    
     const handleEvent = (e) => {
        setformData({
         ...formData,
-        [e.target.name] : e.target.value
+        [e.target.name] : e.target.value,
+      
        })
+     
     }
     return(
         <>
@@ -122,15 +156,27 @@ function UserSignIn(){
         <div className="flex flex-col">
             <label className="font-extrabold text-sm" style={{fontFamily:'Times New Roman, serif'}}  htmlFor="">Organization</label>
             <div className="caret-purple-400 w-80 relative h-10 rounded-md bg-white border border-gray-300 hover:shadow-[0_0_8px_rgba(82,53,232,0.3)] hover:border-purple-300">
-                <input className="ml-3 w-full py-2 text-sm font-extrabold outline-none" type="text" readOnly='true' value={orgs}  style={{fontFamily:'Times New Roman, serif'}} />
-                          <select  className=" font-extrabold mr-8 outline-none absolute inset-0 w-full h-full opacity-0 cursor-pointer"  style={{fontFamily:'Times New Roman, serif'}} name="" id="">
-                            <option  value=""disabled selected hidden></option>
-                            {org.map((name)=>(
-                              <option key={name} value={name}>
-                                {name}
-                              </option>
-                            ))}
-                          </select>
+                <input
+      className="ml-3 w-full py-2 text-sm font-extrabold outline-none"
+      type="text"
+      readOnly={true}
+      value={formData.organization}
+      style={{ fontFamily: "Times New Roman, serif" }}
+    />
+
+    {/* A single controlled select: */}
+    <select
+      name="organization" value={formData.organization} onChange={handleEvent}  className="font-extrabold mr-8 outline-none absolute inset-0 w-full h-full opacity-0 cursor-pointer" style={{ fontFamily: "Times New Roman, serif" }}
+    >
+      <option value="" disabled hidden>
+        Select an organization
+      </option>
+      {orgList.map((orgName, idx) => (
+        <option key={idx} value={orgName}>
+          {orgName}
+        </option>
+      ))}
+    </select>
             </div>
         </div>
      </div>

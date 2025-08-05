@@ -22,6 +22,10 @@ const OrganizationSchema = new Schema(
                 type: Schema.Types.ObjectId,
                 required: true,
                 ref: "members.kind",
+            },
+            email: {
+                type: String,
+                required: true
             }
         }],
     
