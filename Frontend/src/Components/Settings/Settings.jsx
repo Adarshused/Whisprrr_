@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 function Settings(){
    
  const curractive= useSelector((state)=>state.CurrActive)
+//  console.log(curractive['SettingisActive'])
   return(
     <>
     <div className="flex">
@@ -20,7 +21,7 @@ function Settings(){
     {curractive['SettingisActive'] === "Notifications" &&<Notification/>}
     {curractive['SettingisActive'] === "Privacy" &&<Privacy/>}
     {curractive['SettingisActive'] === "Security" && <Security/>}
-    {curractive['SettingisActive'] === "Perference" &&<Preference/>}
+    {curractive['SettingisActive'] === "Preference" &&<Preference/>}
     {curractive['SettingisActive'] === "Password" && <Password/>}
     </div>
     

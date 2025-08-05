@@ -373,8 +373,63 @@ const UserInfo = AsyncHandler(async (req, res) => {
      
      const redisKey =userID;
     await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
-    return res.
-   status(200)
+    return res
+   .status(200)
    .json(new ApiResponse(200, "Contact updated successfully"))
 })
-export {AvatarUser, RegisterFaculty, LoginFaculty, UserData,Logout,UserContact,UserInfo}
+
+const UserAbout = AsyncHandler(async (req, res) => {
+    let userID = req.user._id;
+    const about = String(req.body.about);
+
+    await Faculty.findByIdAndUpdate(
+        userID,
+        {$set: {
+            about : about
+        }
+    },
+    {
+        new: true,
+    }
+    )
+    const User = await Faculty.findById(userID).select(
+        "-password -refreshToken"
+    )
+    const redisKey = userID;
+    await redis.set(redisKey, JSON.stringify(User), 'EX', 60 * 5)
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, "About updatred successfully"))
+})
+const UserAddress = AsyncHandler(async (req, res) => {
+    let userID = req.user._id;
+    const plot = String(req.body.plot);
+    const area = String(req.body.area);
+    const city = String(req.body.city);
+    const state = String(req.body.state);
+
+    await Faculty.findByIdAndUpdate(
+        userID,
+        {$set: {
+              plot: plot,
+              area: area,
+              city: city,
+              state: state
+        }
+    },
+    {
+        new: true,
+    }
+    )
+    const User = await Faculty.findById(userID).select(
+        "-password -refreshToken"
+    )
+    const redisKey = userID;
+    await redis.set(redisKey, JSON.stringify(User), 'EX', 60 * 5)
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, "Address Updated Successfully"))
+})
+export {AvatarUser, RegisterFaculty, LoginFaculty, UserData,Logout,UserContact,UserInfo,UserAbout, UserAddress}

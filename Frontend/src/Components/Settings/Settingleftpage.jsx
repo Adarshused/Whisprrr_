@@ -210,7 +210,7 @@ function Settingleftpage(){
               </div>
             </div>
             </NavLink>
-           
+           <NavLink>
             <div className="flex cursor-pointer" onClick={()=>{
               changeFeature("Preference")
                
@@ -219,6 +219,7 @@ function Settingleftpage(){
  <h2 className={preference?"font-extrabold font-['Times_New_Roman,_serif']":"text-black"} >Preference</h2>
               </div>
             </div>
+            </NavLink>
             <div className="flex flex-col   gap-y-5" >
             <div className="flex cursor-pointer" onClick={()=>{
               changeFeature("Password")

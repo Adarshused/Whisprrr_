@@ -48,9 +48,21 @@ const facultySchema = new Schema(
         type: String,
         require: true
       },
-      address: {
+      plot: {
         type: String,
-        require: true,
+        trim: true
+      },
+      city: {
+        type: String,
+        trim: true
+      },
+      state: {
+        type: String,
+        trim: true
+      },
+      area: {
+        type: String,
+        trim: true
       },
       connection: {
         type: Schema.Types.ObjectId,

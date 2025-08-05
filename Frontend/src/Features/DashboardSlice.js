@@ -19,7 +19,10 @@ const initialState={
         'weekly_upvot':[],
         'btech_cse':[],
         'btech_cse_totalupv':'',
-         
+         'plot':'',
+         'area':'',
+         'city':'',
+         'state':''
     },
     }
 }
