@@ -1,5 +1,5 @@
 import React, { useDebugValue, useEffect, useRef, useState } from "react";
-
+import { useSelector } from "react-redux";
 function Dashboardpage(){
   const [curr_leaderboard_page,setcurr_leaderboard_page]=useState(0);
   const [end_leaderboard_page,setend_leaderboard_page]=useState(10);
@@ -51,44 +51,44 @@ function Dashboardpage(){
       
       
     ]
-    const values=[
-      {
-        'name':'Monika',
-        'Title':'Dean',
-        'img':"/assests/Monika.jpg",
-        'upvote':'20000'
-      },
-      {
-        'name':'komal',
-        'Title':'Prof',
-        'img':"/assests/komal.jpg",
-        'upvote':'11000'
-      },
-      {
-        'name':'Hithesh',
-        'Title':'Dean',
-        'img':"/assests/hithesh.jpg",
-        'upvote':'4900'
-      },
-      {
-        'name':'Kunal',
-        'Title':'Prof',
-        'img':"/assests/kunal.jpg",
-        'upvote':'4600'
-      },
-      {
-        'name':'Naina',
-        'Title':'Ms',
-        'img':'/assests/naina.jpg',
-        'upvote':'2500'
-      },
-      {
-        'name':'Ishita',
-        'Title':'Ms',
-        'img':'/assests/Ishita.jpg',
-        'upvote':'1589'
-      }
-    ]
+    // const values=[
+    //   {
+    //     'name':'Monika',
+    //     'Title':'Dean',
+    //     'img':"/assests/Monika.jpg",
+    //     'upvote':'20000'
+    //   },
+    //   {
+    //     'name':'komal',
+    //     'Title':'Prof',
+    //     'img':"/assests/komal.jpg",
+    //     'upvote':'11000'
+    //   },
+    //   {
+    //     'name':'Hithesh',
+    //     'Title':'Dean',
+    //     'img':"/assests/hithesh.jpg",
+    //     'upvote':'4900'
+    //   },
+    //   {
+    //     'name':'Kunal',
+    //     'Title':'Prof',
+    //     'img':"/assests/kunal.jpg",
+    //     'upvote':'4600'
+    //   },
+    //   {
+    //     'name':'Naina',
+    //     'Title':'Ms',
+    //     'img':'/assests/naina.jpg',
+    //     'upvote':'2500'
+    //   },
+    //   {
+    //     'name':'Ishita',
+    //     'Title':'Ms',
+    //     'img':'/assests/Ishita.jpg',
+    //     'upvote':'1589'
+    //   }
+    // ]
     const My_portfolio=[
       {
         'previous_upvotes':'56',
@@ -117,6 +117,8 @@ function Dashboardpage(){
     const tracker = document.getElementById('tracker');
     const [maxweek,setmaxweek]=useState()
     const [maxmonth,setmaxmonth]=useState()
+    
+    const curractive= useSelector((state)=>state.CurrActive)
 
     function ceilThreshold(arr, target){
       let lo=0, hi=arr.length-1,lower_bound=-1,upper_bound=-1;
@@ -138,8 +140,10 @@ function Dashboardpage(){
     // Same points used to draw the polyline
    
     const sorted_cvalues=[...cvalues].sort((a,b)=>b.upvote-a.upvote);
-    const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
-    useEffect(()=>{setuserDetail(sorted_values)},[])
+    // const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
+    const leaderBoard = curractive['leaderBoard']
+    console.log(leaderBoard)
+    useEffect(()=>{setuserDetail(leaderBoard)},[leaderBoard])
     useEffect(()=>setConnectionDetail(sorted_cvalues),[]);
    const increment=()=>{
     setcurr_leaderboard_page(prev=>Math.min(prev+1,end_leaderboard_page));
@@ -549,23 +553,23 @@ return(
            <div className="flex flex-col mt-4 ">{
            userDetail.slice(curr_leaderboard_page*4,curr_leaderboard_page*4+4)
            .map((values,idx)=>(
-          <div className="flex w-full h-20 py-4 px-3 border-b border-gray-300 gap-x-15 ">
+          <div className="flex w-full h-20 py-4 px-3 border-b border-gray-300 gap-x-12 ">
            <div className="flex gap-x-2 w-43">
-           <img className="rounded-[50%] h-12 w-12" src={values.img} alt="" />
+           <img className="rounded-[50%] h-12 w-12" src={values.Avatar} alt="" />
            <div className=" flex font-extrabold mt-3 text-md gap-x-2" style={{fontFamily:'Times New Roman,Serif'}}>
             <div className="flex ">
             <h1 className="">{values.Title[0]}</h1>
-            <h1 className={`flex ${values.upvote>=5000?'text-[#FB3766]':values.upvote>=2000 && values.upvote<5000?'text-[#5235E8]':values.upvote>=500 && values.upvote<2000?'text-[#DAF727]':'text-black'}`}>{values.Title.slice(1)}</h1>
+            <h1 className={`flex ${values.score>=5000?'text-[#FB3766]':values.score>=2000 && values.score<5000?'text-[#5235E8]':values.score>=500 && values.score<2000?'text-[#DAF727]':'text-black'}`}>{values.Title.slice(1)}</h1>
             </div>
-           <h1>{values.name}</h1>
+           <h1>{values.username}</h1>
            </div>
            </div>
           
-           <div className="flex gap-x-2 mt-3 text-sm">
-           <h2 className="text-gray-400">Rank {((idx+1)+(curr_leaderboard_page*4))}</h2>
+           <div className="flex  gap-x-2 mt-3 text-sm">
+           <h2 className="text-gray-400 w-15">Rank {((idx+1)+(curr_leaderboard_page*4))}</h2>
 
-          {values.upvote<1000 && <h1 className="flex ml-2 text-[#5235E8]">{values.upvote}</h1>}
-          {values.upvote>=1000 && <h1 className="flex ml-2 text-[#5235E8]">{Number((values.upvote/1000).toFixed(1))}k</h1>}
+          {values.score<1000 && <h1 className="flex w-10 ml-2 text-[#5235E8]">{values.score}</h1>}
+          {values.score>=1000 && <h1 className="flex w-10 ml-2 text-[#5235E8]">{Number((values.score/1000).toFixed(1))}k</h1>}
            </div>
            
           </div>

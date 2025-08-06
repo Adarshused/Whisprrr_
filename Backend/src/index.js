@@ -16,7 +16,7 @@ async function preloadCache() {
 
  const users = await  fetchAllUsersFromDB();
  const org = await fetchOrgFromDB();
-
+//   console.log(users)
  const orgListStr = JSON.stringify(org)
 //  console.log(typeof(orgListStr))
  const rawUsers = users.map(u => u.toObject ? u.toObject() : u);
@@ -27,6 +27,7 @@ async function preloadCache() {
     // u._id = String(u._id)
     const key = u._id;
     const score = u.totalUpvote;
+    // console.log(typeof(score))
     const val = JSON.stringify(u);
     
     pipeline.set(key, val,'EX',3600);
@@ -55,6 +56,7 @@ async function preloadCache() {
 console.log(`🌡️   Preloaded ${users.length} users into Redis`)
 }
 await redis.flushdb();
+
 await preloadCache()
 .then(()=>{
     app.listen(process.env.PORT || 8000, ()=>{
@@ -64,3 +66,5 @@ await preloadCache()
 .catch((err) => {
     console.log("Connection failed :", err)
 })
+// const topUsers = await redis.zrevrange("users:byupvotes", 0, 5, "WITHSCORES");
+// console.log("Top users by upvotes:", topUsers);

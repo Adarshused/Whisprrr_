@@ -32,22 +32,7 @@ const fetchAllUsersFromDB = async () => {
   try{
     const faculties = await Faculty.aggregate([
       // take all faculties
-      {$match: {}},
-      // locate upvotes from the upvote schema
-      {
-         $lookup: {
-            from: "upvotes", // remember to write schema in smaller case
-            localField: "_id",
-            foreignField: "faculty",
-            as: "upvoteDocs"
-         }
-      },
-      // sum up the values
-      { 
-         $set: {
-            totalUpvote: { $size: "$upvoteDocs"}
-         }
-      },
+      
       {
           $project: {
           displayname:         1,

@@ -23,7 +23,7 @@ const initialState={
          'area':'',
          'city':'',
          'state':''
-    },
+    }, leaderBoard : [],
     }
 }
 
@@ -56,10 +56,12 @@ export const DashboardSlice=createSlice({
         ChangeUserData: (state, action)=>{
             state.CurrActive['userData']=action.payload
         },
-      
+        ChangeleaderBoard: (state, action)=>{
+            state.CurrActive['leaderBoard']=action.payload
+        }
     }
 })
 
-export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle,ChangeVal,Update_user,ChangeLogIn,ChangeUserData}=DashboardSlice.actions
+export const {ChangeStatus,ChangeSettingStatus,ChangeName,ChangeTitle,ChangeVal,Update_user,ChangeLogIn,ChangeUserData,ChangeleaderBoard}=DashboardSlice.actions
 
 export default DashboardSlice.reducer

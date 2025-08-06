@@ -7,7 +7,7 @@ import DashboardHeader from './Components/Dashboard/DashboardHeader.jsx';
 import {useDispatch,useSelector} from 'react-redux';
 import Settings from './Components/Settings/Settings.jsx'
 import Settingsheader from './Components/Settings/Settingsheader.jsx';
-import { ChangeLogIn, ChangeUserData, Update_user } from './Features/DashboardSlice.js';
+import { ChangeleaderBoard, ChangeLogIn, ChangeUserData, Update_user } from './Features/DashboardSlice.js';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import { useCurrentUser } from './utils/useCurrentUser.js';
 import { HashLoader} from 'react-spinners'
@@ -70,14 +70,20 @@ function App(props) {
          
        const  userData = user?.data?.user
       
-    
-      //  console.log(user)
        if(userData){
-        console.log(userData)
+        
+
+        const lpaylod=[]
+        
+        for(let i = 0; i < user?.data?.leaderboard?.length; ++i) {
+          lpaylod.push(user?.data?.leaderboard[i]);
+        }
 
         
          /* Here setuservalue or useState is an asynchronous call and im dispatching the value to the store since the setuservalue is not been updated its dispatching the old values itself 
          so i instead of storing the value in setuservalue now i directly store it in payload const */
+         
+
         const payload ={
           firstname:userData.firstname?userData.firstname:"",
           lastname:userData.lastname?userData.lastname:"",
@@ -103,8 +109,10 @@ function App(props) {
           weekly_upvot: userData.weekly_upvot?userData.weekly_upvot:[],
           btech_cse: userData.btech_cse?userData.btech_cse:[],
          btech_cse_totalupv: userData.btech_cse_totalupv?userData.btech_cse_totalupv:"",
+         totalUpvote: userData.totalUpvote? userData.totalUpvote:""
         }
         // console.log()
+        Dispatch(ChangeleaderBoard(lpaylod))
         Dispatch(ChangeUserData(payload))
         // console.log(curractive['userData'].img)
         // console.log(curractive[ 'userData'])

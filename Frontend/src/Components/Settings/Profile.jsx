@@ -15,8 +15,12 @@ function Profile(){
   const [isEditContact, setisEditContact] = useState(true);
   const [isEditInfo, setisEditInfo] = useState(true);
   const [infoData,setinfoData] = useState({})
+  const [title, settitle] = useState("")
+  const [upvote, setupvote] = useState()
   const Dispatch = useDispatch()
   const curractive= useSelector((state)=>state.CurrActive)
+  
+  const TitleList = ["Mr", "Ms", "Prof", "Engr", "Dr","Mrs", "Dean", "HOD"]
   
   const handleFileChange = async (event) => {
     const allCookies = document.cookie;
@@ -51,12 +55,14 @@ function Profile(){
       e.preventDefault();     
      const displayname = e.target.DisplayName?.value;
      const email  = e.target.email?.value;
+     const title = e.target.Title?.value;
+     console.log(title)
     //  console.log(displayname, email)
      try {
      const res = await fetch("http://localhost:8000/api/v1/users/UserContact",{
       method : "POST",
       headers: { "Content-Type": "application/json" },
-      body : JSON.stringify({displayname, email}),
+      body : JSON.stringify({displayname, email,title}),
       credentials: "include",
      });
      if(res.ok) {
@@ -99,6 +105,7 @@ function Profile(){
   }
    useEffect(()=>{
     const user = curractive['userData']
+    console.log(user.totalUpvote)
     if(user){
       console.log(user)
       setemail(user.email)
@@ -108,7 +115,8 @@ function Profile(){
       setLastname(user.lastname)
       setDOB(user.dob)
       setCOR(user.cor)
-
+      settitle(user.Title)
+      setupvote(user.totalUpvote)
     }
     else console.log("ERROOOOOOOOOOOOORRRRRRr")
    },[])
@@ -127,7 +135,14 @@ function Profile(){
                   <Avatar firstName={Firstname} lastName={Lastname} avatarUrl={profilelogo} size={56} className="" />
                   {/* <button className="cursor-pointer shadow-md text-3xl rounded-full  w-20 h-20 font-extrabold text-white bg-[#DEDAFB]" style={{fontFamily:'Times New Roman, Serif',textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'}} >{profilelogo}</button> */}
                   <div className="flex flex-col ">
-                  <h1 className=" mt-5 text-xl font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{name}</h1>
+                   <div className="flex gap-x-2">
+                     <div className="flex mt-5 ">
+            <h1 className="font-extrabold text-xl"  style={{ fontFamily: 'Times New Roman, Serif' }}>{title[0]}</h1>
+            <h1 className={`font-extrabold text-xl flex ${upvote>=5000?'text-[#FB3766]':upvote>=2000 && upvote<5000?'text-[#5235E8]':upvote>=500 && upvote<2000?'text-[#DAF727]':'text-black '}`}  style={{ fontFamily: 'Times New Roman, Serif' }}>{title.slice(1)}</h1>
+            </div>
+                   <h1 className=" mt-5 text-xl font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{name}</h1>
+                   </div>
+                    
                    <h5 className=" text-gray-400">{email}</h5>
                   </div>
               </div>
@@ -145,9 +160,36 @@ function Profile(){
              </div>
              <form  onSubmit={HandleSubmitContact}>
              <div className="h-1/2 flex w-screen">
+              <div className="flex flex-col ml-6 mt-7 h-19 ">
+              <h5 className="font-extrabold  "  style={{fontFamily:'Times New Roman,Serif'}} >Title</h5>
+              <div className="mt-2  caret-purple-400 w-15 relative h-10 rounded-md bg-white border border-gray-300">
+                <input
+      className="ml-3 w-full py-2 text-sm text-gray-400 outline-none"
+      type="text"
+      readOnly={true}
+     
+     defaultValue={title}
+      style={{ fontFamily: "Times New Roman, serif" }}
+    />
+
+    {/* A single controlled select: */}
+    <select
+         name="Title"  className="font-extrabold mr-8 outline-none absolute inset-0 w-full h-full opacity-0 cursor-pointer" style={{ fontFamily: "Times New Roman, serif" }}
+    >
+      <option value="" disabled hidden>
+        Select an Title
+      </option>
+      {TitleList.map((Title, idx) => (
+        <option key={idx} value={Title}>
+          {Title}
+        </option>
+      ))}
+    </select>
+            </div>
+            </div>
                 <div className="flex flex-col ml-6 mt-7 h-19 ">
                    <h5 className="font-extrabold  "  style={{fontFamily:'Times New Roman,Serif'}} >Display name</h5>
-                   <div className=" mt-2 w-103 h-11 border rounded-lg border-gray-300" >
+                   <div className=" mt-2 w-80 h-11 border rounded-lg border-gray-300" >
                    <input  className="ml-5 w-105 h-full text-gray-400 outline-none" type="text" name="DisplayName" defaultValue={name} readOnly={isEditContact} />
                    </div>
                 </div>
@@ -166,7 +208,7 @@ function Profile(){
                    
                   </div>
                    
-                   <div className=" mt-2 w-103 ml-5 h-11 border rounded-lg border-gray-300" >
+                   <div className=" mt-2 w-80 ml-5 h-11 border rounded-lg border-gray-300" >
                    <input  className="ml-5 w-105 h-full text-gray-400  outline-none" defaultValue={email}  name="email" type="text" readOnly={isEditContact} />
                    </div>
                 </div>

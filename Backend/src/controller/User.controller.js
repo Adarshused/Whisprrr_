@@ -301,8 +301,10 @@ const UserData = AsyncHandler(async (req, res) => {
         // User._id = String(User._id)
         await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
     }
-    
-    const raw = await redis.zrevrange('users:byUpvotes', 0, topN - 1, 'WITHSCORES');
+    // const topUsers = await redis.zrevrange("users:byupvotes", 0, 5, "WITHSCORES");
+// console.log("Top users by upvotes:", topUsers);
+    const raw = await redis.zrevrange('users:byupvotes', 0, -1, 'WITHSCORES');
+    // console.log(raw)
     const leaderBoard = []
     for(let i = 0; i < raw.length; i += 2) {
         const faculty = await Faculty.findById(raw[i])
@@ -314,6 +316,7 @@ const UserData = AsyncHandler(async (req, res) => {
             Avatar: faculty.avatar,
         })
     }
+    // console.log(leaderBoard)
     
    return res
    .status(200)
@@ -325,11 +328,13 @@ const UserContact = AsyncHandler(async (req, res) => {
 //    console.log(req.body)
    const displayname = String(req.body.displayname)
    const email = String(req.body.email)
+   const title = String(req.body.title)
   await Faculty.findByIdAndUpdate(
      userID,
     { $set:{
         displayname : displayname,
-        email : email
+        email : email,
+        title : title
     }   
     },
     {
