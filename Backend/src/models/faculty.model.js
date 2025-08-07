@@ -52,6 +52,12 @@ const facultySchema = new Schema(
         type: String,
         trim: true
       },
+      following: {
+        type: Number,
+      },
+      followers: {
+        type: Number,
+      },
       city: {
         type: String,
         trim: true
