@@ -22,4 +22,7 @@ app.use("/api/v1/users",userRouter)
 import OrgRouter from "./routes/organization.route.js"
 app.use("/api/v1/admin",OrgRouter)
 
+import ConnectionRouter from "./routes/connection.route.js"
+app.use("/api/v1/connection",ConnectionRouter)
+
 export {app}
