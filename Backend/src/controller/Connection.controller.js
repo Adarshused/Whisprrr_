@@ -5,15 +5,26 @@ import { ApiResponse } from '../utils/ApiResponse.js'
 import { AsyncHandler } from '../utils/AsyncHandler.js'
 import mongoose from 'mongoose'
 import { Connections } from '../models/connection.model.js'
+import { Organization } from '../models/organisation.model.js'
 
 const Follow = AsyncHandler(async (req, res, next) => {
   const followerID = req.user._id;
-  const followeeID = req.body.followee;
-
+  const followeeID = req.body?.followee;
+   console.log(followeeID)
   const session = await mongoose.startSession();
   try {
     await session.withTransaction(async () => {
-      // 1) create the connection document (with session)
+
+      //1) check if already following the user
+      const existedUser = await Connections.findOne(
+        {followerID, followeeID },
+        null,
+        { session }
+      )
+
+      if(existedUser) 
+        throw new ApiError(409, "Already following")
+      // 2) create the connection document (with session)
       await Connections.create(
         [{ followerID, followeeID }],
         { session }
@@ -61,26 +72,26 @@ const Follow = AsyncHandler(async (req, res, next) => {
         .status(409)
         .json({ message: "Already following this user." });
     }
-    // next(err);
+    return next(err);
   } finally {
     session.endSession();
   }
 });
 
-const UnFollow = AsyncHandler(async (req, res) => {
+const UnFollow = AsyncHandler(async (req, res, next) => {
      const followerID = req.user._id;
   const followeeID = req.body.followee;
-
+  //  console.log(followerID, followeeID)
   const session = await mongoose.startSession();
   try {
     await session.withTransaction(async () => {
       // 1) create the connection document (with session)
-      const deleted = await Connections.findByIdAndDelete(
-        [{ followerID, followeeID }],
-        { session }
-      );
+    const deleted = await Connections.findOneAndDelete(
+  { followerID, followeeID },
+  { session }
+);
     if(!deleted) 
-        throw new ApiError(400, "User not found")
+       throw new ApiError(404,"User not found")
       await Promise.all([
         Faculty.findByIdAndUpdate(
           followerID,
@@ -123,11 +134,26 @@ const UnFollow = AsyncHandler(async (req, res) => {
         .status(409)
         .json({ message: "Already Unfollowed this user." });
     }
-    // next(err);
+    return next(err);
   } finally {
     session.endSession();
   }
    
 })
 
-export {Follow, UnFollow}
+const getFollowers = AsyncHandler(async (req, res) => {
+  const userID = req.user._id;
+
+  const Followers = await Connections.find(
+    {followeeID : userID}
+  );
+  // console.log(Followers)
+  if(!Followers) 
+    throw new ApiError(500, "Their was an problem while fetching the followers")
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200, {Followers}, "Fetched followers successfully"))
+})
+
+export {Follow, UnFollow, getFollowers}

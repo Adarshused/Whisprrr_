@@ -314,6 +314,13 @@ const UserData = AsyncHandler(async (req, res) => {
             username: faculty.displayname,
             Title: faculty.title,
             Avatar: faculty.avatar,
+            about: faculty.about,
+            followers: faculty.followers,
+            following: faculty.following,
+            about: faculty.about,
+            city: faculty.city,
+            state: faculty.state,
+            organization: faculty.organization
         })
     }
     // console.log(leaderBoard)

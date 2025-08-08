@@ -29,6 +29,7 @@ router.route("/upvote").post(
     verifyJWT,
     upvote
 )
+
 router.route("/logout").post(
     verifyJWT,
     Logout

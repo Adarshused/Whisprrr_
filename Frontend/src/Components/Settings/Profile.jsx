@@ -105,7 +105,7 @@ function Profile(){
   }
    useEffect(()=>{
     const user = curractive['userData']
-    console.log(user.totalUpvote)
+    // console.log(user.totalUpvote)
     if(user){
       console.log(user)
       setemail(user.email)

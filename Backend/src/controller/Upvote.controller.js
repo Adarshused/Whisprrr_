@@ -8,45 +8,64 @@ import mongoose from 'mongoose'
 
 
 const upvote = AsyncHandler(async (req, res) => {
-    
-    const {facultyId} = req.body
-    const userID = req.user._id
-    if (!mongoose.Types.ObjectId.isValid(facultyId)) {
-      throw new ApiError(400,"Invalid Faculty Id")
-  }
-  const upvote = await Upvotes.create({
-    faculty: facultyId,
-  })
-
-  if(!upvote)
-    throw new ApiError(500, "Error while adding upvote")
+    const recipient = req.user._id
+    const voter = req.body.facultyId
    
-  const updateFaculty = await Faculty.findByIdAndUpdate(
-    facultyId,
-    {
-        $inc: {totalUpvote: 1}
-    },
-    {
-        new: true,
-        select: 'totalUpvote',
-    }
-  );
-  if(!updateFaculty) {
-    await Upvotes.findByIdAndDelete(upvote._id)
-    throw new ApiError(400, "Faculty Not Found")
+    if (!mongoose.Types.ObjectId.isValid(voter)) {
+      throw new ApiError(400,"Invalid voter")
   }
-  // add the updated upvote to the redis
+   const session = await mongoose.startSession();
 
-  await redis.zadd(
-    'users:users:byUpvotes',
-    updateFaculty.totalUpvote,
-    facultyId.toString()
-  )
-
-  return res
-  .status(200)
-  .json(new ApiResponse(200, {totalUpvote: updateFaculty.totalUpvote},"Upvoted Successfully") )
-})
-
+    try {
+      await session.withTransaction(async () => {
+  
+       
+        //1) create the connection document (with session)
+        await Upvotes.create(
+          [{ recipient, voter }],
+          { session }
+        );
+  
+        await Promise.all([
+          Faculty.findByIdAndUpdate(
+            recipient,
+            { $inc: { totalUpvote: 1 } },
+            {
+              new: true,
+              select: "totalUpvote",
+              session          
+            }
+          ),
+        ]);
+      });
+  
+      // transaction committed
+      // fetch fresh user, update cache, return
+      const User = await Faculty.findById(recipient)
+        .select("-password -refreshToken");
+      await redis.set(
+        recipient,
+        JSON.stringify(User),
+        "EX",
+        60 * 5
+      );
+  
+      return res
+        .status(200)
+        .json(new ApiResponse(200, "Upvoted successfully"));
+    } catch (err) {
+      if (err.code === 11000) {
+        return res
+          .status(409)
+          .json({ message: "Error while upvoting" });
+      }
+      return next(err);
+    } finally {
+      session.endSession();
+    }
+  });
+  
+  
+  
 
 export {upvote}

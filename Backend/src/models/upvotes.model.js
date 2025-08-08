@@ -4,10 +4,15 @@ import { Faculty } from "./faculty.model.js";
 
 const upvoteSchema = new Schema(
     {
-       faculty: {
+       voter: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Faculty',
         required: true,
+       },
+       recipient: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'Faculty',
+         required: true
        },
        createdAt: {
         type: Date,

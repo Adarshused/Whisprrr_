@@ -2,7 +2,7 @@ import React, { useSyncExternalStore } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ConnectionPortfolio from "./ConnectionPortfolio";
 import { ChangeStatus, ChangeTitle ,ChangeName,ChangeVal} from "../../Features/DashboardSlice";
 function Connectionspage(){
@@ -13,6 +13,11 @@ function Connectionspage(){
     const [ConectionDetail,setConnectionDetail]=useState([]);
     const [cordinate,setcordinate]=useState("");
     const [change,setchange] = useState(null);
+    const [followers, setfollowers] = useState(new Set())
+    const [Values, setValues] = useState([])
+
+    const curractive= useSelector((state)=>state.CurrActive)
+    
   let cordinates="50 55 52 55 54 55 56 55 58 55 60 55 62 55 64 55 66 55 68 55 70 55 72 55 74 55 76 55 78 55 80 55 82 55 84 55 86 55 88 55 90 55 92 55 94 55 96 55";
   let changed_coordinate=""
   function asign_coordinates(point){
@@ -40,6 +45,40 @@ function Connectionspage(){
     setcordinate(changed_coordinate);
     console.log(changed_coordinate)
   },[changed_coordinate]);
+  
+  // get all followers
+   
+    useEffect(()=>{
+
+    const FetchFollowers = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/v1/connection/getFollowers", {
+          method : "GET",
+          credentials: "include"
+        })
+
+        
+        if(res.ok) {
+            let data = await res.json()
+            data = data?.data?.Followers
+            console.log(data?.data?.Followers[0].followerID)
+           const followerSet = new Set(
+          data.map(f => f.followerID.toString())
+             );
+            setfollowers(followerSet)
+            // console.log(followers)
+        }
+        else {
+        const err = await res.json();
+        throw new Error(err.message)
+        }
+      }
+      catch (err) {
+          setError(err.message)
+      }
+    }
+    FetchFollowers();
+    }, [])
   
   const values=[
       {
@@ -148,6 +187,15 @@ function Connectionspage(){
 
       }
     ]
+ 
+    useEffect(()=>{
+       const user = curractive['leaderBoard']
+       
+       setValues(user)
+        
+    },[])
+    // Values.map((value)=> console.log(value.Avatar))
+    // console.log("FOund HeREeeeee", Values)
     const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
      useEffect(()=>{setuserDetail(sorted_values)},[])
        
@@ -166,6 +214,29 @@ function Connectionspage(){
          Dispatch(ChangeTitle(User.Title));
          Dispatch(ChangeVal(User));
        }
+
+       // Handle Follow
+       const HandleFollow = async(e) =>{
+        e.preventDefault();
+       const followee = e.currentTarget.id
+       console.log(followee)
+        try {
+            const res = await fetch("http://localhost:8000/api/v1/connection/follow",{
+              method: "POST",
+              headers : { "Content-Type" : "application/json"},
+              body: JSON.stringify({ followee }),
+              credentials: "include"
+            })
+            if(res.ok) console.log(res)
+            else {
+             const err = await res.json()
+             throw new Error(err.message)
+            }
+        }
+        catch (err) {
+         setError(err.message)
+        }
+       } 
     return(
         <>
         <div className="flex flex-col mt-10 ml-10 w-300 gap-y-5">
@@ -238,44 +309,45 @@ function Connectionspage(){
             </div>
               <div className="flex flex-col w-full h-full ">
            <div className="flex flex-col  ">{
-           userDetail.slice(curr_leaderboard_page*4,curr_leaderboard_page*4+4)
-           .map((values,idx)=>(
-            <div className="w-screen ">
+           Values.slice(curr_leaderboard_page*4,curr_leaderboard_page*4+4)
+           .map((user,idx)=>(
+            <div key={idx} className="w-screen ">
           <div className="flex w-350 h-20    ">
             <NavLink to="/connectionportfolio">
             <div className="flex gap-x-2 w-40 mt-7">
-           <img className="rounded-[50%] h-12 w-12" src={values.img} alt="" />
+           <img className="rounded-[50%] h-12 w-12" src={user.Avatar} alt="" />
            <div className="  flex font-extrabold cursor-pointer mt-3 text-md gap-x-2 " onClick={()=>{
             changeFeature();
-            changeName(values);
+            changeName(user);
            }} style={{fontFamily:'Times New Roman,Serif'}}>
             <div className="flex ">
-            <h1 className="">{values.Title[0]}</h1>
-            <h1 className={`flex ${values.upvote>=5000?'text-[#FB3766]':values.upvote>=2000 && values.upvote<5000?'text-[#5235E8]':values.upvote>=500 && values.upvote<2000?'text-[#DAF727]':'text-black'}`}>{values.Title.slice(1)}</h1>
+            <h1 className="">{user?.Title[0]}</h1>
+            <h1 className={`flex ${user.score>=5000?'text-[#FB3766]':user.score>=2000 && user.score<5000?'text-[#5235E8]':user.score>=500 && user.score<2000?'text-[#DAF727]':'text-black'}`}>{user.Title.slice(1)}</h1>
             </div>
-           <h1>{values.name}</h1>
+           <h1>{user.username}</h1>
            </div>
            </div>
             </NavLink>
 
           
            <div className="flex w-20  ml-47   text-sm mt-9">
-            <h1 className="flex ml-2 text-[#42424D] ">{values.upvote}</h1>
+            <h1 className="flex ml-2 text-[#42424D] ">{user.score}</h1>
            </div>
-           <div className="w-25 ml-35 mt-6 ">
-             {values.status === 'notfollowing' && (
-             <div className=" flex mt-2 cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " style={{fontFamily:'Times New Roman,Serif'}}>
+           <div className="w-25 ml-28 mt-6 ">
+             {!followers.has(user.id) && (
+
+             <button id={user.id} className=" flex mt-2 cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " onClick={HandleFollow} style={{fontFamily:'Times New Roman,Serif'}}>
               <h3 className="font-extrabold flex  text-white">Follow</h3>  
-             </div>
+             </button>
           )}
-           {values.status === 'following' && (
+           {followers.has(user.id) && (
             <div className="ml-2 mt-2">
 
               <h1 className="font-extrabold text-[#5235E8]" style={{fontFamily:'Times New Roman,Serif'}}>Following</h1>
             </div>
            )}
            </div>
-           <div className="mt-8 w-30 ml-27">
+           {/* <div className="mt-8 w-30 ml-27">
             {(()=>{
               const ans=((values.prevD_up - values.prevPD_up)/values.prevPD_up)*100;
        if(ans >0 ) return( 
@@ -305,8 +377,8 @@ function Connectionspage(){
         </div>)
             })
             ()}
-           </div>
-         
+           </div> */}
+{/*          
            <div className="w-30 ml-15">
               {(()=>{
                  asign_coordinates(values.twentyFour_hour);
@@ -348,8 +420,8 @@ function Connectionspage(){
                 </div>
                 )
               })()}
-           </div>
-           <div className="w-1/7 ml-15 mt-8">
+           </div> */}
+           {/* <div className="w-1/7 ml-15 mt-8">
             {values.watchlist === true && (
                 <div className="flex cursor-pointer" >
                   <svg className="mt-1  w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -364,7 +436,7 @@ function Connectionspage(){
        </svg>
        </div>
             )}
-           </div>
+           </div> */}
           </div>
           </div>
         ))
