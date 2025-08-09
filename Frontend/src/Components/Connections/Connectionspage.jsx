@@ -15,7 +15,7 @@ function Connectionspage(){
     const [change,setchange] = useState(null);
     const [followers, setfollowers] = useState(new Set())
     const [Values, setValues] = useState([])
-
+    const [userID, setuserID] = useState()
     const curractive= useSelector((state)=>state.CurrActive)
     
   let cordinates="50 55 52 55 54 55 56 55 58 55 60 55 62 55 64 55 66 55 68 55 70 55 72 55 74 55 76 55 78 55 80 55 82 55 84 55 86 55 88 55 90 55 92 55 94 55 96 55";
@@ -61,9 +61,9 @@ function Connectionspage(){
         if(res.ok) {
             let data = await res.json()
             data = data?.data?.Followers
-            console.log(data?.data?.Followers[0].followerID)
+            console.log(data?.data?.Followers[0].followeeID)
            const followerSet = new Set(
-          data.map(f => f.followerID.toString())
+          data.map(f => f.followeeID.toString())
              );
             setfollowers(followerSet)
             // console.log(followers)
@@ -189,9 +189,12 @@ function Connectionspage(){
     ]
  
     useEffect(()=>{
+      
+       const data = curractive['userData'].id
        const user = curractive['leaderBoard']
-       
-       setValues(user)
+       const validUsers = user.filter((u)=>u.id != userID);
+       setuserID(data);
+       setValues(validUsers)
         
     },[])
     // Values.map((value)=> console.log(value.Avatar))
@@ -219,7 +222,8 @@ function Connectionspage(){
        const HandleFollow = async(e) =>{
         e.preventDefault();
        const followee = e.currentTarget.id
-       console.log(followee)
+
+      //  console.log(followee)
         try {
             const res = await fetch("http://localhost:8000/api/v1/connection/follow",{
               method: "POST",
@@ -227,7 +231,9 @@ function Connectionspage(){
               body: JSON.stringify({ followee }),
               credentials: "include"
             })
-            if(res.ok) console.log(res)
+            if(res.ok) {
+
+            }
             else {
              const err = await res.json()
              throw new Error(err.message)
@@ -311,7 +317,9 @@ function Connectionspage(){
            <div className="flex flex-col  ">{
            Values.slice(curr_leaderboard_page*4,curr_leaderboard_page*4+4)
            .map((user,idx)=>(
+             
             <div key={idx} className="w-screen ">
+          
           <div className="flex w-350 h-20    ">
             <NavLink to="/connectionportfolio">
             <div className="flex gap-x-2 w-40 mt-7">
@@ -334,11 +342,13 @@ function Connectionspage(){
             <h1 className="flex ml-2 text-[#42424D] ">{user.score}</h1>
            </div>
            <div className="w-25 ml-28 mt-6 ">
+             
              {!followers.has(user.id) && (
-
+              
              <button id={user.id} className=" flex mt-2 cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " onClick={HandleFollow} style={{fontFamily:'Times New Roman,Serif'}}>
               <h3 className="font-extrabold flex  text-white">Follow</h3>  
              </button>
+
           )}
            {followers.has(user.id) && (
             <div className="ml-2 mt-2">
@@ -439,8 +449,8 @@ function Connectionspage(){
            </div> */}
           </div>
           </div>
-        ))
-        }
+        )
+      )}
            </div>
         <div className="flex mt-3 justify-center">
           <div className="cursor-pointer w-8 h-7 rounded-lg border border-gray-300" onClick={decrement}>

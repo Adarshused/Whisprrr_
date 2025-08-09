@@ -145,9 +145,9 @@ const getFollowers = AsyncHandler(async (req, res) => {
   const userID = req.user._id;
 
   const Followers = await Connections.find(
-    {followeeID : userID}
+    {followerID : userID}
   );
-  // console.log(Followers)
+  console.log(Followers)
   if(!Followers) 
     throw new ApiError(500, "Their was an problem while fetching the followers")
 

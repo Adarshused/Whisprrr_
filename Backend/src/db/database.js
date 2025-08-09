@@ -35,18 +35,25 @@ const fetchAllUsersFromDB = async () => {
       
       {
           $project: {
-          displayname:         1,
-          email:               1,
-          firstname:           1,
-          avatar:              1,
-          dob:                 1,
-          country_residence:   1,
-          title:               1,
-          about:               1,
-          address:             1,
-          experience:          1,
-          totalUpvote:         1,
-          upvote:              1,
+                _id:               1,
+              organization:        1,
+              displayname:         1,
+              email:               1,
+              firstname:           1,
+              lastname:            1,
+              avatar:              1,
+              dob:                 1,
+              country_residence:   1,
+              title:               1,
+              about:               1,
+              experience:          1,
+              totalUpvote:         1,
+              following:           1,
+              followers:           1,
+              plot:                1,
+              state:               1,
+              area:                1,
+              city:                1,
         }
       }
     ])

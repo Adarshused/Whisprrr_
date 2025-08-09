@@ -66,6 +66,5 @@ const upvote = AsyncHandler(async (req, res) => {
   });
   
   
-  
 
 export {upvote}

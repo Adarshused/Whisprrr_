@@ -7,6 +7,7 @@ import {ApiResponse} from '../utils/ApiResponse.js'
 import { redis } from '../utils/redis.js';
 import mongoose from 'mongoose';
 import { access } from 'fs';
+import { Upvotes } from '../models/upvotes.model.js';
 
 const generateAccessTokenAndRefreshToken = async(userID) => {
 try{
@@ -239,6 +240,7 @@ const Logout = AsyncHandler(async (req, res) => {
 const UserData = AsyncHandler(async (req, res) => {
     let userID = req.user._id
     let User;
+    let _24hUpvote;
     const topN = 10
     // userID = String(userID)
     const redisKey = userID;
@@ -264,6 +266,7 @@ const UserData = AsyncHandler(async (req, res) => {
     }
     }
     else {
+       
        User =  await Faculty.aggregate([
           {$match : 
             { _id: req.user._id}
@@ -283,24 +286,53 @@ const UserData = AsyncHandler(async (req, res) => {
            },
            {
               $project: {
+              _id:               1,
               displayname:         1,
+              organization:        1,
               email:               1,
               firstname:           1,
+              lastname:            1,
               avatar:              1,
               dob:                 1,
               country_residence:   1,
               title:               1,
               about:               1,
-              address:             1,
               experience:          1,
               totalUpvote:         1,
-              upvote:              1,
+              following:           1,
+              followers:           1,
+              state:               1,
+              area:                1,
+              city:                1,
+            
         }
       }
         ]);
         // User._id = String(User._id)
         await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
     }
+     // get 24Hours Upvotes of every user
+     const now = new Date();
+     const start = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    const data = await Upvotes.aggregate([
+       { $match: {
+          recipient: userID,
+        createdAt: { $gte: start, $lte: now }
+    }},
+    { $group: {
+        _id: { $dateTrunc: { date: "$createdAt", unit: "hour", timezone: "Asia/Kolkata" } },
+        count: { $sum: 1 }
+    }},
+    { $sort: { _id: 1 } }
+    ]
+    );
+    const counts = Array(24).fill(0)
+    data.forEach(doc => {
+        const idx = Math.floor((new Date(doc._id).getTime() - start.getTime()) / 3600000)
+        if(idx >=0 && idx < 24)  counts[idx] = doc.count;
+    })
+    // console.log(counts)
     // const topUsers = await redis.zrevrange("users:byupvotes", 0, 5, "WITHSCORES");
 // console.log("Top users by upvotes:", topUsers);
     const raw = await redis.zrevrange('users:byupvotes', 0, -1, 'WITHSCORES');
@@ -312,6 +344,9 @@ const UserData = AsyncHandler(async (req, res) => {
             id: raw[i],
             score: Number(raw[i + 1]),
             username: faculty.displayname,
+            totalUpvote: faculty.totalUpvote,
+            experience: faculty.experience,
+            country_residence: faculty.country_residence,
             Title: faculty.title,
             Avatar: faculty.avatar,
             about: faculty.about,
