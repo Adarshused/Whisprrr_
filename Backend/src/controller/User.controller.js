@@ -8,6 +8,7 @@ import { redis } from '../utils/redis.js';
 import mongoose from 'mongoose';
 import { access } from 'fs';
 import { Upvotes } from '../models/upvotes.model.js';
+import { fetchAllUsersFromDB } from '../db/database.js';
 
 const generateAccessTokenAndRefreshToken = async(userID) => {
 try{
@@ -312,57 +313,16 @@ const UserData = AsyncHandler(async (req, res) => {
         await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
     }
      // get 24Hours Upvotes of every user
-     const now = new Date();
-     const start = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-    const data = await Upvotes.aggregate([
-       { $match: {
-          recipient: userID,
-        createdAt: { $gte: start, $lte: now }
-    }},
-    { $group: {
-        _id: { $dateTrunc: { date: "$createdAt", unit: "hour", timezone: "Asia/Kolkata" } },
-        count: { $sum: 1 }
-    }},
-    { $sort: { _id: 1 } }
-    ]
-    );
-    const counts = Array(24).fill(0)
-    data.forEach(doc => {
-        const idx = Math.floor((new Date(doc._id).getTime() - start.getTime()) / 3600000)
-        if(idx >=0 && idx < 24)  counts[idx] = doc.count;
-    })
+    
     // console.log(counts)
     // const topUsers = await redis.zrevrange("users:byupvotes", 0, 5, "WITHSCORES");
 // console.log("Top users by upvotes:", topUsers);
-    const raw = await redis.zrevrange('users:byupvotes', 0, -1, 'WITHSCORES');
-    // console.log(raw)
-    const leaderBoard = []
-    for(let i = 0; i < raw.length; i += 2) {
-        const faculty = await Faculty.findById(raw[i])
-        leaderBoard.push({
-            id: raw[i],
-            score: Number(raw[i + 1]),
-            username: faculty.displayname,
-            totalUpvote: faculty.totalUpvote,
-            experience: faculty.experience,
-            country_residence: faculty.country_residence,
-            Title: faculty.title,
-            Avatar: faculty.avatar,
-            about: faculty.about,
-            followers: faculty.followers,
-            following: faculty.following,
-            about: faculty.about,
-            city: faculty.city,
-            state: faculty.state,
-            organization: faculty.organization
-        })
-    }
+   
     // console.log(leaderBoard)
     
    return res
    .status(200)
-   .json(new ApiResponse(200, {user: User,leaderboard: leaderBoard},"Fetched user data"))
+   .json(new ApiResponse(200, {user: User},"Fetched user data"))
 })
 
 const UserContact = AsyncHandler(async (req, res) => {
@@ -449,6 +409,7 @@ const UserAbout = AsyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "About updatred successfully"))
 })
+
 const UserAddress = AsyncHandler(async (req, res) => {
     let userID = req.user._id;
     const plot = String(req.body.plot);
@@ -479,4 +440,205 @@ const UserAddress = AsyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "Address Updated Successfully"))
 })
-export {AvatarUser, RegisterFaculty, LoginFaculty, UserData,Logout,UserContact,UserInfo,UserAbout, UserAddress}
+
+const getAllFaculty = AsyncHandler(async (req, res) => {
+     
+    let raw = await redis.zrevrange('users:byupvotes', 0, -1,'WITHSCORES');
+    
+    if(raw.length === 0) {
+          const rawUsers = await fetchAllUsersFromDB();
+        if(!rawUsers || rawUsers.length === 0) {
+            throw new ApiError(505, "Error while loading all users");
+        }
+         const now = new Date();                           // current instant (UTC under the hood)
+         const start = new Date(now.getTime() - 24*60*60*1000); // 24 hours ago
+        const userIds = rawUsers.map(u => u._id);
+        // aggregating all upvotes count in one aggregation
+        const agg = await Upvotes.aggregate([
+        { $match: 
+            { recipient: { $in: userIds }, 
+            createdAt: { $gte: start, $lte: now } 
+        } 
+       },
+       { $project: 
+        { recipient: 1,
+        hour: { $dateTrunc: { date: "$createdAt", unit: "hour", timezone: "Asia/Kolkata" } }
+       }
+       },
+       { $group: 
+       { _id: { recipient: "$recipient", hour: "$hour" }, 
+       count: { $sum: 1 } 
+      } },
+      { $sort: 
+        { "_id.hour": 1 } }
+       ]);
+       
+    //    2) convert agg -> map of recipient -> 24-array
+       const countsMap = new Map();
+       for (const doc of agg) {
+       const rid = String(doc._id.recipient);
+       if (!countsMap.has(rid)) countsMap.set(rid, Array(24).fill(0));
+       const idx = Math.floor((new Date(doc._id.hour).getTime() - start.getTime()) / 3600000);
+       if (idx >= 0 && idx < 24) countsMap.get(rid)[idx] = doc.count;
+       }
+
+       // 3) pipeline updates in batches
+      
+       const BATCH = 1000;
+       let pipeline = redis.pipeline();
+       let ops = 0;
+
+       for (const u of rawUsers) {
+        const id = u._id;
+        const score = u.totalUpvote || 0;
+        const profileJson = JSON.stringify(u);
+        const counts = countsMap.get(id) || Array(24).fill(0);
+        const countsJson = JSON.stringify(counts);
+
+        //  store structured data in hash (doesn't affect zset ordering)
+       pipeline.hset(`user:${id}`, 'profile', profileJson, 'counts24', countsJson);
+       pipeline.expire(`user:${id}`, 3600); // optional TTL for the hash
+
+       // keep leaderboard purely by score (member is user id)
+       // If you do NOT want to change the score, skip this zadd.
+       pipeline.zadd('users:byupvotes', score, id);
+
+       ops++;
+       if (ops >= BATCH) {
+        await pipeline.exec();
+       pipeline = redis.pipeline();
+       ops = 0;
+        }
+       }
+       if (ops > 0) await pipeline.exec();
+
+       raw = await redis.zrevrange('users:byupvotes', 0, -1,'WITHSCORES');
+    //     const rawUsers = users.map(u => u.toObject ? u.toObject() : u);
+    //     const pipeline = redis.pipeline();
+    //     const now = new Date();
+    //     const start = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    //      for(const u of rawUsers) {
+        
+    //      const key = u._id;
+    //      const score = u.totalUpvote;
+        
+    //      const val = JSON.stringify(u);
+    
+    //      pipeline.set(key, val,'EX',3600);
+    //      pipeline.zadd("users:byupvotes", score, u._id )
+         
+    //      /*  
+    //            Calulating 24Hrs upvotes of each faculty
+    //     */
+    //      const data = await Upvotes.aggregate([
+    //       { $match: {
+    //        recipient: u._id,
+    //        createdAt: { $gte: start, $lte: now }
+    //       }},
+    //       { $group: {
+    //        _id: { $dateTrunc: { date: "$createdAt", unit: "hour", timezone: "Asia/Kolkata" } },
+    //        count: { $sum: 1 }
+    //       }},
+    //      { $sort: { _id: 1 } }
+    //      ]
+    //      );
+    //     const counts = Array(24).fill(0)
+    //     data.forEach(doc => {
+    //      const idx = Math.floor((new Date(doc._id).getTime() - start.getTime()) / 3600000)
+    //      if(idx >=0 && idx < 24)  counts[idx] = doc.count;
+    //    })
+        
+
+    //    }
+        
+    //    const result = await pipeline.exec();
+    //     const user = await redis.zrevrange('users:byUpvotes',0,1);
+    //     console.log(`🌡️   Preloaded ${users.length} users into Redis`)
+         
+    //     raw = await redis.zrevrange('users:byupvotes', 0, -1, 'WITHSCORES');
+       }
+    
+        // parse rawWithScores into entries [{id, score}, ...]
+        const entries = [];
+       for (let i = 0; i < raw.length; i += 2) {
+       entries.push({ id: raw[i], score: Number(raw[i + 1]) });
+       }
+      // pipeline to fetch the hash fields for each id
+          const pl = redis.pipeline();
+          for (const e of entries) {
+             pl.hmget(`user:${e.id}`, 'profile', 'counts24'); // or hgetall
+           } 
+
+           const Res = await pl.exec();
+
+           const leaderBoard = []
+           for (let i = 0; i < entries.length; i++) {
+            const id = entries[i].id;
+            const score = entries[i].score;
+            const entryRes = Res[i];
+            const err = entryRes[0];
+            const val = entryRes[1];
+            let profile = null;
+            let counts = Array(24).fill(0);
+
+            if(!err && val) {
+               const [profileJson, countsJson ] = val;
+               if(profileJson) {
+                try {
+                    profile = JSON.parse(profileJson);
+                }
+                catch (err) {
+                  profile = null
+                }
+               }
+              if(countsJson) {
+                try {
+                  counts = JSON.parse(countsJson)
+                }
+                catch (err) {
+                    counts = Array(24).fill(0);
+                }
+              }
+            }
+
+            leaderBoard.push({
+                id,
+                score,
+                profile,
+                counts24: counts
+            });
+           }
+
+        
+
+
+    // const leaderBoard = []
+    
+    // for(let i = 0; i < raw.length; i += 2) {
+    //     const faculty = await Faculty.findById(raw[i])
+        
+    //     leaderBoard.push({
+    //         id: raw[i],
+    //         score: Number(raw[i + 1]),
+    //         username: faculty.displayname,
+    //         totalUpvote: faculty.totalUpvote,
+    //         experience: faculty.experience,
+    //         country_residence: faculty.country_residence,
+    //         Title: faculty.title,
+    //         Avatar: faculty.avatar,
+    //         about: faculty.about,
+    //         followers: faculty.followers,
+    //         following: faculty.following,
+    //         about: faculty.about,
+    //         city: faculty.city,
+    //         state: faculty.state,
+    //         organization: faculty.organization
+    //     })
+    // }
+    return res
+    .status(200)
+    .json(new ApiResponse(200, {leaderBoard: leaderBoard}, "Fetched all Faculties Successfully"))
+
+})
+export {AvatarUser, RegisterFaculty, LoginFaculty, UserData,Logout,UserContact,UserInfo,UserAbout, UserAddress, getAllFaculty}
