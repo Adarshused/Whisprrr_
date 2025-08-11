@@ -513,50 +513,7 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
        if (ops > 0) await pipeline.exec();
 
        raw = await redis.zrevrange('users:byupvotes', 0, -1,'WITHSCORES');
-    //     const rawUsers = users.map(u => u.toObject ? u.toObject() : u);
-    //     const pipeline = redis.pipeline();
-    //     const now = new Date();
-    //     const start = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-    //      for(const u of rawUsers) {
-        
-    //      const key = u._id;
-    //      const score = u.totalUpvote;
-        
-    //      const val = JSON.stringify(u);
-    
-    //      pipeline.set(key, val,'EX',3600);
-    //      pipeline.zadd("users:byupvotes", score, u._id )
-         
-    //      /*  
-    //            Calulating 24Hrs upvotes of each faculty
-    //     */
-    //      const data = await Upvotes.aggregate([
-    //       { $match: {
-    //        recipient: u._id,
-    //        createdAt: { $gte: start, $lte: now }
-    //       }},
-    //       { $group: {
-    //        _id: { $dateTrunc: { date: "$createdAt", unit: "hour", timezone: "Asia/Kolkata" } },
-    //        count: { $sum: 1 }
-    //       }},
-    //      { $sort: { _id: 1 } }
-    //      ]
-    //      );
-    //     const counts = Array(24).fill(0)
-    //     data.forEach(doc => {
-    //      const idx = Math.floor((new Date(doc._id).getTime() - start.getTime()) / 3600000)
-    //      if(idx >=0 && idx < 24)  counts[idx] = doc.count;
-    //    })
-        
-
-    //    }
-        
-    //    const result = await pipeline.exec();
-    //     const user = await redis.zrevrange('users:byUpvotes',0,1);
-    //     console.log(`🌡️   Preloaded ${users.length} users into Redis`)
-         
-    //     raw = await redis.zrevrange('users:byupvotes', 0, -1, 'WITHSCORES');
+   
        }
     
         // parse rawWithScores into entries [{id, score}, ...]
@@ -609,33 +566,7 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
                 counts24: counts
             });
            }
-
-        
-
-
-    // const leaderBoard = []
-    
-    // for(let i = 0; i < raw.length; i += 2) {
-    //     const faculty = await Faculty.findById(raw[i])
-        
-    //     leaderBoard.push({
-    //         id: raw[i],
-    //         score: Number(raw[i + 1]),
-    //         username: faculty.displayname,
-    //         totalUpvote: faculty.totalUpvote,
-    //         experience: faculty.experience,
-    //         country_residence: faculty.country_residence,
-    //         Title: faculty.title,
-    //         Avatar: faculty.avatar,
-    //         about: faculty.about,
-    //         followers: faculty.followers,
-    //         following: faculty.following,
-    //         about: faculty.about,
-    //         city: faculty.city,
-    //         state: faculty.state,
-    //         organization: faculty.organization
-    //     })
-    // }
+           
     return res
     .status(200)
     .json(new ApiResponse(200, {leaderBoard: leaderBoard}, "Fetched all Faculties Successfully"))

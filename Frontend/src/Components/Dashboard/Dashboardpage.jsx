@@ -555,13 +555,13 @@ return(
            .map((values,idx)=>(
           <div className="flex w-full h-20 py-4 px-3 border-b border-gray-300 gap-x-12 ">
            <div className="flex gap-x-2 w-43">
-           <img className="rounded-[50%] h-12 w-12" src={values.Avatar} alt="" />
+           <img className="rounded-[50%] h-12 w-12" src={values.profile?.avatar} alt="" />
            <div className=" flex font-extrabold mt-3 text-md gap-x-2" style={{fontFamily:'Times New Roman,Serif'}}>
             <div className="flex ">
-            <h1 className="">{values.Title[0]}</h1>
-            <h1 className={`flex ${values.score>=5000?'text-[#FB3766]':values.score>=2000 && values.score<5000?'text-[#5235E8]':values.score>=500 && values.score<2000?'text-[#DAF727]':'text-black'}`}>{values.Title.slice(1)}</h1>
+            <h1 className="">{values.profile.title[0]}</h1>
+            <h1 className={`flex ${values.score>=5000?'text-[#FB3766]':values.score>=2000 && values.score<5000?'text-[#5235E8]':values.score>=500 && values.score<2000?'text-[#DAF727]':'text-black'}`}>{values.profile.title.slice(1)}</h1>
             </div>
-           <h1>{values.username}</h1>
+           <h1>{values.profile.displayname}</h1>
            </div>
            </div>
           

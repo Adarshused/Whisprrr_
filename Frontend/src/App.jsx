@@ -16,9 +16,8 @@ import { fetchCurrentUser } from './utils/Getme.js';
 const queryClient  = new QueryClient()
 
 function App(props) {
-  // const Dispatch=useDispatch();
   
-  // console.log("Reached")
+
   const [islogin,setislogin] = useState(false)
   const [dashboard,setdashboard] = useState(false);
   const [connections,setconnections]=useState(false);
@@ -28,29 +27,13 @@ function App(props) {
   const [setting,setsetting]=useState(false);
    const [heading,setheading]=useState("Dashboard");
    const [Sheading,setSheading] = useState("Profile")
-  //  const [uservalue, setuservalue] = useState({
-  //       name: "",
-  //       Title: "",
-  //       img: "",
-  //       upvote: "",
-  //       about: "",
-  //       twentyFour_hour: "",
-  //       prevD_up: "",
-  //       prevPD_up: "",
-  //       max_title: "",
-  //       max_upvote: "",
-  //       address: "",
-  //       experience: "",
-  //       upv_twlmonths: "",
-  //       weekly_upvot: "",
-  //       btech_cse: "",
-  //       btech_cse_totalupv: ""
-  //  })
-   
+  
    const curractive= useSelector((state)=>state.CurrActive)
   
-   const {data: user, isLoading, isFetching, isError} =  useCurrentUser();
-  //  console.log(user)
+   
+   const {data: {user, faculties } = {}, isLoading, isFetching, isError} =  useCurrentUser();
+  //  console.log(faculties)
+
    const Dispatch=useDispatch();
    useEffect(()=>{
 
@@ -66,19 +49,21 @@ function App(props) {
        }
       //  queryClient.removeQueries(['currentUser']);
        Dispatch(ChangeLogIn(true))
-       console.log(user)
+      //  console.log(user)
          
        const  userData = user?.data?.user
-      
+                      /*  GetAllFaculties */
+       
+      //   const Facultydata = faculties?.data['leaderBoard'][0]
+      //  console.log(Facultydata)
        if(userData){
         
-
         const lpaylod=[]
         
-        for(let i = 0; i < user?.data?.leaderboard?.length; ++i) {
-          lpaylod.push(user?.data?.leaderboard[i]);
+        for(let i = 0; i < faculties?.data['leaderBoard'].length; ++i) {
+          lpaylod.push(faculties?.data['leaderBoard'][i]);
         }
-
+        // console.log(lpaylod)
         
          /* Here setuservalue or useState is an asynchronous call and im dispatching the value to the store since the setuservalue is not been updated its dispatching the old values itself 
          so i instead of storing the value in setuservalue now i directly store it in payload const */
@@ -113,6 +98,7 @@ function App(props) {
          totalUpvote: userData.totalUpvote? userData.totalUpvote:""
         }
         // console.log()
+        console.log(lpaylod)
         Dispatch(ChangeleaderBoard(lpaylod))
         Dispatch(ChangeUserData(payload))
         // console.log(curractive['userData'].img)
@@ -172,6 +158,8 @@ function App(props) {
     //   if(name === curractive['isActive']) set(true);
     //   else set(false);
     //  })}
+
+
   return (
     <div className="overflow-x-hidden min-h-screen">
     {!islogin?(

@@ -323,16 +323,16 @@ function Connectionspage(){
           <div className="flex w-350 h-20    ">
             <NavLink to="/connectionportfolio">
             <div className="flex gap-x-2 w-40 mt-7">
-           <img className="rounded-[50%] h-12 w-12" src={user.Avatar} alt="" />
+           <img className="rounded-[50%] h-12 w-12" src={user.profile.avatar} alt="" />
            <div className="  flex font-extrabold cursor-pointer mt-3 text-md gap-x-2 " onClick={()=>{
             changeFeature();
             changeName(user);
            }} style={{fontFamily:'Times New Roman,Serif'}}>
             <div className="flex ">
-            <h1 className="">{user?.Title[0]}</h1>
-            <h1 className={`flex ${user.score>=5000?'text-[#FB3766]':user.score>=2000 && user.score<5000?'text-[#5235E8]':user.score>=500 && user.score<2000?'text-[#DAF727]':'text-black'}`}>{user.Title.slice(1)}</h1>
+            <h1 className="">{user?.profile.title[0]}</h1>
+            <h1 className={`flex ${user.score>=5000?'text-[#FB3766]':user.score>=2000 && user.score<5000?'text-[#5235E8]':user.score>=500 && user.score<2000?'text-[#DAF727]':'text-black'}`}>{user.profile.title.slice(1)}</h1>
             </div>
-           <h1>{user.username}</h1>
+           <h1>{user.profile.displayname}</h1>
            </div>
            </div>
             </NavLink>
@@ -343,14 +343,14 @@ function Connectionspage(){
            </div>
            <div className="w-25 ml-28 mt-6 ">
              
-             {!followers.has(user.id) && (
+             {!followers.has(user.profile._id) && (
               
-             <button id={user.id} className=" flex mt-2 cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " onClick={HandleFollow} style={{fontFamily:'Times New Roman,Serif'}}>
+             <button id={user.profile._id} className=" flex mt-2 cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " onClick={HandleFollow} style={{fontFamily:'Times New Roman,Serif'}}>
               <h3 className="font-extrabold flex  text-white">Follow</h3>  
              </button>
 
           )}
-           {followers.has(user.id) && (
+           {followers.has(user.profile._id) && (
             <div className="ml-2 mt-2">
 
               <h1 className="font-extrabold text-[#5235E8]" style={{fontFamily:'Times New Roman,Serif'}}>Following</h1>
