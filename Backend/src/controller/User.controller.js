@@ -450,6 +450,7 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
         if(!rawUsers || rawUsers.length === 0) {
             throw new ApiError(505, "Error while loading all users");
         }
+        //  console.log("reachedddddddddddd")
          const now = new Date();                           // current instant (UTC under the hood)
          const start = new Date(now.getTime() - 24*60*60*1000); // 24 hours ago
         const userIds = rawUsers.map(u => u._id);
@@ -481,7 +482,7 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
        const idx = Math.floor((new Date(doc._id.hour).getTime() - start.getTime()) / 3600000);
        if (idx >= 0 && idx < 24) countsMap.get(rid)[idx] = doc.count;
        }
-
+    //   console.log("MMMmmmm daaaAAmmM",countsMap)
        // 3) pipeline updates in batches
       
        const BATCH = 1000;
@@ -492,9 +493,9 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
         const id = u._id;
         const score = u.totalUpvote || 0;
         const profileJson = JSON.stringify(u);
-        const counts = countsMap.get(id) || Array(24).fill(0);
+        const counts = countsMap.get(String(id)) || Array(24).fill(0);
         const countsJson = JSON.stringify(counts);
-
+      console.log(counts)
         //  store structured data in hash (doesn't affect zset ordering)
        pipeline.hset(`user:${id}`, 'profile', profileJson, 'counts24', countsJson);
        pipeline.expire(`user:${id}`, 3600); // optional TTL for the hash

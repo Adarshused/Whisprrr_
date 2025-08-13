@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
 import { useRef } from "react";
-function ConnectionPortfolio(User){
+function ConnectionPortfolio(user){
      const [month,setmonth]=useState([]);
      const [percInc,setpercInc]=useState("0");
      let data=""
      useEffect(()=>{
-      setpercInc(Number((((Value['value'].prevD_up-Value['value'].prevPD_up)/Math.abs(Value['value'].prevPD_up))).toFixed(1)))
+      setpercInc(Number((((user.score - user?.PrevUpv)/Math.abs(user?.PrevUpv))).toFixed(1)))
      },[])
        const y_cordinate=[],x_cordinate=[];
       const Value=useSelector((state)=>state.CurrActive);
       
       // console.log(points)
       const y_cor=new Array(360,300,230,140,50);
-      const cordinate=Value['value'].upv_twlmonths;
-      const len=cordinate.length;
+      const cordinate=user?.counts24;     /* here 12 months data should come */
+      const len=cordinate?.length;
       let val=0;
        for(let i=0;i<len;i++){
         let x=[]

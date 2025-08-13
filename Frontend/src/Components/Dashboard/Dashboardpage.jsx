@@ -21,8 +21,11 @@ function Dashboardpage(){
     const [participants,setparticipants]=useState("10000");
     const [counter,setcounter]=useState(1)
     const [change,setchange]=useState()
-    
-    
+    const [Last7DaysColumn, setLast7DaysColumn] = useState([])
+    const x_cordinate = [20, 110, 200, 270, 360, 450, 550], y_cor = [250, 205, 160, 115, 70, 20];
+    const [y_cordinate, sety_cordinate] = useState([])
+    const [values, setvalues] = useState([4500, 1700, 1800, 4700, 4900, 1700, 5000])
+    const [coordinates, setcoordinates] = useState("")
     const cvalues=[
       {
         'name':'Dinesh',
@@ -218,11 +221,145 @@ function Dashboardpage(){
      }
     },[status])
     useEffect(()=>{
+
       if(currupvote_<=500 ) setstatus("Faculty");
       else if(currupvote_>500 && currupvote_<=2000) setstatus("Senior Faculty");
       else if(currupvote_>2000 && currupvote_<=5000) setstatus("Master");
       else if(currupvote_>5000) setstatus("Grand Master");
     },[currupvote_])
+
+    useEffect(()=>{
+    // get today (year, month, day) in Asia/Kolkata
+   const parts = new Intl.DateTimeFormat('en-GB', {
+       timeZone: 'Asia/Kolkata',
+       year: 'numeric',
+       month: 'numeric',
+       day: 'numeric'
+     }).formatToParts(new Date());
+
+    const year = Number(parts.find(p => p.type === 'year').value);
+    const month = Number(parts.find(p => p.type === 'month').value); // 1-12
+    const day = Number(parts.find(p => p.type === 'day').value);
+
+    const last7 = Array.from({ length: 7 }, (_, i) => new Date(Date.UTC(year, month - 1, day - i)));
+    const fmt = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'Asia/Kolkata' });
+    const data = last7.map(d => fmt.format(d)) 
+    data.reverse()
+    setLast7DaysColumn(data);
+    
+    //    Graph Y cordinate Logic
+  //  const [values, setvalues] = useState([2000, 4500, 10000, 1200, 5677, 6788, 4355])
+     let len = values.length;
+     for (let i = 0; i < len; i++) {
+          
+             if(values[i]<100){
+                 let base=0,ceil=100;
+                 let delta=values[i]-base;
+                 let range=ceil-base;
+                 let per=delta/range;
+                 let inter=400-y_cor[0];
+                 let y=400-(inter*per);
+                 y_cordinate.push(y);
+             }
+             else if(values[i]>=100 && values[i]<500){
+                 let base=100,ceil=500;
+                 let delta=values[i]-base;
+                 let range=ceil-base;
+                 let per=delta/range;
+                 let inter=y_cor[0]-y_cor[1];
+                 let y=y_cor[0]-(inter*per);
+                 y_cordinate.push(y);
+             }
+             else if(values[i]>=500 && values[i]<2500){
+              let base=500,ceil=2500;
+                 let delta=values[i]-base;
+                 let range=ceil-base;
+                 let per=delta/range;
+                 let inter=y_cor[1]-y_cor[2];
+                 let y=y_cor[1]-(inter*per);
+                 y_cordinate.push(y);
+             }
+             else if(values[i]>=2500 && values[i]<5000){
+              let base=2500,ceil=5000;
+                 let delta=values[i]-base;
+                 let range=ceil-base;
+                 let per=delta/range;
+                 let inter=y_cor[2]-y_cor[3];
+                 let y=y_cor[2]-(inter*per);
+                 y_cordinate.push(y);
+             }
+             else if(values[i]>=5000 && values[i]<10000){
+              let base=5000,ceil=10000;
+                 let delta=values[i]-base;
+                 let range=ceil-base;
+                 let per=delta/range;
+                 let inter=y_cor[3]-y_cor[4];
+                 let y=y_cor[3]-(inter*per);
+                 y_cordinate.push(y);
+             }
+             else if(values[i]>=10000 && values[i]<=20000){
+                let base=10000,ceil=20000;
+                 let delta=values[i]-base;
+                 let range=ceil-base;
+                 let per=delta/range;
+                 let inter=y_cor[4]-0;
+                 let y=y_cor[4]-(inter*per);
+                 y_cordinate.push(y);
+             }
+        }
+
+         let pts="";
+       for (let i = 0; i < x_cordinate.length; i++) {
+        pts += `${x_cordinate[i]},${y_cordinate[i]} `;
+      }
+      setcoordinates(pts.trim())
+            }, [])
+      
+        // handling the mouseeven for the point
+       const svgRef = useRef(null);
+        const trackerRef = useRef(null);
+      
+        // Convert flat values to coordinate objects
+        const x_and_y =x_cordinate.map((x, i) => ({ x, y: y_cordinate[i] }));
+      
+        useEffect(() => {
+          const svg = svgRef.current;
+          const tracker = trackerRef.current;
+          if (!svg || !tracker) return;
+         
+          const handleMouseMove = (e) => {
+            const pt = svg.createSVGPoint();
+            pt.x = e.clientX;
+            pt.y = e.clientY;
+      
+            const cursor = pt.matrixTransform(svg.getScreenCTM().inverse());
+            const x = cursor.x;
+      
+            let closest = x_and_y[0];
+            for (let p of x_and_y) {
+              if (Math.abs(p.x - x) < Math.abs(closest.x - x)) {
+                closest = p;
+              }
+            }
+      
+            trackerRef.current.setAttribute("transform", `translate(${closest.x}, ${closest.y})`);
+            trackerRef.current.setAttribute("visibility", "visible");
+      
+          };
+      
+          const handleMouseLeave = () => {
+            trackerRef.current.setAttribute("visibility", "hidden");
+          };
+      
+          svg.addEventListener('mousemove', handleMouseMove);
+          svg.addEventListener('mouseleave', handleMouseLeave);
+      
+          return () => {
+            svg.removeEventListener('mousemove', handleMouseMove);
+            svg.removeEventListener('mouseleave', handleMouseLeave);
+          };
+        }, [x_and_y]);
+      
 return(
     
     <>
@@ -336,17 +473,17 @@ return(
                          stroke-width="2"
                          stroke-linecap="round"
                           stroke-linejoin="round"
->
-  <g transform="translate(-10, 0)">
-    <polyline points="6 13 12 19 18 13"/>
-  </g>
-</svg>
+                        >
+                    <g transform="translate(-10, 0)">
+                    <polyline points="6 13 12 19 18 13"/>
+                    </g>
+                     </svg>
 
 
              </div>
       </div>
       {/* graph */}
-      <div >  
+      <div className="flex">  
           {/* <svg  id="graph" width="400" height="100" viewBox="0 0 400 100">
         <defs>
             <linearGradient id="fade-purple" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -360,24 +497,99 @@ return(
     <circle id="tracker" r="6" fill="red */}
     {/* " cx="0" cy="0" visibility="hidden"/> */}
     {/* </svg> */}
-    <svg width="550" height="270" viewBox="0 0 550 270">
+    { timeline === "Weekly" &&  (
+             <div className="w-5 text-gray-500">
+                <h1 className="mt-3">20k</h1>
+                <h1 className="mt-5">10k</h1>
+                <h1 className="mt-5">5k</h1>
+                <h1 className="mt-5">2.5k</h1>
+                <h1 className="mt-5">500</h1>
+                <h1 className="mt-5">100</h1>
+              </div>
+    )}
+
+    { timeline === "Monthly" && (
+          <div className=" w-5 text-gray-500">
+                <h1 className="mt-3">50k</h1>
+                <h1 className="mt-5">20k</h1>
+                <h1 className="mt-5">10k</h1>
+                <h1 className="mt-5">5k</h1>
+                <h1 className="mt-5">1k</h1>
+                <h1 className="mt-5">500</h1>
+              </div>
+    )}
+    <div className="flex flex-col w-140">
+      <svg width="550" height="270" viewBox="0 0 550 270">
        <defs>
-            <linearGradient id="fade-purple" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#5235E8" stop-opacity="20%" />
-              <stop offset="100%" stop-color="#5235E8" stop-opacity="0" />
-            </linearGradient>
+            <linearGradient
+      id="fade-purple"
+      gradientUnits="userSpaceOnUse"
+      x1="0" y1="100"
+      x2="0" y2="250"
+    >
+      <stop offset="0%"   stopColor="#5235E8" stopOpacity="0.2" />
+      <stop offset="100%" stopColor="#5235E8" stopOpacity="0"   />
+    </linearGradient>
           </defs>
-    <rect x="20" y="20" width="530" height="250" fill="none" stroke="purple"></rect>
+         
+    {/* <rect x="20" y="20" width="530" height="250" fill="none" stroke="purple"></rect>
+    <circle cx="20" cy="20" r="2" fill="#5235E8"></circle>
+    <circle cx="20" cy="70" r="2" fill="#5235E8"></circle>
+    <circle cx="20" cy="115" r="2" fill="#5235E8"></circle>
+    <circle cx="20" cy="160" r="2" fill="#5235E8"></circle>
+    <circle cx="20" cy="205" r="2" fill="#5235E8"></circle>
+    <circle cx="20" cy="250" r="2" fill="#5235E8"></circle>
+    <circle cx="20" cy="250" r="2" fill="#5235E8"></circle>
+    <circle cx="110" cy="250" r="2" fill="#5235E8"></circle>
+    <circle cx="200" cy="250" r="2" fill="#5235E8"></circle>
+    <circle cx="270" cy="250" r="2" fill="#5235E8"></circle>
+    <circle cx="360" cy="250" r="2" fill="#5235E8"></circle>
+    <circle cx="450" cy="250" r="2" fill="#5235E8"></circle>
+    <circle cx="545" cy="250" r="2" fill="#5235E8"></circle>
+    <circle cx="20" cy="20" r="2" fill="#5235E8"></circle> */}
     {/* <polyline points="20 250 95 220 170 180 265 150 360 250" stroke="#5235E8" fill="none" stroke-width="4"></polyline> */}
-    <path d="M20 250 L20 250 95 220 170 180 265 150 360 250" fill="none" stroke="#5235E8" stroke-width="4"></path>
-     <circle cx="20" cy="250" r="2" fill="red"></circle>
-     <circle cx="98" cy="250" r="2" fill="red"></circle>
-     <circle cx="173" cy="250" r="2" fill="red"></circle>
-     <circle cx="251" cy="250" r="2" fill="red"></circle>
-     <circle cx="329" cy="250" r="2" fill="red"></circle>
-     <circle cx="407" cy="250" r="2" fill="red"></circle>
-     <circle cx="485" cy="250" r="2" fill="red"></circle>
+    {timeline === "Weekly" && (
+      <>
+       <polyline points={coordinates}
+                  fill="none"
+                  stroke="#5235E8"
+                  strokeWidth="3"
+                  ></polyline>
+    <path
+       d={`
+        M ${x_cordinate[0]},${y_cordinate[0]}
+        ${x_cordinate.slice(1).map((x,i) => `L ${x},${y_cordinate[i+1]}`).join(" ")}
+        L ${x_cordinate[x_cordinate.length-1]},400   
+        L ${x_cordinate[0]},400
+        Z
+    `}
+    fill="url(#fade-purple)"
+     />
+     </>
+    )}
+      {/* <defs> */}
+    {/* <filter id="circleShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="gray" flood-opacity="0.5" />
+    </filter>
+  </defs>
+         <g width="1200" ref={trackerRef} visibility="hidden" filter="url(#circleShadow)">
+            <line x1="-12000" y1="" x2="1200" y2="" stroke="black" ></line>
+            <circle r="9" fill="white"  />
+            <circle r="3" fill="#5235E8" />
+</g> */}
     </svg>
+
+   {timeline === "Weekly" && (
+          <div className="flex w-full text-gray-500 text-sm ml-3 gap-x-11 ">
+             {Last7DaysColumn.map((d, idx)=>(
+              <h1 key={idx}>{d}</h1>
+             ))}
+          </div>
+   )}
+    
+    </div>
+    
+
       </div>
      </div>
      <div className="flex mt-3 flex-col w-70  ">
@@ -558,18 +770,18 @@ return(
            <img className="rounded-[50%] h-12 w-12" src={values.profile?.avatar} alt="" />
            <div className=" flex font-extrabold mt-3 text-md gap-x-2" style={{fontFamily:'Times New Roman,Serif'}}>
             <div className="flex ">
-            <h1 className="">{values.profile.title[0]}</h1>
-            <h1 className={`flex ${values.score>=5000?'text-[#FB3766]':values.score>=2000 && values.score<5000?'text-[#5235E8]':values.score>=500 && values.score<2000?'text-[#DAF727]':'text-black'}`}>{values.profile.title.slice(1)}</h1>
+            <h1 className="">{values.profile?.title[0]}</h1>
+            <h1 className={`flex ${values?.score>=5000?'text-[#FB3766]':values?.score>=2000 && values?.score<5000?'text-[#5235E8]':values?.score>=500 && values?.score<2000?'text-[#DAF727]':'text-black'}`}>{values?.profile?.title.slice(1)}</h1>
             </div>
-           <h1>{values.profile.displayname}</h1>
+           <h1>{values?.profile?.displayname}</h1>
            </div>
            </div>
           
            <div className="flex  gap-x-2 mt-3 text-sm">
            <h2 className="text-gray-400 w-15">Rank {((idx+1)+(curr_leaderboard_page*4))}</h2>
 
-          {values.score<1000 && <h1 className="flex w-10 ml-2 text-[#5235E8]">{values.score}</h1>}
-          {values.score>=1000 && <h1 className="flex w-10 ml-2 text-[#5235E8]">{Number((values.score/1000).toFixed(1))}k</h1>}
+          {values.score<1000 && <h1 className="flex w-10 ml-2 text-[#5235E8]">{values?.score}</h1>}
+          {values.score>=1000 && <h1 className="flex w-10 ml-2 text-[#5235E8]">{Number((values?.score/1000).toFixed(1))}k</h1>}
            </div>
            
           </div>

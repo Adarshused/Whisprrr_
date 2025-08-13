@@ -20,9 +20,9 @@ function Connectionspage(){
     
   let cordinates="50 55 52 55 54 55 56 55 58 55 60 55 62 55 64 55 66 55 68 55 70 55 72 55 74 55 76 55 78 55 80 55 82 55 84 55 86 55 88 55 90 55 92 55 94 55 96 55";
   let changed_coordinate=""
-  function asign_coordinates(point){
+  function asign_coordinates(points){
      let cordinateArr=cordinates.split(" ").map(Number);
-    const points=point.split(",");
+    // const points=point.split(",");
     for(let i=1;i<points.length;i++){
     let ans=Math.floor(((points[i]-points[i-1])/points[i-1])*100);
     cordinateArr[i*2-1]+=ans;
@@ -193,6 +193,7 @@ function Connectionspage(){
        const data = curractive['userData'].id
        const user = curractive['leaderBoard']
        const validUsers = user.filter((u)=>u.id != userID);
+      //  console.log("VAllllllllid", validUsers)
        setuserID(data);
        setValues(validUsers)
         
@@ -317,50 +318,51 @@ function Connectionspage(){
            <div className="flex flex-col  ">{
            Values.slice(curr_leaderboard_page*4,curr_leaderboard_page*4+4)
            .map((user,idx)=>(
-             
+              
             <div key={idx} className="w-screen ">
           
-          <div className="flex w-350 h-20    ">
-            <NavLink to="/connectionportfolio">
+           <div className="flex w-350 h-20    ">
+            <NavLink to="/connectionportfolio" state={{ user }}>
             <div className="flex gap-x-2 w-40 mt-7">
-           <img className="rounded-[50%] h-12 w-12" src={user.profile.avatar} alt="" />
+           <img className="rounded-[50%] h-12 w-12" src={user?.profile?.avatar} alt="" />
            <div className="  flex font-extrabold cursor-pointer mt-3 text-md gap-x-2 " onClick={()=>{
             changeFeature();
             changeName(user);
            }} style={{fontFamily:'Times New Roman,Serif'}}>
             <div className="flex ">
-            <h1 className="">{user?.profile.title[0]}</h1>
-            <h1 className={`flex ${user.score>=5000?'text-[#FB3766]':user.score>=2000 && user.score<5000?'text-[#5235E8]':user.score>=500 && user.score<2000?'text-[#DAF727]':'text-black'}`}>{user.profile.title.slice(1)}</h1>
+            <h1 className="">{user?.profile?.title[0]}</h1>
+            <h1 className={`flex ${user?.score>=5000?'text-[#FB3766]':user?.score>=2000 && user?.score<5000?'text-[#5235E8]':user?.score>=500 && user?.score<2000?'text-[#DAF727]':'text-black'}`}>{user?.profile?.title?.slice(1)}</h1>
             </div>
-           <h1>{user.profile.displayname}</h1>
+           <h1>{user?.profile?.displayname}</h1>
            </div>
            </div>
             </NavLink>
 
           
            <div className="flex w-20  ml-47   text-sm mt-9">
-            <h1 className="flex ml-2 text-[#42424D] ">{user.score}</h1>
+            <h1 className="flex ml-2 text-[#42424D] ">{user?.score}</h1>
            </div>
            <div className="w-25 ml-28 mt-6 ">
              
-             {!followers.has(user.profile._id) && (
+             {!followers.has(user?.profile?._id) && (
               
-             <button id={user.profile._id} className=" flex mt-2 cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " onClick={HandleFollow} style={{fontFamily:'Times New Roman,Serif'}}>
+             <button id={user?.profile?._id} className=" flex mt-2 cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " onClick={HandleFollow} style={{fontFamily:'Times New Roman,Serif'}}>
               <h3 className="font-extrabold flex  text-white">Follow</h3>  
              </button>
 
           )}
-           {followers.has(user.profile._id) && (
+           {followers.has(user?.profile?._id) && (
             <div className="ml-2 mt-2">
 
               <h1 className="font-extrabold text-[#5235E8]" style={{fontFamily:'Times New Roman,Serif'}}>Following</h1>
             </div>
            )}
            </div>
-           {/* <div className="mt-8 w-30 ml-27">
+           <div className="mt-8 w-30 ml-37">
             {(()=>{
-              const ans=((values.prevD_up - values.prevPD_up)/values.prevPD_up)*100;
-       if(ans >0 ) return( 
+              const ans=(((user?.score - user?.PrevUpv)/user?.PrevUpv))*1000;
+              // console.log("calculated upvote :", ans)
+       if(ans >=0 ) return( 
        <div className="flex gap-x-2">
         <svg width="20" height="20" viewBox="0 0 20 20">
           <g transform="translate(10, 20)">
@@ -368,7 +370,7 @@ function Connectionspage(){
           </g>
         </svg> 
         <div className="w-5">
-     <h1 className="font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{Number((((values.prevD_up-values.prevPD_up)/Math.abs(values.prevPD_up))).toFixed(1))}%</h1>
+     <h1 className="font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{ans.toFixed(1)}%</h1>
         </div>
        
         </div>
@@ -382,18 +384,19 @@ function Connectionspage(){
           </g>
         </svg>
          <div className="w-1/7">
-        <h1 className="font-extrabold" style={{fontFamily:'Times New Roman , Serif'}}>{Number((((values.prevD_up-values.prevPD_up)/Math.abs(values.prevPD_up))).toFixed(1))}%</h1>
+        <h1 className="font-extrabold" style={{fontFamily:'Times New Roman , Serif'}}>{Number((((user?.score - user?.PrevUpv)/Math.abs(user?.PrevUpv))).toFixed(1))}%</h1>
         </div>
         </div>)
             })
             ()}
-           </div> */}
-{/*          
+           </div>
+         
            <div className="w-30 ml-15">
               {(()=>{
-                 asign_coordinates(values.twentyFour_hour);
-                 const ans=((values.prevD_up - values.prevPD_up)/values.prevPD_up)*100;
-                 if(ans > 0) return (
+                 asign_coordinates(user?.counts24);
+                //  console.log(user?.counts24)
+                 const ans=((user?.score - user?.PrevUpv)/user?.PrevUpv)*100;
+                 if(ans >= 0) return (
                    <div className="">
                    <svg width="220" height="220" viewBox="0 0 200 200"  >
          <defs>
@@ -430,7 +433,7 @@ function Connectionspage(){
                 </div>
                 )
               })()}
-           </div> */}
+           </div>
            {/* <div className="w-1/7 ml-15 mt-8">
             {values.watchlist === true && (
                 <div className="flex cursor-pointer" >

@@ -51,60 +51,95 @@ function App(props) {
        Dispatch(ChangeLogIn(true))
       //  console.log(user)
          
-       const  userData = user?.data?.user
+       const  UserData = user?.data?.user
+      //  console.log("USER_DATA :", FacultyData)
                       /*  GetAllFaculties */
        
       //   const Facultydata = faculties?.data['leaderBoard'][0]
       //  console.log(Facultydata)
-       if(userData){
+       if(UserData){
         
-        const lpaylod=[]
-        
-        for(let i = 0; i < faculties?.data['leaderBoard'].length; ++i) {
-          lpaylod.push(faculties?.data['leaderBoard'][i]);
-        }
-        // console.log(lpaylod)
+        const leaderboard = faculties?.data?.leaderBoard ?? [];
+        const lpaylod = [];
+
+       for (let i = 0; i < leaderboard.length; ++i) {
+  const item = leaderboard[i];
+  const counts24 = item?.counts24 ?? []; // array or object
+  let total = 0;
+
+  // sum values
+  if (Array.isArray(counts24)) {
+    for (let j = 0; j < counts24.length; ++j) {
+      counts24[j] = Number(counts24[j] || 0);
+      total += counts24[j];
+    }
+  } else if (counts24 && typeof counts24 === 'object') {
+    for (const k in counts24) {
+      counts24[k] = Number(counts24[k] || 0);
+      total += counts24[k];
+    }
+  }
+
+  const score = Number(item?.score || 0);
+  const prevUp = score - total;
+
+  // ADD prevUp to each element (mutates counts24)
+  if (Array.isArray(counts24)) {
+    for (let j = 0; j < counts24.length; ++j) {
+      counts24[j] = counts24[j] + prevUp;
+    }
+  } else if (counts24 && typeof counts24 === 'object') {
+    for (const k in counts24) {
+      counts24[k] = counts24[k] + prevUp;
+    }
+  }
+
+  const Data = { ...item, PrevUpv: prevUp };
+  lpaylod.push(Data);
+}
+
+          // console.log(FacultyData[0])
         
          /* Here setuservalue or useState is an asynchronous call and im dispatching the value to the store since the setuservalue is not been updated its dispatching the old values itself 
          so i instead of storing the value in setuservalue now i directly store it in payload const */
          
-
+        const FacultyData = UserData[0];
         const payload ={
-          id: userData._id?userData._id:"",
-          firstname:userData.firstname?userData.firstname:"",
-          lastname:userData.lastname?userData.lastname:"",
-          dob:userData.dob?userData.dob:"",
-          cor:userData.country_residence?userData.country_residence:"",
-          name:userData.displayname?userData.displayname:"",
-          email:userData.email?userData.email:"",
-          Title: userData.title?userData.title:"",
-          img: userData.avatar?userData.avatar:"",
-          upvote: userData.upvote?userData.upvote:"",
-          about: userData.about?userData.about:"",
-          area: userData.area?userData.area:"",
-          plot: userData.plot?userData.plot:"",
-          state: userData.state?userData.state:"",
-          city: userData.city?userData.city:"",
-          twentyFour_hour: userData.twentyFour_hour?userData.twentyFour_hour:"",
-          prevD_up: userData.prevD_up?userData.prevD_up:"",
-          max_title: userData.max_title?userData.max_title:"",
-          max_upvote: userData.max_upvote?userData.max_upvote:"",
-          address: userData.address?userData.address:"",
-          experience: userData.experience?userData.experience:"",
-          upv_twlmonths: userData.upv_twlmonths?userData.upv_twlmonths:[[]],
-          weekly_upvot: userData.weekly_upvot?userData.weekly_upvot:[],
-          btech_cse: userData.btech_cse?userData.btech_cse:[],
-         btech_cse_totalupv: userData.btech_cse_totalupv?userData.btech_cse_totalupv:"",
-         totalUpvote: userData.totalUpvote? userData.totalUpvote:""
+          id: FacultyData?._id?FacultyData?._id:"",
+          firstname:FacultyData?.firstname?FacultyData.firstname:"",
+          lastname:FacultyData?.lastname?FacultyData.lastname:"",
+          dob:FacultyData?.dob?FacultyData.dob:"",
+          cor:FacultyData?.country_residence?FacultyData.country_residence:"",
+          name:FacultyData?.displayname?FacultyData.displayname:"",
+          email:FacultyData?.email?FacultyData.email:"",
+          Title: FacultyData?.title?FacultyData.title:"",
+          img: FacultyData?.avatar?FacultyData.avatar:"",
+          upvote: FacultyData?.upvote?FacultyData.upvote:"",
+          about: FacultyData?.about?FacultyData.about:"",
+          area: FacultyData?.area?FacultyData.area:"",
+          plot: FacultyData?.plot?FacultyData.plot:"",
+          state: FacultyData?.state?FacultyData.state:"",
+          city: FacultyData?.city?FacultyData.city:"",
+          twentyFour_hour: FacultyData?.twentyFour_hour?FacultyData.twentyFour_hour:"",
+          prevD_up: FacultyData?.prevD_up?FacultyData.prevD_up:"",
+          max_title: FacultyData?.max_title?FacultyData.max_title:"",
+          max_upvote: FacultyData?.max_upvote?FacultyData.max_upvote:"",
+          address: FacultyData?.address?FacultyData.address:"",
+          experience: FacultyData?.experience?FacultyData.experience:"",
+          upv_twlmonths: FacultyData?.upv_twlmonths?FacultyData.upv_twlmonths:[[]],
+          weekly_upvot: FacultyData?.weekly_upvot?FacultyData.weekly_upvot:[],
+          btech_cse: FacultyData?.btech_cse?FacultyData.btech_cse:[],
+         btech_cse_totalupv: FacultyData?.btech_cse_totalupv?FacultyData.btech_cse_totalupv:"",
+         totalUpvote: FacultyData?.totalUpvote? FacultyData.totalUpvote:""
         }
         // console.log()
-        console.log(lpaylod)
+        console.log("WE ARE HERE  :",lpaylod)
         Dispatch(ChangeleaderBoard(lpaylod))
         Dispatch(ChangeUserData(payload))
-        // console.log(curractive['userData'].img)
-        // console.log(curractive[ 'userData'])
+        // console.log(curractive['FacultyData'].img)
+        // console.log(curractive[ 'FacultyData'])
       }
-      // console.log(userData[0]?.email)
+      // console.log(FacultyData[0]?.email)
    },[user, isLoading, isError, isFetching])
     
    useEffect(()=>{
