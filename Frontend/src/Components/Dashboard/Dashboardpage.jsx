@@ -4,7 +4,7 @@ function Dashboardpage(){
   const [curr_leaderboard_page,setcurr_leaderboard_page]=useState(0);
   const [end_leaderboard_page,setend_leaderboard_page]=useState(10);
   const[timeline,settimeline]=useState("Weekly");
-    const [currupvote,setcurrupvote]=useState("2.1k");
+    const [currupvote,setcurrupvote]=useState("0");
     const [currupvote_,setcurrupvote_]=useState("200000");
     const [percentageIncrease_oa,setpercentageIncrease_oa]=useState("1.37%");
     const [percentageIncrease_24h,setpercentageIncrease_24h]=useState("5.47%");
@@ -18,7 +18,7 @@ function Dashboardpage(){
     const [grandmasterw,setgrandmasterw]=useState("");
    const [userDetail,setuserDetail]=useState([]);
    const [ConectionDetail,setConnectionDetail]=useState([]);
-    const [participants,setparticipants]=useState("10000");
+    const [participants,setparticipants]=useState();
     const [counter,setcounter]=useState(1)
     const [change,setchange]=useState()
     const [Last7DaysColumn, setLast7DaysColumn] = useState([])
@@ -145,9 +145,22 @@ function Dashboardpage(){
     const sorted_cvalues=[...cvalues].sort((a,b)=>b.upvote-a.upvote);
     // const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
     const leaderBoard = curractive['leaderBoard']
+    const user = curractive['userData']
     console.log(leaderBoard)
     useEffect(()=>{setuserDetail(leaderBoard)},[leaderBoard])
+    useEffect(()=>{
+      const val  = Number((user.totalUpvote/1000).toFixed(1))+"k";
+      setcurrupvote(val);
+      let cnt = 1;
+      for (let i = 0; i < leaderBoard.length; ++i) {
+        if (leaderBoard[i].id === user.id) break;
+             cnt++;
+      }
+      setRank(cnt)
+      setparticipants(leaderBoard.length)
+    })
     useEffect(()=>setConnectionDetail(sorted_cvalues),[]);
+    
    const increment=()=>{
     setcurr_leaderboard_page(prev=>Math.min(prev+1,end_leaderboard_page));
    }
@@ -221,7 +234,7 @@ function Dashboardpage(){
      }
     },[status])
     useEffect(()=>{
-
+      
       if(currupvote_<=500 ) setstatus("Faculty");
       else if(currupvote_>500 && currupvote_<=2000) setstatus("Senior Faculty");
       else if(currupvote_>2000 && currupvote_<=5000) setstatus("Master");
@@ -315,50 +328,61 @@ function Dashboardpage(){
       setcoordinates(pts.trim())
             }, [])
       
-        // handling the mouseeven for the point
-       const svgRef = useRef(null);
-        const trackerRef = useRef(null);
-      
-        // Convert flat values to coordinate objects
-        const x_and_y =x_cordinate.map((x, i) => ({ x, y: y_cordinate[i] }));
-      
-        useEffect(() => {
-          const svg = svgRef.current;
-          const tracker = trackerRef.current;
-          if (!svg || !tracker) return;
-         
-          const handleMouseMove = (e) => {
-            const pt = svg.createSVGPoint();
-            pt.x = e.clientX;
-            pt.y = e.clientY;
-      
-            const cursor = pt.matrixTransform(svg.getScreenCTM().inverse());
-            const x = cursor.x;
-      
-            let closest = x_and_y[0];
-            for (let p of x_and_y) {
-              if (Math.abs(p.x - x) < Math.abs(closest.x - x)) {
-                closest = p;
-              }
-            }
-      
-            trackerRef.current.setAttribute("transform", `translate(${closest.x}, ${closest.y})`);
-            trackerRef.current.setAttribute("visibility", "visible");
-      
-          };
-      
-          const handleMouseLeave = () => {
-            trackerRef.current.setAttribute("visibility", "hidden");
-          };
-      
-          svg.addEventListener('mousemove', handleMouseMove);
-          svg.addEventListener('mouseleave', handleMouseLeave);
-      
-          return () => {
-            svg.removeEventListener('mousemove', handleMouseMove);
-            svg.removeEventListener('mouseleave', handleMouseLeave);
-          };
-        }, [x_and_y]);
+    const svgRef = useRef(null);
+                  const trackerRef = useRef(null);
+                  
+                  // Convert flat values to coordinate objects
+                  const x_and_y =x_cordinate.map((x, i) => ({ x, y: y_cordinate[i] }));
+                  useEffect(() => {
+                    const svg = svgRef.current;
+                    const tracker = trackerRef.current;
+                    if (!svg || !tracker) return;
+                   
+                    const handleMouseMove = (e) => {
+                      const pt = svg.createSVGPoint();
+                      pt.x = e.clientX;
+                      pt.y = e.clientY;
+                
+                      const cursor = pt.matrixTransform(svg.getScreenCTM().inverse());
+                      const x = cursor.x;
+                
+                     let bestIdx  = 0;
+                     let closest  = x_and_y[0];
+                     let minDist  = Math.abs(closest.x - x);
+   
+                 for (const [idx, p] of x_and_y.entries()) {
+                   const dist = Math.abs(p.x - x);
+                  if (dist < minDist) {
+                    minDist  = dist;
+                    closest  = p;
+                    bestIdx  = idx;
+                   }
+                    }
+               // console.log(oneDir)
+               // console.log(bestIdx)
+                settexti(oneDir[bestIdx]);
+                 
+                 // console.log(text)
+               // console.log(text)
+                      trackerRef.current.setAttribute("transform", `translate(${closest.x}, ${closest.y})`);
+                      trackerRef.current.setAttribute("visibility", "visible");
+                
+                    };
+                    
+                    const handleMouseLeave = () => {
+                      trackerRef.current.setAttribute("visibility", "hidden");
+                    };
+                
+                    svg.addEventListener('mousemove', handleMouseMove);
+                    svg.addEventListener('mouseleave', handleMouseLeave);
+                
+                    return () => {
+                      svg.removeEventListener('mousemove', handleMouseMove);
+                      svg.removeEventListener('mouseleave', handleMouseLeave);
+                    };
+                  }, [x_and_y]);
+   
+
       
 return(
     
@@ -567,16 +591,38 @@ return(
      />
      </>
     )}
-      {/* <defs> */}
-    {/* <filter id="circleShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <defs>
+    <filter id="circleShadow" x="-50%" y="-50%" width="200%" height="200%">
       <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="gray" flood-opacity="0.5" />
     </filter>
   </defs>
-         <g width="1200" ref={trackerRef} visibility="hidden" filter="url(#circleShadow)">
-            <line x1="-12000" y1="" x2="1200" y2="" stroke="black" ></line>
-            <circle r="9" fill="white"  />
+         <g width="1200" ref={trackerRef} visibility="visible" filter="url(#circleShadow)">
+            <rect x="-50" y="-100" width="100" height="70" rx="4" ry="4" fill="black"/>
+         <text
+         x="0"
+         y="-80"
+         fill="gray"
+         font-family="Arial, sans-serif"
+         font-size="12"
+         text-anchor="middle"
+         alignment-baseline="middle"
+     >
+    Outer Rect
+  </text>
+         <rect x="-40" y="-65" width="80" height="25" rx="4" ry="4" fill="#2F2F37"/>
+
+            <text x="-35" y="-45" fill="#9C9CAB" >
+                Value 
+               </text>
+             <polygon
+               points="-5 -30, 0 -25, 5 -30"
+               fill="black"       
+               />
+             
+            <circle  r="9" fill="white"  />
             <circle r="3" fill="#5235E8" />
-</g> */}
+</g>
+
     </svg>
 
    {timeline === "Weekly" && (
@@ -599,7 +645,7 @@ return(
         <h2 className="text-md">Rank</h2>
         
         </div>
-        <h2 className="text-3xl mt-3">{Rank}</h2>
+        <h2 className="text-4xl  mt-1 w-10 ml-3">{Rank}</h2>
        <div
   className="flex border border-none mt-4 bg-gray-300 h-3 overflow-hidden"
            style={{width}}

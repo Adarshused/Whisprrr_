@@ -43,7 +43,7 @@ function Connectionspage(){
      useEffect(()=>{setchange(changePerc);},[changePerc])
   useEffect(()=>{
     setcordinate(changed_coordinate);
-    console.log(changed_coordinate)
+    // console.log(changed_coordinate)
   },[changed_coordinate]);
   
   // get all followers
@@ -187,17 +187,14 @@ function Connectionspage(){
 
       }
     ]
- 
+    
     useEffect(()=>{
-      
        const data = curractive['userData'].id
-       const user = curractive['leaderBoard']
-       const validUsers = user.filter((u)=>u.id != userID);
-      //  console.log("VAllllllllid", validUsers)
+      const user = curractive['leaderBoard']
+        const validUsers = user.filter((u)=>u.id != userID);
        setuserID(data);
        setValues(validUsers)
-        
-    },[])
+    },[curractive])
     // Values.map((value)=> console.log(value.Avatar))
     // console.log("FOund HeREeeeee", Values)
     const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
@@ -233,7 +230,7 @@ function Connectionspage(){
               credentials: "include"
             })
             if(res.ok) {
-
+              
             }
             else {
              const err = await res.json()
@@ -244,6 +241,32 @@ function Connectionspage(){
          setError(err.message)
         }
        } 
+
+       // Handel UnFollow
+
+       const HandleUnFollow = async(e) => {
+        e.preventDefault();
+        const followee = e.currentTarget.id
+        try {
+          const res = await fetch("http://localhost:8000/api/v1/connection/unfollow", {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({followee}),
+            credentials: "include"
+          })
+
+          if(res.ok) {
+           console.log("Unfollowed SuccessFully")
+          }
+          else {
+            const err = await res.json()
+            throw new Error(err.message);
+          }
+         }
+        catch (err) {
+           setError(err.message)
+        }
+       }
     return(
         <>
         <div className="flex flex-col mt-10 ml-10 w-300 gap-y-5">
@@ -352,10 +375,20 @@ function Connectionspage(){
 
           )}
            {followers.has(user?.profile?._id) && (
-            <div className="ml-2 mt-2">
+          <div className=" mt-2 ml-3 inline-block group relative" style={{ fontFamily: 'Times New Roman, Serif' }}>
+            <button id={user?.profile?._id}  onClick={HandleUnFollow}>
+             <h1 className="font-extrabold cursor-pointer select-none" aria-hidden="true"  >
+              {/* visible by default, fades out on hover */}
+            <span className="block transition-opacity text-[#5235E8]  duration-150 group-hover:opacity-0">Following</span>
+             {/* hidden by default, fades in on hover (absolute sits on top) */}
+            <span className="absolute left-0 top-0 w-full text-[#FB3766] h-full flex items-center justify-center opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                Unfollow
+            </span>
+           </h1>
+            </button>
+           
+         </div>
 
-              <h1 className="font-extrabold text-[#5235E8]" style={{fontFamily:'Times New Roman,Serif'}}>Following</h1>
-            </div>
            )}
            </div>
            <div className="mt-8 w-30 ml-37">

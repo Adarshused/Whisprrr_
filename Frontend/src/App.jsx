@@ -114,7 +114,7 @@ function App(props) {
           email:FacultyData?.email?FacultyData.email:"",
           Title: FacultyData?.title?FacultyData.title:"",
           img: FacultyData?.avatar?FacultyData.avatar:"",
-          upvote: FacultyData?.upvote?FacultyData.upvote:"",
+          upvote: FacultyData?.Upvote?FacultyData.Upvote:"",
           about: FacultyData?.about?FacultyData.about:"",
           area: FacultyData?.area?FacultyData.area:"",
           plot: FacultyData?.plot?FacultyData.plot:"",

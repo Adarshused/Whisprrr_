@@ -80,7 +80,7 @@ const Follow = AsyncHandler(async (req, res, next) => {
 
 const UnFollow = AsyncHandler(async (req, res, next) => {
      const followerID = req.user._id;
-  const followeeID = req.body.followee;
+    const followeeID = req.body?.followee;
   //  console.log(followerID, followeeID)
   const session = await mongoose.startSession();
   try {

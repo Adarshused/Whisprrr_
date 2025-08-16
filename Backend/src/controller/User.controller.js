@@ -280,11 +280,6 @@ const UserData = AsyncHandler(async (req, res) => {
                     as: "upvoteDocs"
                 }
             },
-            {
-            $set: {
-            totalUpvote: { $size: "$upvoteDocs"}
-           }
-           },
            {
               $project: {
               _id:               1,
