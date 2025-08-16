@@ -152,7 +152,7 @@ function Portfoliopage(){
                  const svg = svgRef.current;
                  const tracker = trackerRef.current;
                  if (!svg || !tracker) return;
-                
+                 
                  const handleMouseMove = (e) => {
                    const pt = svg.createSVGPoint();
                    pt.x = e.clientX;

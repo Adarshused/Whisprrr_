@@ -25,7 +25,10 @@ function Dashboardpage(){
     const x_cordinate = [20, 110, 200, 270, 360, 450, 550], y_cor = [250, 205, 160, 115, 70, 20];
     const [y_cordinate, sety_cordinate] = useState([])
     const [values, setvalues] = useState([4500, 1700, 1800, 4700, 4900, 1700, 5000])
+    const [WeeklyValues, setWeeklyValues] = useState([])
     const [coordinates, setcoordinates] = useState("")
+    const [text, settext] = useState("")
+    const [date, setdate] = useState("")
     const cvalues=[
       {
         'name':'Dinesh',
@@ -54,44 +57,7 @@ function Dashboardpage(){
       
       
     ]
-    // const values=[
-    //   {
-    //     'name':'Monika',
-    //     'Title':'Dean',
-    //     'img':"/assests/Monika.jpg",
-    //     'upvote':'20000'
-    //   },
-    //   {
-    //     'name':'komal',
-    //     'Title':'Prof',
-    //     'img':"/assests/komal.jpg",
-    //     'upvote':'11000'
-    //   },
-    //   {
-    //     'name':'Hithesh',
-    //     'Title':'Dean',
-    //     'img':"/assests/hithesh.jpg",
-    //     'upvote':'4900'
-    //   },
-    //   {
-    //     'name':'Kunal',
-    //     'Title':'Prof',
-    //     'img':"/assests/kunal.jpg",
-    //     'upvote':'4600'
-    //   },
-    //   {
-    //     'name':'Naina',
-    //     'Title':'Ms',
-    //     'img':'/assests/naina.jpg',
-    //     'upvote':'2500'
-    //   },
-    //   {
-    //     'name':'Ishita',
-    //     'Title':'Ms',
-    //     'img':'/assests/Ishita.jpg',
-    //     'upvote':'1589'
-    //   }
-    // ]
+
     const My_portfolio=[
       {
         'previous_upvotes':'56',
@@ -123,25 +89,7 @@ function Dashboardpage(){
     
     const curractive= useSelector((state)=>state.CurrActive)
 
-    function ceilThreshold(arr, target){
-      let lo=0, hi=arr.length-1,lower_bound=-1,upper_bound=-1;
-      while(lo<=hi){
-        let mid=Math.floor((hi+lo)/2);
-        if(arr[mid]>= target){
-          ans=arr[mid];
-          idx=mid;
-          hi=mid-1;
-        }
-        else lo=mid+1;
-      }
-      if(lower_bound+1<arr.length){
-          upper_bound=lower_bound+1;
-          return {lower_bound,upper_bound};
-      } 
-     return {lower_bound,upper_bound};
-    }
-    // Same points used to draw the polyline
-   
+ 
     const sorted_cvalues=[...cvalues].sort((a,b)=>b.upvote-a.upvote);
     // const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
     const leaderBoard = curractive['leaderBoard']
@@ -259,9 +207,17 @@ function Dashboardpage(){
     const data = last7.map(d => fmt.format(d)) 
     data.reverse()
     setLast7DaysColumn(data);
-    
-    //    Graph Y cordinate Logic
-  //  const [values, setvalues] = useState([2000, 4500, 10000, 1200, 5677, 6788, 4355])
+
+    for (let idx = 0; idx < values.length; ++idx) {
+          if(values[idx] < 1000) 
+            setWeeklyValues(prev => [...prev, values[idx]]);
+          else 
+            setWeeklyValues(prev => [...prev, Number((values[idx]/1000).toFixed(1))+"k"])
+    }
+            }, [])
+  
+   //    Graph Y cordinate Logic
+  
      let len = values.length;
      for (let i = 0; i < len; i++) {
           
@@ -321,23 +277,25 @@ function Dashboardpage(){
              }
         }
 
-         let pts="";
+  useEffect(() => {
+      let pts="";
        for (let i = 0; i < x_cordinate.length; i++) {
         pts += `${x_cordinate[i]},${y_cordinate[i]} `;
       }
       setcoordinates(pts.trim())
-            }, [])
-      
-    const svgRef = useRef(null);
+  }, [y_cordinate])
+        
+                  const svgRef = useRef(null);
                   const trackerRef = useRef(null);
                   
                   // Convert flat values to coordinate objects
                   const x_and_y =x_cordinate.map((x, i) => ({ x, y: y_cordinate[i] }));
+                  // console.log("x_and_y_coordinates ",x_and_y)
                   useEffect(() => {
                     const svg = svgRef.current;
                     const tracker = trackerRef.current;
-                    if (!svg || !tracker) return;
-                   
+                    if (!svg || !tracker || !(timeline === "Weekly")) return;
+                  //  console.log("----->>>>>>>reached")
                     const handleMouseMove = (e) => {
                       const pt = svg.createSVGPoint();
                       pt.x = e.clientX;
@@ -360,8 +318,8 @@ function Dashboardpage(){
                     }
                // console.log(oneDir)
                // console.log(bestIdx)
-                settexti(oneDir[bestIdx]);
-                 
+                settext(WeeklyValues[bestIdx]);
+                setdate(Last7DaysColumn[bestIdx])
                  // console.log(text)
                // console.log(text)
                       trackerRef.current.setAttribute("transform", `translate(${closest.x}, ${closest.y})`);
@@ -522,7 +480,7 @@ return(
     {/* " cx="0" cy="0" visibility="hidden"/> */}
     {/* </svg> */}
     { timeline === "Weekly" &&  (
-             <div className="w-5 text-gray-500">
+             <div className="w-5 text-gray-500 text-sm">
                 <h1 className="mt-3">20k</h1>
                 <h1 className="mt-5">10k</h1>
                 <h1 className="mt-5">5k</h1>
@@ -543,7 +501,7 @@ return(
               </div>
     )}
     <div className="flex flex-col w-140">
-      <svg width="550" height="270" viewBox="0 0 550 270">
+      <svg  ref={svgRef} width="550" height="270" viewBox="0 0 550 270">
        <defs>
             <linearGradient
       id="fade-purple"
@@ -596,10 +554,10 @@ return(
       <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="gray" flood-opacity="0.5" />
     </filter>
   </defs>
-         <g width="1200" ref={trackerRef} visibility="visible" filter="url(#circleShadow)">
-            <rect x="-50" y="-100" width="100" height="70" rx="4" ry="4" fill="black"/>
-         <text
-         x="0"
+         <g width="1200" ref={trackerRef} visibility="hidden" filter="url(#circleShadow)">
+            <rect x="-50" y="-100" width="120" height="70" rx="6" ry="6" fill="black"/>
+          <text
+         x="10"
          y="-80"
          fill="gray"
          font-family="Arial, sans-serif"
@@ -607,12 +565,15 @@ return(
          text-anchor="middle"
          alignment-baseline="middle"
      >
-    Outer Rect
+    {date}
   </text>
-         <rect x="-40" y="-65" width="80" height="25" rx="4" ry="4" fill="#2F2F37"/>
+         <rect x="-40" y="-65" width="100" height="25" rx="4" ry="4" fill="#2F2F37"/>
 
             <text x="-35" y="-45" fill="#9C9CAB" >
-                Value 
+                Upvote 
+               </text>
+               <text x="25" y="-45" fill="#ffffff">
+                {text}
                </text>
              <polygon
                points="-5 -30, 0 -25, 5 -30"
@@ -626,7 +587,7 @@ return(
     </svg>
 
    {timeline === "Weekly" && (
-          <div className="flex w-full text-gray-500 text-sm ml-3 gap-x-11 ">
+          <div className="flex w-full text-gray-500 text-xs ml-3 gap-x-11 ">
              {Last7DaysColumn.map((d, idx)=>(
               <h1 key={idx}>{d}</h1>
              ))}

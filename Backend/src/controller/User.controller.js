@@ -488,9 +488,10 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
         const id = u._id;
         const score = u.totalUpvote || 0;
         const profileJson = JSON.stringify(u);
+        // console.log(profileJson)
         const counts = countsMap.get(String(id)) || Array(24).fill(0);
         const countsJson = JSON.stringify(counts);
-      console.log(counts)
+    //   console.log(counts)
         //  store structured data in hash (doesn't affect zset ordering)
        pipeline.hset(`user:${id}`, 'profile', profileJson, 'counts24', countsJson);
        pipeline.expire(`user:${id}`, 3600); // optional TTL for the hash

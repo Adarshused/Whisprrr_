@@ -38,7 +38,7 @@ function App(props) {
    useEffect(()=>{
 
           if(isError) {
-         console.log("ERROR while getting user")
+          console.log("ERROR while getting user")
          Dispatch(ChangeLogIn(false));
          setislogin(false)
         }
