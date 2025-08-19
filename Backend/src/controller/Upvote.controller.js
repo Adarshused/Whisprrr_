@@ -8,8 +8,8 @@ import mongoose from 'mongoose'
 
 
 const upvote = AsyncHandler(async (req, res) => {
-  const recipient = req.user._id
-  const voter = req.body.facultyId
+  const voter = req.user._id
+  const recipient = req.body.facultyId
 
   if (!mongoose.Types.ObjectId.isValid(voter)) {
     throw new ApiError(400, "Invalid voter")
@@ -124,24 +124,39 @@ const Last7days = AsyncHandler(async (req, res) => {
     { $project: { _id: 0, days: 1 } }
   ]);
 
+  // console.log(agg[0].days)
   // 3) build a map of ISO-date -> count
   const dayCounts = new Map();
-  if (agg[0] && Array.isArray(agg[0].days)) {
-    for (const d of agg[0].days) {
-      // d.day will be a Date object in the driver; convert to ISO date string
-      dayCounts.set(new Date(d.day).toISOString(), d.count);
-    }
-  }
+ if (agg[0] && Array.isArray(agg[0].days)) {
+  for (const d of agg[0].days) {
+    if (d == null || d.day == null) continue; // skip bad rows
 
+    // use existing Date if possible, otherwise parse
+    const dt = d.day instanceof Date ? d.day : new Date(d.day);
+
+    if (isNaN(dt.getTime())) {
+      console.warn('Invalid date for row:', d);
+      continue;
+    }
+
+    const isoDate = dt.toISOString().slice(0, 10); // UTC YYYY-MM-DD
+    dayCounts.set(isoDate, d.count);
+  }
+}
+
+  //  console.log(dayCounts)
   // 4) build the last-7 dates (oldest -> newest) as UTC-midnight Date objects matching the day keys
   const last7Dates = Array.from({ length: 7 }, (_, i) => {
     // i from 0..6 -> map to day-6 .. day-0
-    return new Date(Date.UTC(year, month - 1, day - 6 + i));
+   const s = new Date(Date.UTC(year, month - 1, day - 6 + i)).toISOString().slice(0, 10);
+
+    return s;
   });
 
+    console.log(last7Dates)
   // 5) create the final array of counts (oldest -> newest), filling 0 for missing days
-  const last7Counts = last7Dates.map(d => dayCounts.get(d.toISOString()) || 0);
-
+  const last7Counts = last7Dates.map(d => dayCounts.get(d) || 0);
+ 
   console.log(last7Counts); // e.g. [2000,2300,4590,3424,4222,5555,3422]
 
  return res

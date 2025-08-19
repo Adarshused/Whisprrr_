@@ -101,7 +101,7 @@ function UserSignIn(){
     }
     return(
         <>
-         <div className="flex h-screen w-screen">
+         <div className="flex flex-col h-screen w-screen md:flex-row">
   {/* left half */}
   <div className="relative w-2/5 h-full overflow-hidden">
     <form action={handleSubmit}>

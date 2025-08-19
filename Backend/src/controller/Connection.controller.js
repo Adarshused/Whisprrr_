@@ -153,7 +153,10 @@ const getFollowers = AsyncHandler(async (req, res) => {
 
   return res
   .status(200)
-  .json(new ApiResponse(200, {Followers}, "Fetched followers successfully"))
+  .json(new ApiResponse(200, {Followers},"Fetched followers successfully"))
 })
+
+
+
 
 export {Follow, UnFollow, getFollowers}

@@ -1,9 +1,9 @@
 import React, { useDebugValue, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 function Dashboardpage(){
-  const [curr_leaderboard_page,setcurr_leaderboard_page]=useState(0);
-  const [end_leaderboard_page,setend_leaderboard_page]=useState(10);
-  const[timeline,settimeline]=useState("Weekly");
+    const [curr_leaderboard_page,setcurr_leaderboard_page]=useState(0);
+    const [end_leaderboard_page,setend_leaderboard_page]=useState(10);
+    const[timeline,settimeline]=useState("Weekly");
     const [currupvote,setcurrupvote]=useState("0");
     const [currupvote_,setcurrupvote_]=useState("200000");
     const [percentageIncrease_oa,setpercentageIncrease_oa]=useState("1.37%");
@@ -16,15 +16,17 @@ function Dashboardpage(){
     const [seniorfacultyw,setseniorfacultyw]=useState("");
     const [masterw,setmasterw]=useState("");
     const [grandmasterw,setgrandmasterw]=useState("");
-   const [userDetail,setuserDetail]=useState([]);
-   const [ConectionDetail,setConnectionDetail]=useState([]);
+    const [userDetail,setuserDetail]=useState([]);
+    const [ConectionDetail,setConnectionDetail]=useState([]);
     const [participants,setparticipants]=useState();
     const [counter,setcounter]=useState(1)
     const [change,setchange]=useState()
     const [Last7DaysColumn, setLast7DaysColumn] = useState([])
     const x_cordinate = [20, 110, 200, 270, 360, 450, 550], y_cor = [250, 205, 160, 115, 70, 20];
     const [y_cordinate, sety_cordinate] = useState([])
-    const [values, setvalues] = useState([4500, 1700, 1800, 4700, 4900, 1700, 5000])
+    const [ConnectionRanking, setConnectionRanking] = useState([])
+    const [followers, setfollowers] = useState(() => new Set([]))
+    const [WeeklyUpovte, setWeeklyUpovte] = useState([])
     const [WeeklyValues, setWeeklyValues] = useState([])
     const [coordinates, setcoordinates] = useState("")
     const [text, settext] = useState("")
@@ -89,12 +91,12 @@ function Dashboardpage(){
     
     const curractive= useSelector((state)=>state.CurrActive)
 
- 
+    
     const sorted_cvalues=[...cvalues].sort((a,b)=>b.upvote-a.upvote);
     // const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
     const leaderBoard = curractive['leaderBoard']
     const user = curractive['userData']
-    console.log(leaderBoard)
+    console.log("Come here boy",leaderBoard)
     useEffect(()=>{setuserDetail(leaderBoard)},[leaderBoard])
     useEffect(()=>{
       const val  = Number((user.totalUpvote/1000).toFixed(1))+"k";
@@ -208,67 +210,68 @@ function Dashboardpage(){
     data.reverse()
     setLast7DaysColumn(data);
 
-    for (let idx = 0; idx < values.length; ++idx) {
-          if(values[idx] < 1000) 
-            setWeeklyValues(prev => [...prev, values[idx]]);
+    for (let idx = 0; idx < WeeklyUpovte.length; ++idx) {
+          if(WeeklyUpovte[idx] < 1000) 
+            setWeeklyValues(prev => [...prev, WeeklyUpovte[idx]]);
           else 
-            setWeeklyValues(prev => [...prev, Number((values[idx]/1000).toFixed(1))+"k"])
+            setWeeklyValues(prev => [...prev, Number((WeeklyUpovte[idx]/1000).toFixed(1))+"k"])
     }
-            }, [])
+            }, [WeeklyUpovte])
   
    //    Graph Y cordinate Logic
-  
-     let len = values.length;
+     useEffect(() => {
+          let len = WeeklyUpovte.length;
+         
      for (let i = 0; i < len; i++) {
           
-             if(values[i]<100){
+             if(WeeklyUpovte[i]<100){
                  let base=0,ceil=100;
-                 let delta=values[i]-base;
+                 let delta=WeeklyUpovte[i]-base;
                  let range=ceil-base;
                  let per=delta/range;
-                 let inter=400-y_cor[0];
-                 let y=400-(inter*per);
+                 let inter=250-y_cor[0];
+                 let y=250-(inter*per);
                  y_cordinate.push(y);
              }
-             else if(values[i]>=100 && values[i]<500){
+             else if(WeeklyUpovte[i]>=100 && WeeklyUpovte[i]<500){
                  let base=100,ceil=500;
-                 let delta=values[i]-base;
+                 let delta=WeeklyUpovte[i]-base;
                  let range=ceil-base;
                  let per=delta/range;
                  let inter=y_cor[0]-y_cor[1];
                  let y=y_cor[0]-(inter*per);
                  y_cordinate.push(y);
              }
-             else if(values[i]>=500 && values[i]<2500){
+             else if(WeeklyUpovte[i]>=500 && WeeklyUpovte[i]<2500){
               let base=500,ceil=2500;
-                 let delta=values[i]-base;
+                 let delta=WeeklyUpovte[i]-base;
                  let range=ceil-base;
                  let per=delta/range;
                  let inter=y_cor[1]-y_cor[2];
                  let y=y_cor[1]-(inter*per);
                  y_cordinate.push(y);
              }
-             else if(values[i]>=2500 && values[i]<5000){
+             else if(WeeklyUpovte[i]>=2500 && WeeklyUpovte[i]<5000){
               let base=2500,ceil=5000;
-                 let delta=values[i]-base;
+                 let delta=WeeklyUpovte[i]-base;
                  let range=ceil-base;
                  let per=delta/range;
                  let inter=y_cor[2]-y_cor[3];
                  let y=y_cor[2]-(inter*per);
                  y_cordinate.push(y);
              }
-             else if(values[i]>=5000 && values[i]<10000){
+             else if(WeeklyUpovte[i]>=5000 && WeeklyUpovte[i]<10000){
               let base=5000,ceil=10000;
-                 let delta=values[i]-base;
+                 let delta=WeeklyUpovte[i]-base;
                  let range=ceil-base;
                  let per=delta/range;
                  let inter=y_cor[3]-y_cor[4];
                  let y=y_cor[3]-(inter*per);
                  y_cordinate.push(y);
              }
-             else if(values[i]>=10000 && values[i]<=20000){
+             else if(WeeklyUpovte[i]>=10000 && WeeklyUpovte[i]<=20000){
                 let base=10000,ceil=20000;
-                 let delta=values[i]-base;
+                 let delta=WeeklyUpovte[i]-base;
                  let range=ceil-base;
                  let per=delta/range;
                  let inter=y_cor[4]-0;
@@ -276,6 +279,9 @@ function Dashboardpage(){
                  y_cordinate.push(y);
              }
         }
+        //  console.log("C'mon baby   ",y_cordinate)
+     },[WeeklyUpovte])
+     
 
   useEffect(() => {
       let pts="";
@@ -341,7 +347,85 @@ function Dashboardpage(){
                   }, [x_and_y]);
    
 
-      
+    /*  WeeklyUpvote Endpoint Logic */
+    useEffect(() => {
+     async function WeeklyUpvote () {
+        try {
+            
+          const res = await fetch("http://localhost:8000/api/v1/users/weeklyUpvote", {
+            method: "GET",
+            headers: {
+                     "Content-Type": "application/json",
+                     },
+            credentials: "include", 
+          })
+
+          
+          if(res.ok) {
+           const data = await res.json();
+
+        // console.log((data.data.data))
+             const raw = data?.data?.data
+
+        const val = []
+        for (let i = 0; i < raw.length; ++i) {
+          val.push(raw[i])
+        }
+          // console.log("reaching maximummmm",val)
+          // setvalues(prev => [...prev, ...raw])
+            setWeeklyUpovte([...raw])
+        } 
+        else {
+             throw new Error("Something went Wrong")
+          }
+        }
+        catch (err) {
+          throw new Error("Error while fetching weeklyUpvote detail")
+        }
+     }
+
+      WeeklyUpvote();
+    }, [])
+
+    /* Get Connections EndPoint */
+
+    useEffect(() => {
+      const FetchFollowers = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/v1/connection/getFollowers", {
+          method : "GET",
+          credentials: "include"
+        })
+
+        
+        if(res.ok) {
+            let data = await res.json()
+            data = data?.data?.Followers
+            console.log(data?.data?.Followers[0].followeeID)
+           const followerSet = new Set(
+          data.map(f => f.followeeID.toString())
+             );
+            
+            const Connection = userDetail.filter((user) =>followerSet.has(user.id))
+            setConnectionRanking(Connection)
+            console.log("RAM RAM", Connection)
+            // console.log(followers)
+        }
+        else {
+        const err = await res.json();
+        throw new Error(err.message)
+        }
+      }
+      catch (err) {
+          setError(err.message)
+      }
+    }
+    FetchFollowers();
+    }, [userDetail])
+
+    /* ConnectionsRanking Logic */
+
+   
 return(
     
     <>
@@ -521,8 +605,8 @@ return(
     <circle cx="20" cy="160" r="2" fill="#5235E8"></circle>
     <circle cx="20" cy="205" r="2" fill="#5235E8"></circle>
     <circle cx="20" cy="250" r="2" fill="#5235E8"></circle>
-    <circle cx="20" cy="250" r="2" fill="#5235E8"></circle>
-    <circle cx="110" cy="250" r="2" fill="#5235E8"></circle>
+    <circle cx="20" cy="270" r="2" fill="#5235E8"></circle>
+    <circle cx="110" cy="260" r="2" fill="#5235E8"></circle>
     <circle cx="200" cy="250" r="2" fill="#5235E8"></circle>
     <circle cx="270" cy="250" r="2" fill="#5235E8"></circle>
     <circle cx="360" cy="250" r="2" fill="#5235E8"></circle>
@@ -867,7 +951,7 @@ return(
     </div>
 
     <div className="flex  flex-col h-full mt-4">
-      {sorted_cvalues.map((values, idx) => (
+      {ConnectionRanking.map((values, idx) => (
         <div
           key={idx}
           className="flex w-full h-20 py-4 px-3 border-b border-gray-300 gap-x-15"
@@ -875,8 +959,8 @@ return(
           <div className="flex gap-x-2 w-43">
             <img
               className="rounded-full h-12 w-12"
-              src={values.img}
-              alt=""
+              src={values?.profile?.avatar}
+              alt="" 
             />
             <div className="flex flex-col">
               <div
@@ -884,28 +968,28 @@ return(
                 style={{ fontFamily: "Times New Roman,Serif" }}
               >
                 <div className="flex">
-                  <h1>{values.Title[0]}</h1>
+                  <h1>{values?.profile?.title[0]}</h1>
                   <h1
                     className={`flex ${
-                      values.upvote >= 5000
+                      values?.score >= 5000
                         ? "text-[#FB3766]"
-                        : values.upvote >= 2000
+                        : values?.score >= 2000
                         ? "text-[#5235E8]"
-                        : values.upvote >= 500
+                        : values?.score >= 500
                         ? "text-[#DAF727]"
                         : "text-black"
                     }`}
                   >
-                    {values.Title.slice(1)}
+                    {values?.profile?.title.slice(1)}
                   </h1>
                 </div>
-                <h1>{values.name}</h1>
+                <h1>{values?.profile?.displayname}</h1>
               </div>
               <div className="flex">
                 <h3 className="text-[#5235E8] text-sm">
-                  +{values.receive}
+                  +200
                 </h3>
-                <h3 className="text-sm ml-1">on {values.date}</h3>
+                <h3 className="text-sm ml-1">on 12/08/2025</h3>
               </div>
             </div>
           </div>
@@ -915,9 +999,9 @@ return(
               Rank {idx + 1 + curr_leaderboard_page * 4}
             </h2>
             <h1 className="flex ml-2 text-[#5235E8]">
-              {values.upvote < 1000
-                ? values.upvote
-                : Number((values.upvote / 1000).toFixed(1)) + "k"}
+              {values?.score < 1000
+                ? values?.score
+                : Number((values?.score / 1000).toFixed(1)) + "k"}
             </h1>
           </div>
         </div>
