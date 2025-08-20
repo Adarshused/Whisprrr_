@@ -41,12 +41,14 @@ function App(props) {
           console.log("ERROR while getting user")
          Dispatch(ChangeLogIn(false));
          setislogin(false)
+        
         }
-       if(isLoading) {
+      else if(isLoading) {
         <HashLoader color={"#5235E8"} loading={true} size={150}
         aria-label="Loading Spinner"
         data-testid="loader" />
        }
+    else {
       //  queryClient.removeQueries(['currentUser']);
        Dispatch(ChangeLogIn(true))
       //  console.log(user)
@@ -139,6 +141,7 @@ function App(props) {
         // console.log(curractive['FacultyData'].img)
         // console.log(curractive[ 'FacultyData'])
       }
+    }
       // console.log(FacultyData[0]?.email)
    },[user, isLoading, isError, isFetching])
     

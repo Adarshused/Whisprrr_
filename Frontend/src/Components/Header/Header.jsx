@@ -79,7 +79,7 @@ function Header(){
       </button>
     </div>
         {open && (
-          <div className=" w-1/2 h-120  fixed top-10 left-4  z-50 shadow-[0_4px_6px_rgba(82,53,232,0.5)] rounded-lg overflow-hidden" >
+          <div className=" w-1/2 h-120  bg-white/30 backdrop-blur-md fixed top-10 left-4  z-50 shadow-[0_4px_6px_rgba(82,53,232,0.5)] rounded-lg overflow-hidden" >
            <Dropdown options={optionArr}></Dropdown>
               
           </div>

@@ -101,9 +101,10 @@ function UserSignIn(){
     }
     return(
         <>
-         <div className="flex flex-col h-screen w-screen md:flex-row">
-  {/* left half */}
-  <div className="relative w-2/5 h-full overflow-hidden">
+         <div className=" flex flex-col   left-0  h-full md:h-screen  w-screen  md:flex-row">
+
+   {/* left half */}
+  <div className="relative w-full h-2/5 w-full md:w-2/5  md:h-full overflow-hidden">
     <form action={handleSubmit}>
     <svg
       className="absolute inset-0 w-full h-full block"
@@ -124,7 +125,7 @@ function UserSignIn(){
         stroke="none"
       />
     </svg>
-    <div className="flex flex-col w-full mt-2  ml-15 ">
+    <div className="flex flex-col w-full mt-2  md:ml-15 ">
      <div className="flex flex-col p-5">
         <h1 className="font-extrabold text-3xl " style={{fontFamily:'Times New Roman, serif'}}>Sign in to Whisprr</h1>
         <h5 className="text-gray-500 text-sm mt-2">We're glad your back.</h5>
@@ -236,95 +237,95 @@ function UserSignIn(){
         </div>
      </div>
      <div className="flex mt-5 ml-15">
-       <h5 className="text-sm">Don't have an account already?</h5>
-       <h3 className=" relative cursor-pointer font-extrabold text-[#5235E8] hover:text-[#7C64ED]" style={{fontFamily:'Times New Roman, serif'}}>Sign up now</h3>
+       <h5 className=" text-xs md:text-sm">Don't have an account already?</h5>
+       <h3 className=" relative cursor-pointer text-xs md:text-sm font-extrabold text-[#5235E8] hover:text-[#7C64ED]" style={{fontFamily:'Times New Roman, serif'}}>Sign up now</h3>
      </div>
     </div>
     </form>
   </div>
 
   {/* right half */}
-  <div className="flex  flex-col w-3/5 h-full bg-[#0E0637] rounded-l-2xl relative">
+  <div className="flex  flex-col h-3/5 w-full md:w-3/5 md:h-full bg-[#0E0637] rounded-l-2xl relative">
     <div className="flex flex-col ">
       {/* <img className="w-50 block w-[400px] h-auto"  src="/assests/sign_up_page.svg" alt="" /> */}
-      <div className="flex flex-col w-full mt-10">
-        <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-130 h-17 ">
+      <div className="flex flex-col w-full mt-6 md:mt-10">
+        <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-70  md:w-130 md:h-17 ">
            <div className="flex py-2 px-2" style={{fontFamily:'Times New Roman, serif'}}>
-             <img className="w-13 h-13 ml-3 rounded-full" src="/assests/nikita.jpg" alt="" />
-             <div className="flex ml-5 mt-3 gap-x-3">
-               <h3 className="text-gray-400 text-2xl font-extrabold">Ms</h3>
-               <h3 className="text-black  text-2xl font-extrabold">Nikita</h3>
+             <img className="h-10 w-10 md:w-13 md:h-13 ml-3 rounded-full" src="/assests/nikita.jpg" alt="" />
+             <div className="flex ml-5 mt-2 md:mt-3 gap-x-2 md:gap-x-3">
+               <h3 className="text-gray-400 text-lg md:text-2xl font-extrabold">Ms</h3>
+               <h3 className="text-black text-lg md:text-2xl font-extrabold">Nikita</h3>
 
              </div>
-             <div className="flex ml-35 mt-2 gap-x-7 ">
-               <img className="w-5 " src="/assests/upvote.svg" alt="" />
-               <img className="w-16" src="/assests/graph_1.svg" alt="" />
+             <div className="flex ml-4 md:ml-35 md:mt-2 gap-x-2 md:gap-x-7 ">
+               <img className="w-4 md:w-5 " src="/assests/upvote.svg" alt="" />
+               <img className=" w-16" src="/assests/graph_1.svg" alt="" />
              </div>
            </div>
 
         </div>
-        <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-140 h-17 ">
-        <div className="flex py-2 px-2" style={{fontFamily:'Times New Roman, serif'}}>
-             <img className="w-13 h-13 ml-3 rounded-full" src="/assests/profile_updated.svg" alt="" />
-             <div className="flex ml-5 mt-3 gap-x-3">
-               <h3 className="text-gray-400 text-2xl font-extrabold">Ms</h3>
-               <h3 className="text-black  text-2xl font-extrabold">Pooja</h3>
+        <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-80  md:w-140 md:h-17 ">
+         <div className="flex py-2 px-2" style={{fontFamily:'Times New Roman, serif'}}>
+             <img className="h-10 w-10 md:w-13 md:h-13 ml-3 rounded-full" src="/assests/profile_updated.svg" alt="" />
+             <div className="flex ml-5 mt-2 md:mt-3 gap-x-2 md:gap-x-3">
+               <h3 className="text-gray-400 text-lg md:text-2xl font-extrabold">Ms</h3>
+               <h3 className="text-black text-lg md:text-2xl font-extrabold">Pooja</h3>
 
              </div>
-             <div className="flex ml-35 mt-2 gap-x-7 ">
-               <img className="w-5 " src="/assests/upvote.svg" alt="" />
+             <div className="flex ml-14 md:ml-35 md:mt-2 gap-x-2 md:gap-x-7">
+               <img className="w-4 md:w-5 " src="/assests/upvote.svg" alt="" />
                <img className="w-16" src="/assests/graph_2.svg" alt="" />
              </div>
            </div>
         </div>
       </div>
       <div className="flex flex-col w-full  ">
-        <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-90 h-17 ">
+        <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-70 md:w-90 md:h-17 ">
         <div className="flex py-2 px-2" style={{fontFamily:'Times New Roman, serif'}}>
-             <img className="w-12 h-12 ml-3 rounded-full" src="/assests/arryan.jpg" alt="" />
-             <div className="flex ml-5 mt-3 gap-x-3">
-               <h3 className="text-gray-400 text-2xl font-extrabold">Mr</h3>
-               <h3 className="text-black  text-2xl font-extrabold">Aaryan</h3>
+             <img className="h-10 w-10 md:w-12 md:h-12 ml-3 rounded-full" src="/assests/arryan.jpg" alt="" />
+             <div className="flex ml-1 mt-2 md:mt-3 gap-x-2 md:gap-x-3">
+               <h3 className="text-gray-400 text-lg md:text-2xl font-extrabold">Mr</h3>
+               <h3 className="text-black text-lg md:text-2xl font-extrabold">Aaryan</h3>
 
              </div>
-             <div className="flex ml-10 mt-2 gap-x-7 ">
-               <img className="w-5 " src="/assests/upvote.svg" alt="" />
+             <div className="flex ml-5 md:ml-10 md:mt-2 gap-x-2 md:gap-x-7 ">
+               <img className=" w-4 md:w-5 " src="/assests/upvote.svg" alt="" />
                <img className="w-16" src="/assests/graph_3.svg" alt="" />
              </div>
            </div>
         </div>
-        <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-110 h-17 ">
+        <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-75 md:w-110 md:h-17 ">
         <div className="flex py-2 px-2" style={{fontFamily:'Times New Roman, serif'}}>
-             <img className="w-13 h-13 ml-3 rounded-full" src="/assests/bhasin.png" alt="" />
+             <img className="h-12  w-13 md:w-13 md:h-13 ml-3 rounded-full" src="/assests/bhasin.png" alt="" />
              <div className="flex ml-5 mt-3 gap-x-3">
-               <h3 className="text-gray-400 text-2xl font-extrabold">Dr</h3>
-               <h3 className="text-black  text-2xl font-extrabold">Bhasin</h3>
+               <h3 className="text-gray-400 text-lg md:text-2xl font-extrabold">Dr</h3>
+               <h3 className="text-black text-lg md:text-2xl font-extrabold">Bhasin</h3>
 
              </div>
-             <div className="flex ml-25 mt-2 gap-x-7 ">
-               <img className="w-5 " src="/assests/downvotes.svg" alt="" />
+             <div className="flex ml-3 gap-x-3 md:ml-25 md:mt-2 md:gap-x-7 ">
+               <img className="w-4 md:w-5" src="/assests/downvotes.svg" alt="" />
                <img className="w-16" src="/assests/graph_4.svg" alt="" />
              </div>
            </div>
         </div>
       </div>
-      <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-140 h-17 ">
+      <div className="mt-6 rounded-l-2xl flex ml-auto flex-col bg-white w-85  md:w-140 md:h-17 ">
       <div className="flex py-2 px-2" style={{fontFamily:'Times New Roman, serif'}}>
-             <img className="w-13 h-13 ml-3 rounded-full" src="/assests/Dinesh.png" alt="" />
+             <img className="h-12  w-13 md:w-13 md:h-13 ml-3 rounded-full" src="/assests/Dinesh.png" alt="" />
              <div className="flex ml-5 mt-3 gap-x-3">
-               <h3 className="text-gray-400 text-2xl font-extrabold">Dr</h3>
-               <h3 className="text-black  text-2xl font-extrabold">Dinesh</h3>
+               <h3 className="text-gray-400 text-lg md:text-2xl font-extrabold">Dr</h3>
+               <h3 className="text-black text-lg md:text-2xl font-extrabold">Dinesh</h3>
 
              </div>
-             <div className="flex ml-45 mt-2 gap-x-7 ">
-               <img className="w-5 " src="/assests/downvotes.svg" alt="" />
+             <div className="flex ml-12 md:ml-45 md:mt-2 gap-x-2 md:gap-x-7 ">
+               <img className="w-4 md:w-5 " src="/assests/downvotes.svg" alt="" />
                <img className="w-16" src="/assests/graph_5.svg" alt="" />
              </div>
            </div>
         </div>
       </div>
-      <div className="flex flex-col text-white mt-15 ml-30 gap-y-4" >
-        <div className="flex flex-col font-extrabold text-3xl"style={{fontFamily:'Times New Roman, serif'}}>
+      <div className="flex flex-col text-white mt-15 ml-2 md:ml-30 gap-y-4" >
+        <div className="flex flex-col  font-extrabold text-xl md:text-3xl"style={{fontFamily:'Times New Roman, serif'}}>
           <h1>~"Welcome to Whisprr</h1>
           <h1> — log in for instant insights and smarter growth."</h1>
         </div>

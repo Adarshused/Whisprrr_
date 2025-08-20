@@ -81,14 +81,14 @@ function UserSignUp(){
         }, [])
     return(
         <>
-     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+     {/* <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
   <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5Zm16 14a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2ZM4 13a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6Zm16-2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6Z"/>
 </svg>
 <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
   <path stroke="currentColor" strokeLinejoin="round" strokeWidth="2" d="M4 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5Zm16 14a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2ZM4 13a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6Zm16-2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6Z"/>
-</svg>
+</svg> */}
 {isRegistered && (
-        <div className="fixed top-60 left-1/2 transform -translate-x-1/2 bg-white rounded-lg  bg-opacity-50 flex flex-col items-center justify-center z-50 w-120 h-90 border border-gray-300 shadow-[0_0_8px_rgba(82,53,232,0.5)]">
+        <div className="md:fixed md:top-60 left-1/2 transform -translate-x-1/2 bg-white rounded-lg  bg-opacity-50 flex flex-col items-center justify-center z-50 w-120 h-90 border border-gray-300 shadow-[0_0_8px_rgba(82,53,232,0.5)]">
           <svg
             className="w-30 h-30 mb-4"
             viewBox="0 0 60 60"
@@ -142,10 +142,11 @@ function UserSignUp(){
             </NavLink>
         </div>
       )}
-        <div className="fixed top-18 left-0 flex h-screen w-screen">
+      {!isRegistered && (
+        <div className="flex flex-col md:fixed   md:top-14 left-0 md:flex-row h-full md:h-screen w-screen">
   {/* left half */}
   
-  <div className="relative w-2/5 h-full overflow-hidden">
+  <div className="relative w-full h-2/5 md:w-2/5 md:h-full overflow-hidden">
   <form onSubmit={register}>
     <svg
       className="absolute inset-0 w-full h-full block"
@@ -166,7 +167,7 @@ function UserSignUp(){
         stroke="none"
       />
     </svg>
-    <div className="flex flex-col w-full ml-15 mt-5 ">
+    <div className="flex flex-col w-full  md:ml-15 mt-5 ">
      <div className="flex flex-col w-full p-5">
         <h1 className="font-extrabold text-3xl " style={{fontFamily:'Times New Roman, serif'}}>Create an account</h1>
         <h5 className="text-gray-500 text-sm mt-2">Let's begin your Growth.</h5>
@@ -268,47 +269,49 @@ function UserSignUp(){
   </div>
 
   {/* right half */}
-  <div className="flex flex-col w-3/5 h-full bg-[#0E0637] rounded-l-2xl relative">
-    <div className="flex flex-col ml-30 mt-14 ">
-        <div className="flex font-extrabold text-3xl  flex-col text-white" style={{fontFamily:'Times New Roman, serif'}}>
-            <h1>~ "Reach new academic heights with Wishprr</h1>
+  <div className="flex flex-col w-full h-3/5 md:w-3/5 md:h-full bg-[#0E0637] rounded-l-2xl relative">
+    <div className="flex flex-col ml-3 md:ml-30 mt-14 ">
+        <div className="flex font-extrabold text-lg md:text-3xl  flex-col text-white" style={{fontFamily:'Times New Roman, serif'}}>
+            <h1 className="">~ "Reach new academic heights with Wishprr</h1>
             <h1>-Your path to smarter learning,real-time</h1>
             <h1>insights, and unstoppable growth."</h1>
         </div>
-        <div className="flex flex-col text-white"style={{fontFamily:'Times New Roman, serif'}}>
+        <div className="flex flex-col text-sm md:text-md text-white"style={{fontFamily:'Times New Roman, serif'}}>
            <h5 className="">Intrested in real-time faculty performance insights? Sign up now and elevate</h5>
            <h5>your academic oversight with Whisprr</h5>
         </div>
         </div>
 
-       <div className="flex  mr-20">
-       <div className=" w-1/2 ml-30 mt-15">
+       <div className="flex flex-col md:flex-row mr-20">
+       <div className="h-1/2 md:w-1/2  md:ml-30 mt-15">
        {/* right-left part */}
-        <div className="flex flex-col gap-y-8 ">
-          <div className="flex flex-col gap-y-4">
+        <div className="flex flex-col  gap-y-9 md:gap-y-8 ">
+          <div className="flex ml-15 md:ml-0 flex-col gap-y-4">
              <div className="w-60 h-10 bg-[#D6D1FA] rounded-4xl">
               <h3 className=" text-sm w-full py-2 px-4" >Used by over 50+Institute HOD's</h3>
              </div>
-             <img className="w-60 " src="/assests/Sign_up_icons.svg" alt="" />
+             <img className="w-50 ml-5 md:ml-0 md: md:w-60 " src="/assests/Sign_up_icons.svg" alt="" />
           </div>
-          <img className="w-60" src="/assests/sign_up_page.svg" alt="" />
+          <img className=" w-50  md:w-60" src="/assests/sign_up_page.svg" alt="" />
           <div>
 
           </div>
         </div>
        </div>
-       <div className="  w-1/2 flex flex-col ">
+       <div className=" h-1/2 md:w-1/2 flex flex-col ">
         {/* right-right part */}
-        <div className="w-full">
-        <img  className="  w-full h-84 object-fill" src="/assests/Recent_Activity.svg" alt="" />
+        <div className="w-full ml-20 md:ml-0">
+        <img  className="  w-full md:h-84 object-fill" src="/assests/Recent_Activity.svg" alt="" />
         </div>
+         <h4 className=" md:hidden text-sm ml-25 mt-3 text-white">Made with 💖 by Whisprr</h4>
+        <img className=" hidden md:block w-50 h-30" src="/assests/Sign_up_2.svg" alt="" />
         
-        <img className=" w-50 h-30" src="/assests/Sign_up_2.svg" alt="" />
        </div>
        </div>
     </div>
     
   </div>
+      )}
    </>
     )
 }

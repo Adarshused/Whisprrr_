@@ -15,7 +15,10 @@ function Dashboard(){
     <>
     <div className="flex">
     <div>
-    <Dashboard_left/>
+      <div className="hidden md:block">
+        <Dashboard_left/>
+      </div>
+    
     <div className="fixed mt-18 ml-63.5">
     {curractive['isActive'] === "Dashboard" && <Dashboardpage/>}
     {curractive['isActive'] === "Connections" &&<Connectionspage/>}
