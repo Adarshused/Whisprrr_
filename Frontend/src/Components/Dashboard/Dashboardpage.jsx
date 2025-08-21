@@ -26,7 +26,7 @@ function Dashboardpage(){
     const [y_cordinate, sety_cordinate] = useState([])
     const [ConnectionRanking, setConnectionRanking] = useState([])
     const [followers, setfollowers] = useState(() => new Set([]))
-    const [WeeklyUpovte, setWeeklyUpovte] = useState([])
+    const [WeeklyUpovte, setWeeklyUpovte] = useState([5000, 5030, 1600, 1800, 3400,4670, 6000])
     const [WeeklyValues, setWeeklyValues] = useState([])
     const [coordinates, setcoordinates] = useState("")
     const [text, settext] = useState("")
@@ -429,24 +429,25 @@ function Dashboardpage(){
 return(
     
     <>
-    <div className="flex h-screen w-screen ">
-    <div className="flex flex-col w-5/9 mt-7 ml-7">
-     <div className="flex w-full h-25  border-b border-t border-gray-300 ">
-        <div className="flex w-1/2  border-r mt-4 mb-4 border-gray-300 gap-x-30 ">
-        <div className="flex flex-col gap-y-3">
+    <div className="flex  md:h-screen w-screen ">
+    <div className="flex flex-col w-full  md:w-5/9 mt-7 ml-5 md:ml-7">
+     <div className="flex w-85 md:w-full h-25  border-b border-t border-gray-300 ">
+        <div className="flex w-1/2  border-r mt-4 mb-4 border-gray-300 md:gap-x-25 ">
+        <div className="flex flex-col gap-y-3 ">
         <div className="flex gap-x-2">
         <svg width="20" height="20" viewBox="0 0 20 20">
            
            <rect x="3" y="11" width="3" height="9" ry="2" fill="#5235E8"/>
            <rect x="8" y="8" width="3" height="12" ry="2" fill="#DAF727"/>
            <rect x="13" y="3" width="3" height="17" ry="2" fill="#D6D1FA"/>
-        </svg>
-        <h2 className="text-gray-400 font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>CURRENT UPVOTE</h2>
+        </svg> 
+        <h2 className="text-gray-400 w-50  text-sm md:text-md font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>CURRENT UPVOTE</h2>
         </div>
-          <h1 className="text-4xl font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>{currupvote}</h1>
+          <h1 className="text-3xl ml-10 md:ml-0 md:text-4xl font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>{currupvote}</h1>
         </div>
         <div>
         <svg width="100" height="100" viewBox="0 0 100 100"
+        className=""
      xmlns="http://www.w3.org/2000/svg">
      <rect
      x="0" y="40"
@@ -482,12 +483,12 @@ return(
         <div className="ml-8 flex flex-col gap-y-3">
         <div className="flex gap-x-2">
          <img className="" src="/assests/Volume.svg" alt="" />
-        <h2 className="text-gray-400 font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>UPVOTE(24H)</h2>
+        <h2 className="text-gray-400  text-sm  md:text-md font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>UPVOTE(24H)</h2>
         </div>
-          <h1 className="text-4xl font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>{upvote_24h}</h1>
+          <h1 className="text-3xl ml-10 md:ml-0 md:text-4xl font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>{upvote_24h}</h1>
         </div>
         <div>
-        <svg className="ml-20 "width="100" height="100" viewBox="0 0 100 100"
+        <svg className="md:ml-50 "width="100" height="100" viewBox="0 0 100 100"
      xmlns="http://www.w3.org/2000/svg">
      <rect
      x="0" y="40"
@@ -518,8 +519,8 @@ return(
         </div>
         </div>
      </div>
-     <div className="flex w-full mt-5 gap-x-5 h-85 border-b border-gray-300">
-     <div className="flex flex-col">
+     <div className="flex flex-col md:flex-row w-full mt-5 gap-y-10 md:gap-x-5 h-85 border-b border-gray-300">
+     <div className="flex flex-col ">
       <div className="flex gap-x-30" style={{fontFamily:'Times New Romen,Serif'}}>
        <h1 className="font-extrabold text-xl">Portfolio Stats</h1>
        <div className="border border-gray-300 border-2 w-23 relative flex  h-8 bg-white rounded-lg">
@@ -564,7 +565,7 @@ return(
     {/* " cx="0" cy="0" visibility="hidden"/> */}
     {/* </svg> */}
     { timeline === "Weekly" &&  (
-             <div className="w-5 text-gray-500 text-sm">
+             <div className="w-5  text-gray-500 text-xs md:text-sm">
                 <h1 className="mt-3">20k</h1>
                 <h1 className="mt-5">10k</h1>
                 <h1 className="mt-5">5k</h1>
@@ -584,8 +585,8 @@ return(
                 <h1 className="mt-5">500</h1>
               </div>
     )}
-    <div className="flex flex-col w-140">
-      <svg  ref={svgRef} width="550" height="270" viewBox="0 0 550 270">
+    <div className="flex flex-col  md:w-140">
+      <svg  ref={svgRef} className="w-80 md:w-135" width="550" height="270" viewBox="0 0 550 270">
        <defs>
             <linearGradient
       id="fade-purple"
@@ -671,7 +672,7 @@ return(
     </svg>
 
    {timeline === "Weekly" && (
-          <div className="flex w-full text-gray-500 text-xs ml-3 gap-x-11 ">
+          <div className="flex  md:w-full text-gray-500 text-[10px] md:text-xs ml-3 gap-x-4 md:gap-x-11 ">
              {Last7DaysColumn.map((d, idx)=>(
               <h1 key={idx}>{d}</h1>
              ))}
@@ -683,7 +684,7 @@ return(
 
       </div>
      </div>
-     <div className="flex mt-3 flex-col w-70  ">
+     <div className="flex md:mt-3 flex-col w-70  ">
      <div className="flex flex-col ml-5 w-60 h-45 shadow-sm border rounded-lg  border-gray-300 border-2">
       <div className="flex flex-col  p-4 h-33 border-b border-gray-300 font-extrabold" style={{fontFamily:'Times New Roman, Serif'}}>
         <div className="ml-2">
@@ -847,7 +848,7 @@ return(
      </div>
      
     </div>
-    <div className="flex flex-col mt-3 w-4/9 ml-8  border border-b border-l border-gray-300">
+    <div className="flex flex-col hidden md:block  mt-3 w-4/9 ml-8  border border-b border-l border-gray-300">
       <div className="flex flex-col w-5/9 ml-5 w-85 ">
            <div className="flex gap-x-20 mt-2">
               <h1 className="font-extrabold text-lg " style={{fontFamily:'Times New Roman,Serif'}}>University wide Ranking</h1>

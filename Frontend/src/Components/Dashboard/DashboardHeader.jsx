@@ -12,6 +12,7 @@ function DashboardHeader(props){
   const [heading,setheading]=useState('');
   const [notification,setnotification]=useState(true);
   const [clickednotification,setclickednotification]=useState(false);
+  const [open, setOpen] = useState(false);
   const [profilelogo,setprofilelogo]=useState("");
   const name=useSelector((state)=>state.CurrActive)
   useEffect(()=>{
@@ -30,8 +31,50 @@ Dispatch(ChangeStatus(currFeature));
 
   return (
     <>
-    <div className="fixed top-0 left-0 w-310 ml-67 flex py-4 border-b border-gray-300 gap-x-8"style={{fontFamily:'Times New Roman, Serif'}}>
-      <div className="w-50">
+    <div className="fixed top-0 left-0 md:w-310 bg-white/30 backdrop-blur-md md:ml-5 w-full md:ml-67 flex py-4 border-b border-gray-300 gap-x-4 md:gap-x-8"style={{fontFamily:'Times New Roman, Serif'}}>
+       <div className="relative md:hidden px-3 py-3">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-6 h-6 flex flex-col justify-center items-center focus:outline-none"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          className="w-6 h-6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Top bar */}
+          <line
+            x1="5" y1="7" x2="19" y2="7"
+            stroke="black" strokeWidth="2" strokeLinecap="round"
+            className={`
+              transform origin-center
+              transition-transform duration-300
+              ${open ? 'translate-y-[3.5px] rotate-45' : ''}
+            `}
+          />
+          {/* Middle bar */}
+          <line
+            x1="5" y1="12" x2="19" y2="12"
+            stroke="black" strokeWidth="2" strokeLinecap="round"
+            className={`
+              transition-opacity duration-300
+              ${open ? 'opacity-0' : 'opacity-100'}
+            `}
+          />
+          {/* Bottom bar */}
+          <line
+            x1="5" y1="17" x2="19" y2="17"
+            stroke="black" strokeWidth="2" strokeLinecap="round"
+            className={`
+              transform origin-center
+              transition-transform duration-300
+              ${open ? '-translate-y-[3.5px] -rotate-45' : ''}
+            `}
+          />
+        </svg>
+      </button>
+    </div>
+      <div className="md:w-50">
         
           { heading === "ConnectionPortfolio" && (
               <div className="flex ml-5 mt-2 ">
@@ -58,11 +101,11 @@ Dispatch(ChangeStatus(currFeature));
               
             )}
           
-   {heading !== "ConnectionPortfolio" && (<h1 className="font-extrabold text-2xl px-12 " >{heading}</h1>)}   
+   {heading !== "ConnectionPortfolio" && (<h1 className="font-extrabold mt-2 md:mt-0 text-2xl  md:px-12 " >{heading}</h1>)}   
       </div>
     
-     <div className="flex ml-160 gap-x-5">
-     <div className="flex cursor-pointer py-2 relative px-2 justify-center w-50  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] ">
+     <div className="flex ml-20 md:ml-160 gap-x-5">
+     <div className="flex hidden md:block cursor-pointer py-2 relative px-2 justify-center md:w-50  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] ">
               <h3 className="font-extrabold flex  text-white">Connect with Faculties</h3>  
      </div>
      {/* <svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -77,7 +120,7 @@ Dispatch(ChangeStatus(currFeature));
   viewBox="0 0 25 25"
   width="24"
   height="24"
-  className="w-8 h-8 cursor-pointer"
+  className="w-6 h-6 mt-2 md:mt-0  md:w-8 md:h-8 cursor-pointer"
   onClick={()=>setclickednotification(prev=>!prev)}
 >
   <path
@@ -110,8 +153,8 @@ Dispatch(ChangeStatus(currFeature));
   }
 </svg>
 <NavLink to="/settingpage">
-  <button  className="cursor-pointer rounded-full w-10 h-10 font-extrabold text-white bg-[#DEDAFB]" onClick={(e)=>{changeFeature("Setting")}} >
-   <img className="cursor-pointer rounded-full w-10 h-10 font-extrabold text-white bg-[#DEDAFB]" src={profilelogo} alt="" />
+  <button  className="cursor-pointer rounded-full mt-1 md:mt-0 w-10  h-10 font-extrabold text-white bg-[#DEDAFB]" onClick={(e)=>{changeFeature("Setting")}} >
+   <img className="cursor-pointer rounded-full  w-10 h-10 font-extrabold text-white bg-[#DEDAFB]" src={profilelogo} alt="" />
   </button>
 </NavLink>
 

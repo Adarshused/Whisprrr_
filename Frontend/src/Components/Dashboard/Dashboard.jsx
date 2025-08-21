@@ -19,7 +19,7 @@ function Dashboard(){
         <Dashboard_left/>
       </div>
     
-    <div className="fixed mt-18 ml-63.5">
+    <div className="md:fixed mt-18 md:ml-63.5">
     {curractive['isActive'] === "Dashboard" && <Dashboardpage/>}
     {curractive['isActive'] === "Connections" &&<Connectionspage/>}
     {curractive['isActive'] === "Announcements" &&<Announcementspage/>}
