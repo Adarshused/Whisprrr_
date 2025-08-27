@@ -6,7 +6,7 @@ import { Organization } from '../models/organisation.model.js';
 import {ApiResponse} from '../utils/ApiResponse.js'
 import { redis } from '../utils/redis.js';
 import mongoose from 'mongoose';
-import { access } from 'fs';
+import { access, unlinkSync } from 'fs';
 import { Upvotes } from '../models/upvotes.model.js';
 import { fetchAllUsersFromDB } from '../db/database.js';
 
@@ -28,24 +28,17 @@ catch (err) {
 }
 
 const RegisterFaculty = AsyncHandler(async (req, res)=>{
-//    db.faculties.deleteMany({ displayname: null })
     const {name, email, organization,password} = req.body
-    //    console.log(organization)
-    // Faculty.getIndexes()
+    
     if([name, email,organization, password].some((field)=>field?.trim === "")){
         throw new ApiError(400,"all fields are required")
     }
-    // const existedUser = await Faculty.findOne({
-    //     $or :[
-    //         {email},
-    //         {organization}
-    //     ]
-    // })
-    
+   
      /* 
               IMPORTANT NOTE THE SCHEMA NAME IS SAVED BY DEFAULT WITH ALL LETTER SMALL AND PLURAL FORM
               eg: Faculty --> faculties
      */
+
     const existedUser = await Organization.aggregate([
         // find the org
         {$match: {name: organization}},
@@ -76,7 +69,7 @@ const RegisterFaculty = AsyncHandler(async (req, res)=>{
             }
         }
     ])
-    // console.log(existedUser)
+    
     if(existedUser.length > 0)
         throw new ApiError(409, "User with same email already exists in your organization")
    
@@ -118,15 +111,10 @@ const RegisterFaculty = AsyncHandler(async (req, res)=>{
 
 const LoginFaculty = AsyncHandler(async (req,res)=>{
    const {email,organization, password} = req.body
-//    console.log(req)
+
    if([email,organization,password].some((field)=>field?.trim() === ""))
     throw new ApiError(400, "all fields are required")
 
-//    const user = await Faculty.findOne({
-//     email,
-//     organization,
-//    })
-   
     const org = await Organization.findOne({name: organization})
                .populate({
                 path: "members.item",
@@ -137,7 +125,7 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
      
    if(!org) 
     throw new ApiError(401, "Organization Not found")
-//    console.log(org)
+
    const faculty = org.members.find(m => m.kind === 'Faculty' && m.email == email);
 
    if(!faculty) 
@@ -152,12 +140,12 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
     throw new ApiError(401, "Invalid User Credentials")
 
    const {accessToken, refreshToken} = await generateAccessTokenAndRefreshToken(user._id)
-//    console.log(accessToken, refreshToken)
+
    const LoggedInUser = await Faculty.findById(user._id).select(
     "-password -refreshToken"
    )
    const userID = user._id
-   const rediskey = `user:${userID}`;
+   const rediskey = userID;
 
    const Cached = await redis.set(rediskey, LoggedInUser)
    if(!Cached) {
@@ -179,8 +167,7 @@ const LoginFaculty = AsyncHandler(async (req,res)=>{
 
 const AvatarUser = AsyncHandler(async (req, res)=>{
     let userID = req.user._id
-    //   console.log(req)
-    
+
      const AvatarLocalPath = req.files?.avatar[0]?.path;
      if(!AvatarLocalPath) 
         throw new ApiError(400, "Avatar file is empty")
@@ -201,8 +188,8 @@ const AvatarUser = AsyncHandler(async (req, res)=>{
       const User = await Faculty.findById(userID).select(
         "-password -refreshToken"
      )
-    //  userID = String(userID);
-     const redisKey = userID;
+   
+    const redisKey = userID;
     await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
      const option = {
         httpOnly : true,
@@ -243,21 +230,20 @@ const UserData = AsyncHandler(async (req, res) => {
     let User;
     let _24hUpvote;
     const topN = 10
-    // userID = String(userID)
+
     const redisKey = userID;
     const Cached = await redis.get(redisKey)
-    // console.log(Cached)
     
     if(Cached) {
-        // console.log("Chace HIT||")
-        if (typeof Cached !== "string") {
-    console.warn("Unexpected non-string from Redis:", Cached);
-    await redis.del(redisKey);
+
+    if (typeof Cached !== "string") {
+      console.warn("Unexpected non-string from Redis:", Cached);
+      await redis.del(redisKey);
      }
       else{
           try{
-            // console.log(typeof Cached)
-          User = JSON.parse(Cached)
+
+            User = JSON.parse(Cached)
           console.log("✅ Parsed object:", User)
         }
         catch(err) {
@@ -304,17 +290,10 @@ const UserData = AsyncHandler(async (req, res) => {
         }
       }
         ]);
-        // User._id = String(User._id)
+
         await redis.set(redisKey,JSON.stringify(User), "EX", 60 * 5  )
     }
-     // get 24Hours Upvotes of every user
-    
-    // console.log(counts)
-    // const topUsers = await redis.zrevrange("users:byupvotes", 0, 5, "WITHSCORES");
-// console.log("Top users by upvotes:", topUsers);
-   
-    // console.log(leaderBoard)
-    
+
    return res
    .status(200)
    .json(new ApiResponse(200, {user: User},"Fetched user data"))
@@ -322,7 +301,7 @@ const UserData = AsyncHandler(async (req, res) => {
 
 const UserContact = AsyncHandler(async (req, res) => {
    let userID = req.user._id;
-//    console.log(req.body)
+
    const displayname = String(req.body.displayname)
    const email = String(req.body.email)
    const title = String(req.body.title)
@@ -445,9 +424,9 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
         if(!rawUsers || rawUsers.length === 0) {
             throw new ApiError(505, "Error while loading all users");
         }
-        //  console.log("reachedddddddddddd")
-         const now = new Date();                           // current instant (UTC under the hood)
-         const start = new Date(now.getTime() - 24*60*60*1000); // 24 hours ago
+
+        const now = new Date();                           // current instant (UTC under the hood)
+        const start = new Date(now.getTime() - 24*60*60*1000); // 24 hours ago
         const userIds = rawUsers.map(u => u._id);
         // aggregating all upvotes count in one aggregation
         const agg = await Upvotes.aggregate([
@@ -477,7 +456,7 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
        const idx = Math.floor((new Date(doc._id.hour).getTime() - start.getTime()) / 3600000);
        if (idx >= 0 && idx < 24) countsMap.get(rid)[idx] = doc.count;
        }
-    //   console.log("MMMmmmm daaaAAmmM",countsMap)
+
        // 3) pipeline updates in batches
       
        const BATCH = 1000;
@@ -488,13 +467,12 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
         const id = u._id;
         const score = u.totalUpvote || 0;
         const profileJson = JSON.stringify(u);
-        // console.log(profileJson)
         const counts = countsMap.get(String(id)) || Array(24).fill(0);
         const countsJson = JSON.stringify(counts);
-    //   console.log(counts)
+        // console.log("here", profileJson)
         //  store structured data in hash (doesn't affect zset ordering)
-       pipeline.hset(`user:${id}`, 'profile', profileJson, 'counts24', countsJson);
-       pipeline.expire(`user:${id}`, 3600); // optional TTL for the hash
+       pipeline.hset(id, 'profile', profileJson, 'counts24', countsJson);
+       pipeline.expire(id, 3600); // optional TTL for the hash
 
        // keep leaderboard purely by score (member is user id)
        // If you do NOT want to change the score, skip this zadd.
@@ -517,11 +495,11 @@ const getAllFaculty = AsyncHandler(async (req, res) => {
         const entries = [];
        for (let i = 0; i < raw.length; i += 2) {
        entries.push({ id: raw[i], score: Number(raw[i + 1]) });
-       }
-      // pipeline to fetch the hash fields for each id
+        }
+        // pipeline to fetch the hash fields for each id
           const pl = redis.pipeline();
           for (const e of entries) {
-             pl.hmget(`user:${e.id}`, 'profile', 'counts24'); // or hgetall
+             pl.hmget(e.id, 'profile', 'counts24'); // or hgetall
            } 
 
            const Res = await pl.exec();

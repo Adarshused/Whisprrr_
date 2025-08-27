@@ -32,7 +32,6 @@ function App(props) {
   
    
    const {data: {user, faculties } = {}, isLoading, isFetching, isError} =  useCurrentUser();
-  //  console.log(faculties)
 
    const Dispatch=useDispatch();
    useEffect(()=>{
@@ -49,39 +48,33 @@ function App(props) {
         data-testid="loader" />
        }
     else {
-      //  queryClient.removeQueries(['currentUser']);
        Dispatch(ChangeLogIn(true))
-      //  console.log(user)
-         
+  
        const  UserData = user?.data?.user
-      //  console.log("USER_DATA :", FacultyData)
-                      /*  GetAllFaculties */
-       
-      //   const Facultydata = faculties?.data['leaderBoard'][0]
-      //  console.log(Facultydata)
        if(UserData){
         
         const leaderboard = faculties?.data?.leaderBoard ?? [];
         const lpaylod = [];
-
+       console.log(leaderboard, "here")
        for (let i = 0; i < leaderboard.length; ++i) {
-  const item = leaderboard[i];
-  const counts24 = item?.counts24 ?? []; // array or object
-  let total = 0;
+          const item = leaderboard[i];
+          const counts24 = item?.counts24 ?? []; // array or object
+          let total = 0;
 
-  // sum values
-  if (Array.isArray(counts24)) {
-    for (let j = 0; j < counts24.length; ++j) {
-      counts24[j] = Number(counts24[j] || 0);
-      total += counts24[j];
-    }
-  } else if (counts24 && typeof counts24 === 'object') {
-    for (const k in counts24) {
-      counts24[k] = Number(counts24[k] || 0);
-      total += counts24[k];
-    }
+     // sum values
+      if (Array.isArray(counts24)) {
+       for (let j = 0; j < counts24.length; ++j) {
+        counts24[j] = Number(counts24[j] || 0);
+        total += counts24[j];
+     }
+   } 
+     else if (counts24 && typeof counts24 === 'object') {
+       for (const k in counts24) {
+        counts24[k] = Number(counts24[k] || 0);
+        total += counts24[k];
+     }
   }
-
+ 
   const score = Number(item?.score || 0);
   const prevUp = score - total;
 
@@ -100,7 +93,6 @@ function App(props) {
   lpaylod.push(Data);
 }
 
-          // console.log(FacultyData[0])
         
          /* Here setuservalue or useState is an asynchronous call and im dispatching the value to the store since the setuservalue is not been updated its dispatching the old values itself 
          so i instead of storing the value in setuservalue now i directly store it in payload const */
@@ -134,12 +126,8 @@ function App(props) {
          btech_cse_totalupv: FacultyData?.btech_cse_totalupv?FacultyData.btech_cse_totalupv:"",
          totalUpvote: FacultyData?.totalUpvote? FacultyData.totalUpvote:""
         }
-        // console.log()
-        console.log("WE ARE HERE  :",lpaylod)
         Dispatch(ChangeleaderBoard(lpaylod))
         Dispatch(ChangeUserData(payload))
-        // console.log(curractive['FacultyData'].img)
-        // console.log(curractive[ 'FacultyData'])
       }
     }
       // console.log(FacultyData[0]?.email)
@@ -148,34 +136,11 @@ function App(props) {
    useEffect(()=>{
    
  if(curractive['isLoggedIn']) {
-  console.log(curractive['isLoggedIn'])
     setislogin(true)
  }
  else setislogin(false)
    },[curractive['isLoggedIn']])
-  //  console.log(islogin)
-      // const uservalue={
-        
-      //   'name':'Adarsh Mishra',
-      //   'Title':'Mr',
-      //   'img':"",
-      //   'upvote':'2100',
-      //   'twentyFour_hour':'20000,20100,20150,20140,20200,20200,2050,20230,20230,20231,20232,20232,20310,20311,20290,20283,20312,20400,20450,21000,21010,21100,21150,20800',
-      //   'prevD_up':'800',
-      //   'prevPD_up':'200',
-      //   'max_title':'Master',
-      //   'max upvote':'2180',
-      //   'about':"As Dean of Academics at IKG PTU, I am dedicated to fostering a culture of curiosity, celebrating your achievements, and equipping every graduate to make a meaningful impact in our ever-evolving world.",
-      //   'address':'Chennai,Tamil Nadu',
-      //   'experience':'15 years',
-      //   'upv_twlmonths':[[0, 150,   50, 65,200,  300],[600, 400, 434,543,  800,  500],[700, 1000, 656,789, 900,  1200],[1100, 600,867,1289,  1400, 1000],[1300, 800,1245,1540,  1600, 1500],[1700, 900,1203,2010,  1800, 1400],[2000,999,1240, 1200, 2100, 1600],[1900,2100,2210, 2300, 1700, 2500],[2200, 1540,1780,1300, 2400, 2000],[1800, 2100,1789,1650, 1900, 2300],[2000, 2230,2130,1500, 2500, 1700],[2300,1999,2200, 1900, 2400, 2500]],
-      //   'weekly_upvot':[800,567,145,1234,899],
-      //   'btech_cse':[1200,230,158,410],
-      //   'btech_cse_totalupv':1998,
-         
-      // }
-
-          
+  
       const fields = [
         { name: 'Dashboard',  value: dashboard,  set: setdashboard },
         { name: 'Connections', value: connections, set: setconnections },

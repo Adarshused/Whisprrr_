@@ -443,14 +443,14 @@ return(
         </svg> 
         <h2 className="text-gray-400 w-50  text-sm md:text-md font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>CURRENT UPVOTE</h2>
         </div>
-          <h1 className="text-3xl ml-10 md:ml-0 md:text-4xl font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>{currupvote}</h1>
-        </div>
-        <div>
+        <div className="flex gap-x-6 md:gap-x-63">
+          <h1 className="text-3xl md:text-4xl font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>{currupvote}</h1>
+           <div className=" md:mt-1">
         <svg width="100" height="100" viewBox="0 0 100 100"
         className=""
      xmlns="http://www.w3.org/2000/svg">
      <rect
-     x="0" y="40"
+     x="0" y="0"
      width="70" height="30"
      rx="15"
      fill="#ECFDF7"
@@ -458,7 +458,7 @@ return(
      />
       <text
     x="43"               
-    y="56"               
+    y="17"               
     fill="#11CF8B"      
     font-size="14"
     font-family="sans-serif"
@@ -467,7 +467,7 @@ return(
   >
    {percentageIncrease_oa}
   </text>
-    <g transform="translate(10, 60)">
+    <g transform="translate(10, 20)">
    
     <polygon
        points="-5,0 3,-10 10,0"
@@ -479,19 +479,23 @@ return(
 
         </div>
         </div>
+        </div>
+       
+        </div>
         <div className="flex w-1/2 border-r mt-4 mb-4 border-gray-300">
         <div className="ml-8 flex flex-col gap-y-3">
         <div className="flex gap-x-2">
          <img className="" src="/assests/Volume.svg" alt="" />
         <h2 className="text-gray-400  text-sm  md:text-md font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>UPVOTE(24H)</h2>
         </div>
-          <h1 className="text-3xl ml-10 md:ml-0 md:text-4xl font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>{upvote_24h}</h1>
-        </div>
-        <div>
+        <div className="flex gap-x-6 md:gap-x-17 ">
+        
+          <h1 className="text-3xl md:text-4xl font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>{upvote_24h}</h1>
+           <div>
         <svg className="md:ml-50 "width="100" height="100" viewBox="0 0 100 100"
      xmlns="http://www.w3.org/2000/svg">
      <rect
-     x="0" y="40"
+     x="0" y="0"
      width="70" height="30"
      rx="15"
      fill="#ECFDF7"
@@ -499,7 +503,7 @@ return(
      />
       <text
     x="43"               
-    y="56"               
+    y="17"               
     fill="#11CF8B"      
     font-size="14"
     font-family="sans-serif"
@@ -508,7 +512,7 @@ return(
   >
    {percentageIncrease_24h}
   </text>
-    <g transform="translate(10, 60)">
+    <g transform="translate(10, 20)">
     <polygon
        points="-5,0 3,-10 10,0"
        fill="#11CF8B"       
@@ -517,9 +521,13 @@ return(
 </svg>
 
         </div>
+          
+        </div>
+        </div>
+       
         </div>
      </div>
-     <div className="flex flex-col md:flex-row w-full mt-5 gap-y-10 md:gap-x-5 h-85 border-b border-gray-300">
+     <div className="flex flex-col md:flex-row w-full mt-5 gap-y-10 md:gap-x-5 md:h-85 h-160 border-b border-gray-300">
      <div className="flex flex-col ">
       <div className="flex gap-x-30" style={{fontFamily:'Times New Romen,Serif'}}>
        <h1 className="font-extrabold text-xl">Portfolio Stats</h1>
@@ -684,14 +692,14 @@ return(
 
       </div>
      </div>
-     <div className="flex md:mt-3 flex-col w-70  ">
-     <div className="flex flex-col ml-5 w-60 h-45 shadow-sm border rounded-lg  border-gray-300 border-2">
-      <div className="flex flex-col  p-4 h-33 border-b border-gray-300 font-extrabold" style={{fontFamily:'Times New Roman, Serif'}}>
-        <div className="ml-2">
-        <h2 className="text-md">Rank</h2>
+     <div className="flex mt-3  flex-col w-70  ">
+     <div className="flex flex-col ml-12 md:ml-5 w-60  h-45 shadow-sm border rounded-lg  border-gray-300 border-2">
+      <div className="flex flex-col  p-4  md:h-33 border-b border-gray-300 font-extrabold" style={{fontFamily:'Times New Roman, Serif'}}>
+        <div className="ml-18 md:ml-2">
+        <h2 className="text-xl md:text-md">Rank</h2>
         
         </div>
-        <h2 className="text-4xl  mt-1 w-10 ml-3">{Rank}</h2>
+        <h2 className="text-4xl  mt-1 w-10 ml-21 md:ml-3">{Rank}</h2>
        <div
   className="flex border border-none mt-4 bg-gray-300 h-3 overflow-hidden"
            style={{width}}
@@ -737,7 +745,7 @@ return(
       </div>
         <h1 className="text-gray-500 p-2 ml-4">Out of {participants}</h1>
     </div>
-     <div className="flex mt-5 w-full h-13  border border-gray-300 border-2 shadow-sm rounded-lg ">
+     <div className="flex mt-5 w-full h-13 ml-7 md:ml-0 border border-gray-300 border-2 shadow-sm rounded-lg ">
          <h1 className="font-extrabold px-4 py-3 " style={{fontFamily:'Times New Roman,Serif'}}>Compare Ranking</h1>
          <svg
             className="cursor-pointer "
@@ -757,16 +765,16 @@ return(
      </div>
      </div>
      </div>
-     <div className="flex flex-col mt-4">
-      <div className="flex gap-x-160">
-      <div className="font-extrabold text-xl " style={{fontFamily:'Times New Roman,Serif'}}>
+     <div className="flex flex-col  mt-10 md:mt-4">
+      <div className="flex  gap-x-48 md:gap-x-160">
+      <div className="font-extrabold  text-xl " style={{fontFamily:'Times New Roman,Serif'}}>
         My Portfolio
      </div>
-      <h3 className="text-[#5235E8]">See all</h3>
+      <h3 className="text-sm md:text-md text-[#5235E8]">See all</h3>
       </div>
       <div className="flex flex-col mt-3 gap-y-3">
       {My_portfolio.map((value,idx,array)=>(
-        <div className="flex w-full  h-14 border-b border-gray-300 gap-x-65">
+        <div className="flex w-full  h-14 border-b gap-x-15 border-gray-300 md:gap-x-65">
           <div className="flex flex-col">
               <h1 className="font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{value.previous_upvotes} upvote</h1>
               <h5 className="text-gray-300">{value.per_upvote}</h5>
@@ -833,7 +841,7 @@ return(
   
           </div>
           
-          <div className="flex flex-col ml-auto">
+          <div className="flex flex-col md:ml-auto">
           <h1 className="font-extrabold text-sm" style={{fontFamily:'Times New Roman,Serif'}}>{value.date}</h1>
           <div className="flex gap-x-1">
           <h3 className="text-gray-400 text-sm">{value.start_time} -</h3>

@@ -14,9 +14,11 @@ function Settings(){
   return(
     <>
     <div className="flex">
-    <div>
+    <div className="hidden md:block">
     <Settingleftpage/>
-    <div className="fixed mt-18 ml-63.5">
+     </div>
+    
+    <div className="md:fixed mt-18 md:ml-63.5">
     {curractive['SettingisActive'] === "Profile" && <Profile/>}
     {curractive['SettingisActive'] === "Notifications" &&<Notification/>}
     {curractive['SettingisActive'] === "Privacy" &&<Privacy/>}
@@ -25,8 +27,7 @@ function Settings(){
     {curractive['SettingisActive'] === "Password" && <Password/>}
     </div>
     
-    </div>
-    
+   
     </div>
     </>
     )

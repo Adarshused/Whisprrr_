@@ -37,7 +37,7 @@ export function useCurrentUser() {
       ]
     
   });
-  console.log("results", results)
+  // console.log("results", results)
   const [userQ, facultiesQ] = results;
   return  {
     data: { user: userQ.data, faculties: facultiesQ.data },

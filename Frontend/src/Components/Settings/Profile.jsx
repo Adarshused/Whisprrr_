@@ -123,15 +123,15 @@ function Profile(){
     return (
         <>
       <div className="flex flex-col w-screen h-screen">
-        <div className="flex w-full h-4/10">
-         <div className="flex flex-col mt-9 ml-7 w-40">
+        <div className="flex flex-col md:flex-row w-full md:h-4/10">
+         <div className="flex flex-col md:mt-9 ml-7 w-40">
    <h1 className="font-extrabold text-xl" style={{fontFamily:'Times New Roman,Serif'}}> Contact info</h1>
      <h5 className="text-gray-400">Manage your Contact</h5>
          </div>
-         <div className="flex flex-col w-230 rounded-lg ml-35 h-60 shadow-sm border border-gray-300 ">
-          <div className=" border-b border-gray-300 h-1/2">
-             <div className="flex mt-7 ml-6  gap-x-25">
-              <div className="flex  gap-x-5">
+         <div className="flex flex-col w-90 ml-2 md:w-230 rounded-lg md:ml-35 h-90 md:h-60 shadow-sm border border-gray-300 ">
+          
+             <div className="flex flex-col border-b border-gray-300 h-1/2 md:flex-row mt-7 md:ml-6  md:gap-x-25">
+              <div className="flex ml-7 md:ml-0 gap-x-10">
                   <Avatar firstName={Firstname} lastName={Lastname} avatarUrl={profilelogo} size={56} className="" />
                   {/* <button className="cursor-pointer shadow-md text-3xl rounded-full  w-20 h-20 font-extrabold text-white bg-[#DEDAFB]" style={{fontFamily:'Times New Roman, Serif',textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'}} >{profilelogo}</button> */}
                   <div className="flex flex-col ">
@@ -146,7 +146,9 @@ function Profile(){
                    <h5 className=" text-gray-400">{email}</h5>
                   </div>
               </div>
-                <label className="ml-90  w-38 h-12 mt-3 cursor-pointer font-extrabold rounded-lg border border-[#9785F1] text-[#5235E8] px-6 py-3 hover:text-[#5235E8] flex items-center justify-center"
+              <div>
+              
+                <label className="hidden md:block md:ml-90  w-38 h-12 mt-3 cursor-pointer font-extrabold rounded-lg border border-[#9785F1] text-[#5235E8] px-6 py-3 hover:text-[#5235E8] flex items-center justify-center"
                 style={{ fontFamily: 'Times New Roman, Serif' }}
                  >
                 Upload Photo
@@ -156,7 +158,8 @@ function Profile(){
             className="hidden"
             />
            </label>
-             </div>
+              </div>
+            
              </div>
              <form  onSubmit={HandleSubmitContact}>
              <div className="h-1/2 flex w-screen">
@@ -171,7 +174,14 @@ function Profile(){
      defaultValue={title}
       style={{ fontFamily: "Times New Roman, serif" }}
     />
-
+{/*  <button className="h-6 " type={!isEditContact ? "button" : "submit"}>
+               <label className="px-2  w-20 h-6  cursor-pointer font-extrabold text-[#5235E8] px-6 py-3 hover:text-[#9785F1] flex items-center justify-center"
+                style={{ fontFamily: 'Times New Roman, Serif' }} onClick={()=>{
+                  setisEditContact(prev => !prev)
+                }} 
+                 >{isEditContact? 'EDIT' : 'SAVE'}
+                 </label>
+                      </button> */}
     {/* A single controlled select: */}
     <select
          name="Title"  className="font-extrabold mr-8 outline-none absolute inset-0 w-full h-full opacity-0 cursor-pointer" style={{ fontFamily: "Times New Roman, serif" }}
@@ -187,38 +197,35 @@ function Profile(){
     </select>
             </div>
             </div>
+            <div className="flex flex-col md:flex-row">
+
                 <div className="flex flex-col ml-6 mt-7 h-19 ">
                    <h5 className="font-extrabold  "  style={{fontFamily:'Times New Roman,Serif'}} >Display name</h5>
-                   <div className=" mt-2 w-80 h-11 border rounded-lg border-gray-300" >
-                   <input  className="ml-5 w-105 h-full text-gray-400 outline-none" type="text" name="DisplayName" defaultValue={name} readOnly={isEditContact} />
+                   <div className=" mt-2 w-55 md:w-80 h-11 border rounded-lg border-gray-300" >
+                   <input  className="ml-5  md:w-105 h-full text-gray-400 outline-none" type="text" name="DisplayName" defaultValue={name} readOnly={isEditContact} />
                    </div>
                 </div>
-                   <div>
+                  
                 <div className="flex flex-col ml-2  ">
-                  <div className="flex mt-2 ml-4">
+                  <div className="flex mt-2 ml-4 ">
                    <h5 className="font-extrabold mt-5 ml-4 " style={{fontFamily:'Times New Roman,Serif'}}  >Email</h5>
-                      <button className="h-6 " type={!isEditContact ? "button" : "submit"}>
-               <label className="px-2 ml-69 w-20 h-6  cursor-pointer font-extrabold text-[#5235E8] px-6 py-3 hover:text-[#9785F1] flex items-center justify-center"
-                style={{ fontFamily: 'Times New Roman, Serif' }} onClick={()=>{
-                  setisEditContact(prev => !prev)
-                }} 
-                 >{isEditContact? 'EDIT' : 'SAVE'}
-                 </label>
-                      </button>
                    
+                    
                   </div>
-                   
-                   <div className=" mt-2 w-80 ml-5 h-11 border rounded-lg border-gray-300" >
+                   <div className=" mt-2 w-100 ml-5 h-6 md:h-38 border rounded-lg border-gray-300" >
                    <input  className="ml-5 w-105 h-full text-gray-400  outline-none" defaultValue={email}  name="email" type="text" readOnly={isEditContact} />
                    </div>
-                </div>
+                     
+                    </div>
+                 
+           
                    </div>
                   
              </div>
             </form>
          </div>
         </div>
-      <div className="flex w-full h-4/10">
+      <div className="flex flex-col md:flex-row w-full h-4/10">
            
          <div className="flex flex-col mt-9 ml-7">
    <h1 className="font-extrabold text-xl" style={{fontFamily:'Times New Roman,Serif'}}> Personal info</h1>

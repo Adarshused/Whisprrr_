@@ -57,7 +57,7 @@ const Follow = AsyncHandler(async (req, res, next) => {
     const User = await Faculty.findById(followerID)
       .select("-password -refreshToken");
     await redis.set(
-      followerID.toString(),
+      followerID,
       JSON.stringify(User),
       "EX",
       60 * 5
@@ -119,7 +119,7 @@ const UnFollow = AsyncHandler(async (req, res, next) => {
     const User = await Faculty.findById(followerID)
       .select("-password -refreshToken");
     await redis.set(
-      followerID.toString(),
+      followerID,
       JSON.stringify(User),
       "EX",
       60 * 5
@@ -147,7 +147,7 @@ const getFollowers = AsyncHandler(async (req, res) => {
   const Followers = await Connections.find(
     {followerID : userID}
   );
-  console.log(Followers)
+
   if(!Followers) 
     throw new ApiError(500, "Their was an problem while fetching the followers")
 

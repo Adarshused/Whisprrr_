@@ -144,8 +144,8 @@ const Last7days = AsyncHandler(async (req, res) => {
   }
 }
 
-  //  console.log(dayCounts)
-  // 4) build the last-7 dates (oldest -> newest) as UTC-midnight Date objects matching the day keys
+
+// 4) build the last-7 dates (oldest -> newest) as UTC-midnight Date objects matching the day keys
   const last7Dates = Array.from({ length: 7 }, (_, i) => {
     // i from 0..6 -> map to day-6 .. day-0
    const s = new Date(Date.UTC(year, month - 1, day - 6 + i)).toISOString().slice(0, 10);
@@ -153,11 +153,9 @@ const Last7days = AsyncHandler(async (req, res) => {
     return s;
   });
 
-    console.log(last7Dates)
   // 5) create the final array of counts (oldest -> newest), filling 0 for missing days
   const last7Counts = last7Dates.map(d => dayCounts.get(d) || 0);
  
-  console.log(last7Counts); // e.g. [2000,2300,4590,3424,4222,5555,3422]
 
  return res
  .status(200)

@@ -21,7 +21,7 @@ Dispatch(ChangeStatus(currFeature));
 }
   return (
     <>
-    <div className="fixed top-0 left-0 w-310 ml-67 flex py-4 border-b border-gray-300 gap-x-8"style={{fontFamily:'Times New Roman, Serif'}}>
+    <div className="fixed top-0 left-0 w-full md:w-310 md:ml-67 flex py-4 border-b border-gray-300 gap-x-8"style={{fontFamily:'Times New Roman, Serif'}}>
       <div className="w-50">
       <h1 className="font-extrabold text-2xl px-12 " >{heading}</h1>
       </div>

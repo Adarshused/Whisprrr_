@@ -105,7 +105,7 @@ Dispatch(ChangeStatus(currFeature));
       </div>
     
      <div className="flex ml-20 md:ml-160 gap-x-5">
-     <div className="flex hidden md:block cursor-pointer py-2 relative px-2 justify-center md:w-50  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] ">
+     <div className="flex hidden md:block cursor-pointer py-2 relative px-5 justify-center md:w-50  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] ">
               <h3 className="font-extrabold flex  text-white">Connect with Faculties</h3>  
      </div>
      {/* <svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

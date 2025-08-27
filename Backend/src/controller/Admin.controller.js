@@ -6,7 +6,7 @@ import { redis } from '../utils/redis.js'
 
 const CreateOrg = AsyncHandler(async (req, res) => {
     const name = req.body.name
-     console.log(name)
+
     const org = await Organization.create({
         name
     })
@@ -44,7 +44,6 @@ const getOrg = AsyncHandler(async (req, res) => {
          console.log("Their was problem in getting the Org from db")
        }
    }
-//    console.log((org))
    return res
    .status(200)
    .json(
