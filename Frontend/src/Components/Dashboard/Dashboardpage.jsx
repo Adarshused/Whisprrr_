@@ -96,7 +96,7 @@ function Dashboardpage(){
     // const sorted_values=[...values].sort((a,b)=>b.upvote-a.upvote);
     const leaderBoard = curractive['leaderBoard']
     const user = curractive['userData']
-    console.log("Come here boy",leaderBoard)
+    // console.log("Come here boy",leaderBoard)
     useEffect(()=>{setuserDetail(leaderBoard)},[leaderBoard])
     useEffect(()=>{
       const val  = Number((user.totalUpvote/1000).toFixed(1))+"k";
@@ -144,7 +144,7 @@ function Dashboardpage(){
      
       const sfw=sfper*dup_width;
       setseniorfacultyw(sfw);
-      console.log(sfw)
+      // console.log(sfw)
      }
      else if(status === "Master"){
       const fper=500/5000;
@@ -180,7 +180,7 @@ function Dashboardpage(){
       dup_width-=mw;
       const gmw=gmper*dup_width;
       setgrandmasterw(gmw);
-      console.log(fw,sfw,mw,gmw)
+      // console.log(fw,sfw,mw,gmw)
      }
     },[status])
     useEffect(()=>{
@@ -401,14 +401,14 @@ function Dashboardpage(){
         if(res.ok) {
             let data = await res.json()
             data = data?.data?.Followers
-            console.log(data?.data?.Followers[0].followeeID)
+            // console.log(data?.data?.Followers[0].followeeID)
            const followerSet = new Set(
           data.map(f => f.followeeID.toString())
              );
             
             const Connection = userDetail.filter((user) =>followerSet.has(user.id))
             setConnectionRanking(Connection)
-            console.log("RAM RAM", Connection)
+            // console.log("RAM RAM", Connection)
             // console.log(followers)
         }
         else {

@@ -55,7 +55,7 @@ function App(props) {
         
         const leaderboard = faculties?.data?.leaderBoard ?? [];
         const lpaylod = [];
-       console.log(leaderboard, "here")
+      //  console.log(leaderboard, "here")
        for (let i = 0; i < leaderboard.length; ++i) {
           const item = leaderboard[i];
           const counts24 = item?.counts24 ?? []; // array or object

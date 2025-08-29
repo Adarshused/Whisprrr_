@@ -7,7 +7,7 @@ const Avatar = ({
     size = 40,
    className = ''
 }) => {
-    console.log(avatarUrl)
+   //  console.log(avatarUrl)
    const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
    const commonStyles = `flex items-center justify-center rounded-full overflow-hidden ${className} cursor-pointer shadow-md text-3xl rounded-full  w-20 h-20 "  `;
    return avatarUrl ? (

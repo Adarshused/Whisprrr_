@@ -34,25 +34,25 @@ function Security(){
     return(
         <>
        <div className="flex flex-col w-screen h-screen">
-        <div className="flex w-full ">
+        <div className="flex flex-col md:flex-row w-full ">
          <div className="flex flex-col mt-9 ml-7">
    <h1 className="font-extrabold text-xl" style={{fontFamily:'Times New Roman,Serif'}}>Phone number</h1>
      <h5 className="text-gray-400">Keep your phone number up-to-date</h5>
          </div>
-         <div className="flex flex-col w-220 rounded-lg ml-15 h-40 mt-6  shadow-sm border border-gray-300 ">
+         <div className="flex flex-col w-90 md:w-220 rounded-lg ml-2 md:ml-15 h-40 mt-6  shadow-sm border border-gray-300 ">
           <h1 className="mt-7 ml-10 font-extrabold" style={{fontFamily:'Times New Roman'}}>Phone number</h1>
-        <div className="mt-7 ml-10 w-200 h-10  rounded-lg bg-[#F9F9FA] border border-gray-300">
+        <div className="mt-7 ml-10 w-70 md:w-200 h-10  rounded-lg bg-[#F9F9FA] border border-gray-300">
 
         </div>
          </div>
         </div>
-      <div className="flex w-full  mt-10 ">
+      <div className="flex flex-col md:flex-row w-full  mt-10 gap-y-4">
            
-         <div className="flex flex-col mt-9 ml-7">
+         <div className="flex flex-col md:mt-9 ml-7">
    <h1 className="font-extrabold text-xl" style={{fontFamily:'Times New Roman,Serif'}}>Two-step verification</h1>
      <h5 className="text-gray-400">Select your two-step verification method</h5>
          </div>
-        <div className="flex flex-col w-220 rounded-lg ml-8 h-40   shadow-sm border border-gray-300 ">
+        <div className="flex flex-col w-90 ml-2 md:w-220 rounded-lg md:ml-8 h-45 md:h-40   shadow-sm border border-gray-300 ">
               <div className="flex ml-5 mt-5 gap-x-20">
                 <div className="flex">
                    <div className="w-10 h-10  flex justify-center bg-[#F7F6FE]   rounded-md border border-[#EFEDFD]">
@@ -63,8 +63,12 @@ function Security(){
                    <div className="flex flex-col ml-2 w-140">
                <h1 className="font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>Text Message</h1>
                <div className="flex gap-x-1">
-               <h5 className="text-xs text-gray-400">When you sign in, you will receive OTP code to approve your login to your number</h5>
+                <div className="flex flex-col md:flex-row">
+                 <h5 className="text-[10px] md:text-xs text-gray-400">When you sign in, you will receive OTP code to approve</h5>
+               <h5 className="text-[10px] md:text-xs text-gray-400"> your login to your number</h5>
                  <h5 className="text-sm font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{number}</h5>
+                </div>
+               
                </div>
                    </div>
                    
@@ -87,8 +91,12 @@ function Security(){
                    <div className="flex flex-col ml-2 w-151">
                <h1 className="font-extrabold " style={{fontFamily:'Times New Roman,Serif'}}>Email</h1>
                <div className="flex gap-x-1">
-               <h5 className="text-xs  text-gray-400">When you sign in, you will receive notification to approve your login on your email</h5>
+                <div className="flex flex-col md:flex-row">
+                  <h5 className="text-xs  text-gray-400">When you sign in, you will receive notification </h5>
+               <h5 className="text-xs  text-gray-400">to approve your login on your email</h5>
                  <h5 className="text-sm font-extrabold" style={{fontFamily:'Times New Roman,Serif'}}>{email}</h5>
+                </div>
+              
                </div>
                    </div>
                    
@@ -103,7 +111,7 @@ function Security(){
               </div>
         </div>
       </div>
-      <div className="ml-280 mt-8">
+      <div className=" ml-60 md:ml-280 mt-8">
           <div className="flex cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " style={{fontFamily:'Times New Roman,Serif'}}>
               <h3 className="font-extrabold flex  text-white">Save</h3>  
         </div>

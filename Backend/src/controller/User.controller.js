@@ -235,7 +235,7 @@ const UserData = AsyncHandler(async (req, res) => {
     const Cached = await redis.get(redisKey)
     
     if(Cached) {
-
+    //  console.log(Cached)
     if (typeof Cached !== "string") {
       console.warn("Unexpected non-string from Redis:", Cached);
       await redis.del(redisKey);

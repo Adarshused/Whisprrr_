@@ -42,7 +42,7 @@ function UserSignUp(){
        }
        else {
           const playload= await res.json();
-          console.log(playload)
+          // console.log(playload)
          throw new Error(playload.error || "Registration failed");
        }
        

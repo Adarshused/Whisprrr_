@@ -7,7 +7,7 @@ function Password(){
     return(
         <>
         <div className="flex flex-col w-screen h-screen">
-        <div className="flex w-full ">
+        <div className="flex flex-col md:flex-row w-full gap-y-4 ">
          <div className="flex flex-col mt-9 ml-7">
    <h1 className="font-extrabold text-xl" style={{fontFamily:'Times New Roman,Serif'}}>Change password</h1>
    <div className="mt-2 flex flex-col text-gray-400 text-sm">
@@ -18,23 +18,23 @@ function Password(){
      
          </div>
         
- <div className="flex flex-col w-220 rounded-lg ml-15 h-90 mt-6  shadow-sm border border-gray-300 ">
+ <div className="flex flex-col w-90 ml-2 md:w-220 rounded-lg md:ml-15 h-90 mt-6  shadow-sm border border-gray-300 ">
     <div>
       <h1 className="mt-7 ml-10 font-extrabold" style={{fontFamily:'Times New Roman'}}>Old password</h1>
-        <div className="mt-4 ml-10 w-200 px-2 py-2 h-10 text-gray-400 rounded-lg bg-[#F9F9FA] border border-gray-300">
+        <div className="mt-4 ml-10 w-70 md:w-200 px-2 py-2 h-10 text-gray-400 rounded-lg bg-[#F9F9FA] border border-gray-300">
             <input className="w-full h-full outline-none" placeholder={oldpass} type="text" />
             
         </div>
     </div>
     <div>
          <h1 className="mt-7 ml-10 font-extrabold" style={{fontFamily:'Times New Roman'}}>New password</h1>
-        <div className="mt-4 ml-10 w-200 px-2 py-2 h-10 text-gray-400 rounded-lg bg-[#F9F9FA] border border-gray-300">
+        <div className="mt-4 ml-10 w-70 md:w-200 px-2 py-2 h-10 text-gray-400 rounded-lg bg-[#F9F9FA] border border-gray-300">
             <input className="w-full h-full outline-none" placeholder={newpass} type="text" />
             
         </div>
     </div>
           <h1 className="mt-7 ml-10 font-extrabold" style={{fontFamily:'Times New Roman'}}>Confirm new password</h1>
-        <div className="mt-4 ml-10 w-200 px-2 py-2 h-10 text-gray-400 rounded-lg bg-[#F9F9FA] border border-gray-300">
+        <div className="mt-4 ml-10 w-70 md:w-200 px-2 py-2 h-10 text-gray-400 rounded-lg bg-[#F9F9FA] border border-gray-300">
             <input className="w-full h-full outline-none" placeholder={cnewpass} type="text" />
             
         </div>
@@ -43,7 +43,7 @@ function Password(){
         
         </div>
      
-      <div className="ml-280 mt-8">
+      <div className="ml-66 md:ml-280 mt-8">
           <div className="flex cursor-pointer py-2 relative px-2 justify-center w-25  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] " style={{fontFamily:'Times New Roman,Serif'}}>
               <h3 className="font-extrabold flex  text-white">Save</h3>  
         </div>

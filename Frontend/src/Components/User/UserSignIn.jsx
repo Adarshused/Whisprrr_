@@ -26,11 +26,11 @@ function UserSignIn(){
 
     useEffect(()=>{
       Disptach(ChangeLogIn(islogin));
-      console.log(islogin)
+      // console.log(islogin)
     },[islogin])
     
     const handleSubmit = async (e) => {
-      console.log(formData)
+      // console.log(formData)
       try{
       const res = await fetch("http://localhost:8000/api/v1/users/login",{
         method: "POST",
@@ -44,7 +44,7 @@ function UserSignIn(){
         
         setislogin(true);
         const body = await res.json();
-        console.log(body)
+        // console.log(body)
         setformData({
           email: "",
           organizationID: "",
