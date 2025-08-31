@@ -388,7 +388,7 @@ Dispatch(ChangeStatus(currFeature));
    {heading !== "ConnectionPortfolio" && (<h1 className="font-extrabold mt-2 md:mt-0 text-2xl  md:px-12 " >{heading}</h1>)}   
       </div>
     
-     <div className="flex ml-20 md:ml-160 gap-x-5">
+     <div className="flex ml-15 md:ml-160 gap-x-5">
      <div className="flex hidden md:block cursor-pointer py-2 relative px-5 justify-center md:w-50  h-10 rounded-md bg-[#5235E8] hover:bg-[#7C64ED] ">
               <h3 className="font-extrabold flex  text-white">Connect with Faculties</h3>  
      </div>

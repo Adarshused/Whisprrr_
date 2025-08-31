@@ -3,6 +3,8 @@ import { connectDB } from './db/database.js'
 import { redis } from './utils/redis.js'
 import {fetchAllUsersFromDB, fetchOrgFromDB} from './db/database.js'
 import {app} from './app.js'
+
+
 dotenv.config({
     path:'./env'
 })
@@ -14,7 +16,7 @@ redis.on('error',err => {
 connectDB()
 async function preloadCache() {
 
- const org = await fetchOrgFromDB();
+const org = await fetchOrgFromDB();
 //   console.log(users)
  const orgListStr = JSON.stringify(org)
 //  console.log(rawUsers)
