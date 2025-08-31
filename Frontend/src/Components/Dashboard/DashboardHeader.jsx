@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Profile from "../Settings/Profile.jsx";
 import Settings from "../Settings/Settings.jsx";
 import { ChangeStatus } from "../../Features/DashboardSlice.js";
-import Avatar from "../../utils/avatar.jsx";
+import Avatar from "../../utils/Avatar.jsx";
 
 function DashboardHeader(props){
   // console.log(props.title)
