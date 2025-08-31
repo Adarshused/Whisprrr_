@@ -9,6 +9,6 @@ import mongoose from 'mongoose'
 
 const Auth = AsyncHandler(async (req, res) => {
 
-      const redirectUri = "http://localhost:8000/api/v1/auth/google/callback";
+      const redirectUri = "https://whisprrr-backend.vercel.app/api/v1/auth/google/callback";
     //   const client 
 })

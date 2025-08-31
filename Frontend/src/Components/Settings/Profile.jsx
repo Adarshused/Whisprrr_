@@ -30,7 +30,7 @@ function Profile() {
     const formData = new FormData();
     formData.append("avatar", file)
     try {
-      const res = await fetch("http://localhost:8000/api/v1/users/avatar", {
+      const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/users/avatar", {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -59,7 +59,7 @@ function Profile() {
     // console.log(title)
     //  console.log(displayname, email)
     try {
-      const res = await fetch("http://localhost:8000/api/v1/users/UserContact", {
+      const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/users/UserContact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ displayname, email, title }),
@@ -84,7 +84,7 @@ function Profile() {
     const dob = e.target.dob?.value;
     const cor = e.target.cor?.value;
     try {
-      const res = await fetch("http://localhost:8000/api/v1/users/UserInfo", {
+      const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/users/UserInfo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstname, lastname, dob, cor }),

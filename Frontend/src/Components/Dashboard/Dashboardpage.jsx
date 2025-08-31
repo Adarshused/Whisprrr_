@@ -352,7 +352,7 @@ function Dashboardpage(){
      async function WeeklyUpvote () {
         try {
             
-          const res = await fetch("http://localhost:8000/api/v1/users/weeklyUpvote", {
+          const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/users/weeklyUpvote", {
             method: "GET",
             headers: {
                      "Content-Type": "application/json",
@@ -392,7 +392,7 @@ function Dashboardpage(){
     useEffect(() => {
       const FetchFollowers = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/v1/connection/getFollowers", {
+        const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/connection/getFollowers", {
           method : "GET",
           credentials: "include"
         })

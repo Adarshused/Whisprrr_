@@ -23,7 +23,7 @@ function UserSignUp(){
       e.preventDefault()
        try{
         // console.log(body)
-       const res = await fetch("http://localhost:8000/api/v1/users/register",{
+       const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/users/register",{
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ function UserSignUp(){
         useEffect( ()=> {
           const fetchOrg = async() => {
           try {
-           const res = await fetch("http://localhost:8000/api/v1/admin/AllOrganization", {
+           const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/admin/AllOrganization", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

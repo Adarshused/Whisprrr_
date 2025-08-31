@@ -2,7 +2,7 @@
 export async function fetchCurrentUser() {
  
    try{
-     const res =  await fetch("http://localhost:8000/api/v1/users/getme", {
+     const res =  await fetch("https://whisprrr-backend.vercel.app/api/v1/users/getme", {
         method : "GET",
         headers: {
           "Content-Type": "application/json",

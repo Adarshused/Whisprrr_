@@ -32,7 +32,7 @@ function UserSignIn(){
     const handleSubmit = async (e) => {
       // console.log(formData)
       try{
-      const res = await fetch("http://localhost:8000/api/v1/users/login",{
+      const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/users/login",{
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ function UserSignIn(){
     useEffect( ()=> {
       const fetchOrg = async() => {
       try {
-       const res = await fetch("http://localhost:8000/api/v1/admin/AllOrganization", {
+       const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/admin/AllOrganization", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

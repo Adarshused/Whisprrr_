@@ -52,7 +52,7 @@ function Connectionspage(){
 
     const FetchFollowers = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/v1/connection/getFollowers", {
+        const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/connection/getFollowers", {
           method : "GET",
           credentials: "include"
         })
@@ -223,7 +223,7 @@ function Connectionspage(){
 
       //  console.log(followee)
         try {
-            const res = await fetch("http://localhost:8000/api/v1/connection/follow",{
+            const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/connection/follow",{
               method: "POST",
               headers : { "Content-Type" : "application/json"},
               body: JSON.stringify({ followee }),
@@ -248,7 +248,7 @@ function Connectionspage(){
         e.preventDefault();
         const followee = e.currentTarget.id
         try {
-          const res = await fetch("http://localhost:8000/api/v1/connection/unfollow", {
+          const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/connection/unfollow", {
             method: "POST",
             headers: {"Content-Type" : "application/json"},
             body: JSON.stringify({followee}),
