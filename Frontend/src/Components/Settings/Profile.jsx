@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Avatar from "../../utils/avatar.jsx";
+import Avatar from "../../utils/Avatar.jsx";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
