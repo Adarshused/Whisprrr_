@@ -4,7 +4,7 @@ import React from "react";
 async function GetAllFaculty () {
       
     try {
-    const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/users/getAllFaculty", {
+    const res = await fetch(`${process.env.BASE_URL}/api/v1/users/getAllFaculty`, {
          method : "GET",
         headers: {
           "Content-Type": "application/json",

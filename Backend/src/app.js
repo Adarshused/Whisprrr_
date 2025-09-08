@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser'
 const app = express()
 
 app.use(cors({
-    origin: "https://whisprrr-wo8g.vercel.app",
+    origin: process.env.CORS_ORIGIN,
     methods:["GET","POST","OPTIONS","PUT","DELETE"],
     allowedHeaders: ["Content-Type","Authorization"],
     credentials: true

@@ -8,8 +8,6 @@ import {app} from './app.js'
 dotenv.config({
     path:'./env'
 })
-
-
 redis.on('error',err => {
     console.error('⚠️ Redis error:', err)
 })

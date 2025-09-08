@@ -16,7 +16,7 @@ function Preference(){
         const about = e.target.about?.value;
        
         try {
-          const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/users/UserAbout",{
+          const res = await fetch(`${process.env.BASE_URL}/api/v1/users/UserAbout`,{
             method : "POST",
             headers : { "Content-Type": "application/json" },
             body : JSON.stringify({about}),
@@ -42,7 +42,7 @@ function Preference(){
         const state = e.target.state?.value;
        
         try {
-          const res = await fetch("https://whisprrr-backend.vercel.app/api/v1/users/UserAddress",{
+          const res = await fetch(`${process.env.BASE_URL}/api/v1/users/UserAddress`,{
             method : "POST",
             headers : { "Content-Type": "application/json" },
             body : JSON.stringify({plot, area, city, state}),

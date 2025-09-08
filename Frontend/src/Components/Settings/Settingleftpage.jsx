@@ -73,7 +73,7 @@ function Settingleftpage(){
     }
     const Logout = async () => {
       try{
-         const res = await fetch ('https://whisprrr-backend.vercel.app/api/v1/users/logout',{
+         const res = await fetch (`${process.env.BASE_URL}/api/v1/users/logout`,{
         method: 'POST',
          headers: {
           "Content-Type": "application/json",
