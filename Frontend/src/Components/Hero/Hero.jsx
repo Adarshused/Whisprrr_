@@ -86,7 +86,7 @@ function Hero(){
        </div>
       </div>
                    {/* Second page */}
-          <div className="relative h-screen w-screen flex flex-col ">
+          <div className=" flex flex-col ">
           <div className="  flex flex-col  ">
 
          <svg
@@ -147,7 +147,7 @@ function Hero(){
                      {/* fourth page  */}
                      <div className="flex flex-col w-screen mt-200 md:mt-180 md:ml-62">
                       <div className="relative ">
-                        <img className="ml-4 md:ml-0  md:h-85 w-80 md:w-auto " src="/assests/CTA.svg" alt="" /> 
+                        <img className="ml-4 md:ml-0  md:h-85 w-80 md:w-auto " src="https://res.cloudinary.com/dpupb3our/image/upload/v1757338823/CTA_czsmlc.svg" alt="" /> 
                         <button className="bottom-8 text-xs md:text-lg left-7 h-7 w-25 md:w-35 md:bottom-40 md:left-24 absolute cursor-pointer border-1 md:h-10 font-medium bg-gray-200  rounded-md border-purple-300 active:bg-[#5235E8] active:text-white text-[#5235E8] px-3 py-1 hover:bg-[#5235E8] hover:text-white" >Get Started</button>
                          <img  className="absolute w-20 bottom-2 left-42 md:w-50 md:bottom-8 md:left-118"src="/assests/graph_.svg" alt="" />
                       </div>
