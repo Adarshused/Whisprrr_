@@ -1,3 +1,4 @@
+import { Router } from "express";
 import {upload} from '../middlewares/multer.middleware.js'
 import { AvatarUser, LoginFaculty, Logout, RegisterFaculty, UserData, UserContact, UserInfo, UserAbout, UserAddress, getAllFaculty } from "../controller/User.controller.js";
 import { Last7days, upvote } from "../controller/Upvote.controller.js";
